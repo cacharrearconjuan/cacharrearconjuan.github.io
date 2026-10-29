@@ -100,15 +100,43 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* portada */
 
-.portada { padding: 72px 0 40px; }
+.portada { padding: 46px 0 0; }
+
+/* el título es el chip grande de la placa */
+.placa-titulo {
+  position: relative; background: var(--chip); color: var(--chip-tinta);
+  border-radius: 10px; margin: 14px 0; padding: clamp(34px, 6vw, 64px) clamp(28px, 6vw, 72px) clamp(30px, 5vw, 56px) clamp(40px, 7vw, 90px);
+}
+.placa-titulo::before, .placa-titulo::after {
+  content: ""; position: absolute; left: 36px; right: 36px; height: 14px;
+  background: repeating-linear-gradient(90deg, var(--oro) 0 18px, transparent 18px 40px);
+}
+.placa-titulo::before { top: -14px; border-radius: 3px 3px 0 0; }
+.placa-titulo::after { bottom: -14px; border-radius: 0 0 3px 3px; }
 .portada-titulo {
+  position: relative;
   font-family: "Bricolage", system-ui, sans-serif;
   font-weight: 800; font-stretch: 75%;
-  font-size: clamp(3rem, 11vw, 7.25rem);
-  line-height: 0.9; letter-spacing: -0.025em;
-  margin: 0; max-width: 11ch;
+  font-size: clamp(3.1rem, 10.5vw, 9.5rem);
+  line-height: 0.88; letter-spacing: -0.03em;
+  margin: 0;
 }
-.portada-lema { font-size: clamp(1.15rem, 2.4vw, 1.4rem); max-width: 34ch; margin: 22px 0 32px; color: var(--tinta-suave); }
+/* muesca y punto del pin 1 */
+.portada-titulo::before {
+  content: ""; position: absolute; left: clamp(-90px, -7vw, -40px); top: 50%;
+  width: 18px; height: 40px; margin-top: -20px; background: var(--placa); border-radius: 0 20px 20px 0;
+}
+.placa-titulo > .portada-lema::before {
+  content: ""; position: absolute; left: 22px; top: 22px; width: 11px; height: 11px; border-radius: 50%; background: #3a423d;
+}
+.portada-lema {
+  font-size: clamp(1.1rem, 2.2vw, 1.35rem); max-width: 40ch; margin: 22px 0 0; color: var(--oro);
+}
+.seccion-proyectos { padding-top: 64px; }
+.seccion-proyectos > h2 {
+  font-family: "Bricolage", system-ui, sans-serif; font-weight: 750; font-stretch: 85%;
+  font-size: 1.9rem; letter-spacing: -0.01em; margin: 0 0 30px;
+}
 
 .canales { display: flex; gap: 12px; flex-wrap: wrap; }
 .canal {
