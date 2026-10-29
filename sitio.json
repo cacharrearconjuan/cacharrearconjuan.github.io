@@ -4,10 +4,27 @@
   "lema": "Las herramientas que salen en el canal, explicadas y listas para descargar.",
   "url": "https://cacharrearconjuan.github.io",
   "canales": [
-    {"texto": "Canal de YouTube", "detalle": "@CacharrearconJuan", "url": "https://www.youtube.com/@CacharrearconJuan"},
-    {"texto": "Directos en YouTube", "detalle": "@DirectoconJuan", "url": "https://www.youtube.com/@DirectoconJuan"},
-    {"texto": "Telegram", "detalle": "t.me/CacharrearconJuan", "url": "https://t.me/CacharrearconJuan"}
+    {
+      "texto": "Canal de YouTube",
+      "detalle": "@CacharrearconJuan",
+      "url": "https://www.youtube.com/@CacharrearconJuan"
+    },
+    {
+      "texto": "Directos en YouTube",
+      "detalle": "@DirectoconJuan",
+      "url": "https://www.youtube.com/@DirectoconJuan"
+    },
+    {
+      "texto": "Telegram",
+      "detalle": "t.me/CacharrearconJuan",
+      "url": "https://t.me/CacharrearconJuan"
+    }
   ],
   "ocultar": [],
-  "dias_nuevo": 14
+  "dias_nuevo": 14,
+  "youtube": {
+    "canal_id": "UC6efY3r4Oiy0ns4ZEAVw4_A",
+    "url": "https://www.youtube.com/@CacharrearconJuan",
+    "cuantos": 3
+  }
 }

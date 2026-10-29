@@ -151,6 +151,19 @@ def prueba_web():
                                    "ps5-autoupdaterpm": "", "mis-payloads-ps5": ""}, f"sello Nuevo ({sellos})")
         comprobar("Repositorio de prueba con &lt;html&gt; &amp; enlaces raros" in portada, "portada: descripción escapada")
 
+        # últimos vídeos
+        vids = re.findall(r'href="https://www\.youtube\.com/watch\?v=([^"]+)" target="_blank" rel="noopener"', portada)
+        comprobar(vids == ["vidCCCCCCCC", "vidBBBBBBBB", "vidAAAAAAAA"], f"vídeos: los 3 últimos, sin Shorts ({vids})")
+        comprobar("shortAAAAAA" not in portada and "Vídeo viejo" not in portada, "vídeos: ni Shorts ni el cuarto")
+        comprobar("Fire TV sin anuncios &amp; sin líos &lt;2026&gt;" in portada, "vídeos: título escapado")
+        comprobar(os.path.exists(os.path.join(salida, "videos", "vidCCCCCCCC.jpg")) and
+                  not os.path.exists(os.path.join(salida, "videos", "vidAAAAAAAA.jpg")), "vídeos: miniaturas propias")
+        comprobar(portada.count('class="video-sin-imagen"') == 1, "vídeos: hueco si falta la miniatura")
+        comprobar("i.ytimg.com" not in portada, "vídeos: sin imágenes de YouTube en la página")
+        orden_secciones = [portada.find(f'id="{x}"') for x in ("proyectos", "videos", "canales")]
+        comprobar(orden_secciones == sorted(orden_secciones) and -1 not in orden_secciones, "vídeos: entre proyectos y canales")
+        comprobar("28 de octubre de 2026" in portada, "vídeos: fecha")
+
         lanz = leer(salida, "proyectos/lanzador-scrcpy/index.html")
         comprobar(f"https://github.com/{U}/lanzador-scrcpy/releases/download/v1.0.0/Lanzador-scrcpy.bat" in lanz, "lanzador: .bat")
         comprobar("31 KB" in lanz and "SHA256SUMS.txt" in lanz, "lanzador: tamaño y sumas")
@@ -293,6 +306,23 @@ def prueba_guias():
         comprobar(codigo == 1 and "AAAA-MM-DD" in err, "fecha mal escrita: error claro")
 
 
+def prueba_videos_caidos():
+    print("YouTube no responde")
+    with tempfile.TemporaryDirectory() as t:
+        d = os.path.join(t, "d")
+        shutil.copytree(os.path.join(DATOS, "basico"), d)
+        with open(os.path.join(d, "urls.json"), encoding="utf-8") as f:
+            urls = json.load(f)
+        urls = {k: v for k, v in urls.items() if "youtube.com" not in k}
+        with open(os.path.join(d, "urls.json"), "w", encoding="utf-8") as f:
+            json.dump(urls, f)
+        salida = os.path.join(t, "web")
+        codigo, err = generar(salida, carpeta_datos=d)
+        portada = leer(salida, "index.html")
+        comprobar(codigo == 0 and 'id="videos"' not in portada, "sin YouTube: la web sale sin vídeos")
+        comprobar("Aviso" in err, "sin YouTube: avisa")
+
+
 def prueba_error():
     print("GitHub falla")
     with tempfile.TemporaryDirectory() as t:
@@ -310,6 +340,7 @@ if __name__ == "__main__":
     prueba_web()
     prueba_repo_nuevo()
     prueba_guias()
+    prueba_videos_caidos()
     prueba_error()
     print(f"\n{hechas - len(fallos)} de {hechas} comprobaciones bien.")
     sys.exit(1 if fallos else 0)

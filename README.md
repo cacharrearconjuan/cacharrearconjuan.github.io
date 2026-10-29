@@ -65,6 +65,16 @@ Texto en Markdown que sale antes del README.
 
 Las líneas que empiezan por `#` dentro de la cabecera no cuentan: sirven para dejar campos preparados, como el `# video:` de las notas que ya hay.
 
+## Últimos vídeos
+
+En la portada, entre los proyectos y los canales, salen los 3 últimos vídeos de [@CacharrearconJuan](https://www.youtube.com/@CacharrearconJuan), en una fila. Al pulsar uno se abre en YouTube.
+
+- Se leen del feed público de YouTube en cada pasada (cada hora): no hace falta clave ni cuenta.
+- No salen los Shorts ni los directos.
+- Las miniaturas se copian dentro de la web, así quien entra no carga nada de YouTube hasta que pulsa.
+- Si YouTube no responde, la web se publica igual sin la fila de vídeos, y vuelve en la pasada siguiente.
+- El canal y cuántos vídeos salen se cambian en `sitio.json`, en `"youtube"` (`canal_id` y `cuantos`).
+
 ## Guías
 
 Cada archivo de la carpeta `guias/` es una página de la web, en `/guias/<nombre-del-archivo>/`, y sale en la portada, en el apartado «Guías». Ya está `guias/limpiar-fire-tv.md`.

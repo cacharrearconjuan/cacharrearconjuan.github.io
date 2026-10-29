@@ -26,6 +26,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
+import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
@@ -117,6 +118,10 @@ class ApiFalsa:
         if url not in self.urls:
             raise ErrorWeb(f"{url} no responde")
         v = self.urls[url]
+        if isinstance(v, str) and v.startswith("base64:"):
+            return base64.b64decode(v[7:])
+        if isinstance(v, dict) and "__estado" in v:
+            raise ErrorWeb(f"{url} respondió {v['__estado']}")
         return v if isinstance(v, bytes) else (v if isinstance(v, str) else json.dumps(v)).encode("utf-8")
 
 
@@ -508,6 +513,81 @@ def preparar_proyectos(api, sitio, carpeta_notas, ahora):
     return proyectos
 
 
+# ---------------------------------------------------------------- vídeos de YouTube
+
+NS_YT = {"a": "http://www.w3.org/2005/Atom", "yt": "http://www.youtube.com/xml/schemas/2015",
+         "media": "http://search.yahoo.com/mrss/"}
+
+
+def leer_feed_youtube(api, url):
+    raiz = ET.fromstring(api.url(url))
+    videos = []
+    for e in raiz.findall("a:entry", NS_YT):
+        vid = (e.findtext("yt:videoId", default="", namespaces=NS_YT) or "").strip()
+        enlace = e.find("a:link", NS_YT)
+        href = enlace.get("href", "") if enlace is not None else ""
+        if not re.match(r"^[A-Za-z0-9_-]{6,20}$", vid) or "/shorts/" in href:
+            continue
+        titulo = e.findtext("media:group/media:title", default="", namespaces=NS_YT) or e.findtext("a:title", default="", namespaces=NS_YT)
+        videos.append({"id": vid, "titulo": titulo.strip(), "fecha": e.findtext("a:published", default="", namespaces=NS_YT)})
+    return videos
+
+
+def leer_videos(api, sitio):
+    """Los últimos vídeos del canal, sin Shorts. Si YouTube no responde, la web sale sin ellos."""
+    cfg = sitio.get("youtube") or {}
+    canal = cfg.get("canal_id") or ""
+    if not re.match(r"^UC[A-Za-z0-9_-]{22}$", canal):
+        return []
+    cuantos = int(cfg.get("cuantos", 3))
+    base = "https://www.youtube.com/feeds/videos.xml"
+    # UULF… es la lista de subidas sin Shorts ni directos; si no responde, el feed del canal sin /shorts/
+    for url in (f"{base}?playlist_id=UULF{canal[2:]}", f"{base}?channel_id={canal}"):
+        try:
+            videos = leer_feed_youtube(api, url)
+        except Exception as e:
+            print(f"Aviso: no se ha podido leer {url}: {e}", file=sys.stderr)
+            continue
+        if videos:
+            break
+    else:
+        return []
+    videos.sort(key=lambda v: v["fecha"], reverse=True)
+    videos = videos[:cuantos]
+    for v in videos:
+        try:
+            v["miniatura"] = api.url(f"https://i.ytimg.com/vi/{v['id']}/mqdefault.jpg")
+        except Exception as e:
+            print(f"Aviso: sin miniatura para {v['id']}: {e}", file=sys.stderr)
+            v["miniatura"] = None
+    return videos
+
+
+def bloque_videos(sitio, videos):
+    if not videos:
+        return ""
+    canal = (sitio.get("youtube") or {}).get("url") or "https://www.youtube.com"
+    tarjetas = []
+    for v in videos:
+        imagen = (f'<img src="videos/{esc(v["id"])}.jpg" alt="" width="320" height="180" loading="lazy">'
+                  if v["miniatura"] else '<span class="video-sin-imagen"></span>')
+        tarjetas.append(f"""<li class="video">
+  <a href="https://www.youtube.com/watch?v={esc(v['id'])}" target="_blank" rel="noopener">
+    <span class="video-imagen">{imagen}<span class="video-play" aria-hidden="true"></span></span>
+    <span class="video-titulo">{esc(v['titulo'])}</span>
+    <span class="video-fecha">{esc(fecha_texto(v['fecha']))}</span>
+  </a>
+</li>""")
+    return f"""<section class="ancho seccion videos-seccion" id="videos" aria-labelledby="t-videos">
+  <h2 id="t-videos">Últimos vídeos</h2>
+  <ul class="videos" role="list">
+{chr(10).join(tarjetas)}
+  </ul>
+  <p class="videos-mas"><a href="{esc(canal)}" target="_blank" rel="noopener">Ver todos en YouTube</a></p>
+</section>
+"""
+
+
 # ---------------------------------------------------------------- guías
 
 def arreglar_url_web(url, imagen=False):
@@ -715,7 +795,7 @@ def chip_proyecto(p, pre):
 </li>"""
 
 
-def portada(sitio, proyectos, guias=()):
+def portada(sitio, proyectos, guias=(), videos=()):
     if proyectos:
         lista = "\n".join(chip_proyecto(p, "") for p in proyectos)
         bloque = f'<ul class="chips" role="list">\n{lista}\n</ul>'
@@ -739,7 +819,7 @@ def portada(sitio, proyectos, guias=()):
   {bloque}
   <p class="a-descargas"><a href="descargas/">Ver todas las descargas en una página</a></p>
 </section>
-{bloque_guias}<section class="ancho seccion" id="canales" aria-labelledby="t-canales">
+{bloque_videos(sitio, videos)}{bloque_guias}<section class="ancho seccion" id="canales" aria-labelledby="t-canales">
   <h2 id="t-canales">Canales</h2>
   <div class="canales">{enlaces_canales(sitio)}</div>
 </section>"""
@@ -922,10 +1002,11 @@ def generar(api, sitio, salida, carpeta_notas, ahora, carpeta_guias=None):
     guias = preparar_guias(carpeta_guias or os.path.join(RAIZ, "guias"), ahora)
     sitio = dict(sitio, _hay_guias=bool(guias))
     proyectos = preparar_proyectos(api, sitio, carpeta_notas, ahora)
+    videos = leer_videos(api, sitio)
     if os.path.exists(salida):
         shutil.rmtree(salida)
     archivos = {
-        "index.html": portada(sitio, proyectos, guias),
+        "index.html": portada(sitio, proyectos, guias, videos),
         "descargas/index.html": pagina_descargas(sitio, proyectos),
         "404.html": pagina_404(sitio),
         "feed.xml": feed(sitio, proyectos, guias),
@@ -937,6 +1018,11 @@ def generar(api, sitio, salida, carpeta_notas, ahora, carpeta_guias=None):
         archivos[f"proyectos/{p['slug']}/index.html"] = pagina_proyecto(sitio, p)
     for gu in guias:
         archivos[f"guias/{gu['slug']}/index.html"] = pagina_guia(sitio, gu)
+    for v in videos:
+        if v["miniatura"]:
+            os.makedirs(os.path.join(salida, "videos"), exist_ok=True)
+            with open(os.path.join(salida, "videos", v["id"] + ".jpg"), "wb") as f:
+                f.write(v["miniatura"])
     for ruta, texto in archivos.items():
         destino = os.path.join(salida, ruta)
         os.makedirs(os.path.dirname(destino), exist_ok=True)
