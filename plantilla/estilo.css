@@ -1,0 +1,289 @@
+/* Estilo de la web. La placa es el fondo; cada proyecto es un chip. */
+
+@font-face {
+  font-family: "Bricolage";
+  src: url("fuentes/bricolage.woff") format("woff");
+  font-weight: 200 800;
+  font-stretch: 75% 100%;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson";
+  src: url("fuentes/atkinson.woff") format("woff");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson";
+  src: url("fuentes/atkinson-italic.woff") format("woff");
+  font-weight: 200 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --placa: #e9eee6;       /* placa clara */
+  --placa-2: #dfe6da;
+  --tinta: #15241d;
+  --tinta-suave: #44564c;
+  --mascara: #1d5a43;     /* verde de máscara de soldadura */
+  --linea: #c3cfbf;
+  --chip: #1b201d;
+  --chip-tinta: #e7eae3;
+  --chip-suave: #a9b3ab;
+  --oro: #c4952f;         /* pines y pads */
+  --oro-tinta: #1b201d;
+  --codigo: #dce4d7;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --placa: #0f3a2c;
+    --placa-2: #0c3125;
+    --tinta: #e8eee6;
+    --tinta-suave: #a8c0b3;
+    --mascara: #8fd0b0;
+    --linea: #24584a;
+    --chip: #121815;
+    --chip-tinta: #e7eae3;
+    --chip-suave: #9aa59d;
+    --oro: #d9ae55;
+    --oro-tinta: #161b18;
+    --codigo: #0b2c21;
+    color-scheme: dark;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--placa);
+  color: var(--tinta);
+  font-family: "Atkinson", system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+a { color: var(--mascara); text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--oro); outline-offset: 3px; border-radius: 3px; }
+
+.ancho { width: min(100% - 32px, 1120px); margin-inline: auto; }
+
+.saltar {
+  position: absolute; left: 16px; top: -60px;
+  background: var(--oro); color: var(--oro-tinta); padding: 8px 14px; border-radius: 6px; z-index: 10;
+}
+.saltar:focus { top: 12px; }
+
+/* cabecera y pie */
+
+.cabecera { border-bottom: 1px solid var(--linea); }
+.cabecera-fila { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; flex-wrap: wrap; }
+.marca {
+  font-family: "Bricolage", system-ui, sans-serif; font-weight: 750; font-stretch: 85%;
+  font-size: 1.2rem; color: var(--tinta); text-decoration: none; letter-spacing: -0.01em;
+}
+.cabecera nav { display: flex; gap: 22px; }
+.cabecera nav a { color: var(--tinta); text-decoration: none; padding: 6px 0; }
+.cabecera nav a:hover, .cabecera nav a[aria-current] { color: var(--mascara); text-decoration: underline; }
+
+.pie { border-top: 1px solid var(--linea); margin-top: 96px; padding: 28px 0 40px; color: var(--tinta-suave); font-size: 0.95rem; }
+.pie-fila { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.pie p { margin: 0; }
+.pie-canales { display: flex; gap: 18px; flex-wrap: wrap; }
+
+/* portada */
+
+.portada { padding: 72px 0 40px; }
+.portada-titulo {
+  font-family: "Bricolage", system-ui, sans-serif;
+  font-weight: 800; font-stretch: 75%;
+  font-size: clamp(3rem, 11vw, 7.25rem);
+  line-height: 0.9; letter-spacing: -0.025em;
+  margin: 0; max-width: 11ch;
+}
+.portada-lema { font-size: clamp(1.15rem, 2.4vw, 1.4rem); max-width: 34ch; margin: 22px 0 32px; color: var(--tinta-suave); }
+
+.canales { display: flex; gap: 12px; flex-wrap: wrap; }
+.canal {
+  display: inline-flex; flex-direction: column; gap: 2px;
+  padding: 10px 16px 11px; border: 2px solid var(--mascara); border-radius: 6px;
+  color: var(--tinta); text-decoration: none; line-height: 1.25;
+}
+.canal:hover { background: var(--placa-2); }
+.canal-texto { font-weight: 700; }
+.canal-detalle { font-size: 0.88rem; color: var(--tinta-suave); }
+
+.seccion { padding-top: 40px; }
+.seccion > h2, .pagina-titulo {
+  font-family: "Bricolage", system-ui, sans-serif; font-weight: 750; font-stretch: 85%;
+  font-size: 1.9rem; letter-spacing: -0.01em; margin: 0 0 30px;
+}
+.pagina-titulo { font-size: clamp(2.2rem, 6vw, 3.4rem); line-height: 1; margin-bottom: 12px; }
+.pagina-lema { color: var(--tinta-suave); margin: 0 0 40px; max-width: 60ch; }
+.a-descargas { margin-top: 40px; }
+.vacio { color: var(--tinta-suave); }
+
+/* chips */
+
+.chips {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 44px 28px;
+}
+
+.chip, .chip-caja {
+  position: relative;
+  background: var(--chip); color: var(--chip-tinta);
+  border-radius: 7px;
+}
+.chip::before, .chip::after, .chip-caja::before, .chip-caja::after {
+  content: ""; position: absolute; left: 24px; right: 24px; height: 9px;
+  background: repeating-linear-gradient(90deg, var(--oro) 0 11px, transparent 11px 25px);
+}
+.chip::before, .chip-caja::before { top: -9px; border-radius: 2px 2px 0 0; }
+.chip::after, .chip-caja::after { bottom: -9px; border-radius: 0 0 2px 2px; }
+
+.chip-enlace {
+  position: relative; display: flex; flex-direction: column; gap: 10px; height: 100%;
+  padding: 26px 26px 22px 34px; color: inherit; text-decoration: none; border-radius: 7px;
+}
+/* muesca y punto del pin 1, como en un chip de verdad */
+.chip-enlace::before {
+  content: ""; position: absolute; left: 0; top: 50%; width: 11px; height: 24px; margin-top: -12px;
+  background: var(--placa); border-radius: 0 12px 12px 0;
+}
+.chip-enlace::after {
+  content: ""; position: absolute; left: 16px; top: 16px; width: 7px; height: 7px;
+  border-radius: 50%; background: #3a423d;
+}
+.chip-nombre {
+  font-family: "Bricolage", system-ui, sans-serif; font-weight: 750; font-stretch: 82%;
+  font-size: 1.5rem; line-height: 1.1; letter-spacing: -0.005em;
+}
+.chip-enlace:hover .chip-nombre { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.15em; }
+.chip-resumen { color: var(--chip-suave); font-size: 1rem; flex: 1; }
+.chip-estado { color: var(--oro); font-size: 0.92rem; }
+
+/* fechas, versiones y tamaños: el cero de Atkinson va tachado, aquí se usa la otra letra */
+.chip-estado, .caja-fecha, .pad-tamano, .descarga-info p, .payload-version, .proyecto-titulo .sello {
+  font-family: "Bricolage", system-ui, sans-serif; font-stretch: 92%;
+}
+
+.sello {
+  display: inline-block; vertical-align: middle;
+  font-family: "Atkinson", system-ui, sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 0;
+  background: var(--oro); color: var(--oro-tinta); padding: 2px 9px; border-radius: 999px; margin-left: 8px;
+}
+.chip .sello { align-self: flex-start; margin-left: 0; }
+
+/* pads: botones de descarga */
+
+.pads { display: flex; flex-wrap: wrap; gap: 10px; }
+.pad {
+  display: inline-flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  background: var(--oro); color: var(--oro-tinta); text-decoration: none;
+  padding: 10px 16px; border-radius: 6px; font-weight: 700; line-height: 1.3;
+}
+.pad:hover { filter: brightness(1.08); text-decoration: none; }
+.pad-tamano { font-weight: 400; font-size: 0.88rem; }
+.pad-peque { padding: 6px 12px; font-size: 0.92rem; }
+
+/* página de un proyecto */
+
+.proyecto { padding-top: 40px; }
+.migas { margin: 0 0 18px; }
+.proyecto-titulo {
+  font-family: "Bricolage", system-ui, sans-serif; font-weight: 800; font-stretch: 78%;
+  font-size: clamp(2.4rem, 7vw, 4.4rem); line-height: 0.95; letter-spacing: -0.02em; margin: 0;
+}
+.proyecto-titulo .sello { font-size: 0.95rem; }
+.proyecto-resumen { font-size: 1.25rem; color: var(--tinta-suave); max-width: 50ch; margin: 18px 0 44px; }
+
+.proyecto-rejilla {
+  display: grid; gap: 48px;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  grid-template-areas: "texto caja";
+  align-items: start;
+}
+.proyecto-rejilla .texto { grid-area: texto; min-width: 0; }
+.chip-caja { grid-area: caja; position: sticky; top: 28px; padding: 24px 24px 22px; margin: 9px 0; }
+.chip-caja a:not(.pad) { color: var(--chip-tinta); }
+.caja-titulo { font-family: "Bricolage", system-ui, sans-serif; font-weight: 750; font-stretch: 85%; font-size: 1.3rem; margin: 0 0 12px; }
+.caja-version { font-family: "Bricolage", system-ui, sans-serif; font-size: 1.7rem; font-weight: 700; margin: 0; line-height: 1.1; }
+.caja-fecha { color: var(--chip-suave); margin: 4px 0 16px; font-size: 0.95rem; }
+.chip-caja .pads { flex-direction: column; margin-bottom: 14px; }
+.chip-caja .pad { justify-content: space-between; }
+.caja-mas, .caja-video { margin: 8px 0 0; font-size: 0.95rem; }
+.caja-video a { font-weight: 700; }
+
+@media (max-width: 860px) {
+  .proyecto-rejilla { grid-template-columns: 1fr; grid-template-areas: "caja" "texto"; gap: 40px; }
+  .chip-caja { position: relative; top: auto; }
+}
+
+/* texto del README */
+
+.texto { max-width: 72ch; }
+.texto > :first-child { margin-top: 0; }
+.texto h2, .texto h3, .texto h4 {
+  font-family: "Bricolage", system-ui, sans-serif; font-stretch: 88%; line-height: 1.2; scroll-margin-top: 16px;
+}
+.texto h2 { font-size: 1.65rem; font-weight: 750; margin: 2.2em 0 0.6em; }
+.texto h3 { font-size: 1.25rem; font-weight: 700; margin: 1.8em 0 0.5em; }
+.texto h4 { font-size: 1.05rem; font-weight: 700; margin: 1.5em 0 0.4em; }
+.texto li + li { margin-top: 0.3em; }
+.texto img { max-width: 100%; height: auto; border-radius: 6px; }
+.texto code {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 0.9em;
+  background: var(--codigo); padding: 0.1em 0.35em; border-radius: 4px; overflow-wrap: anywhere;
+}
+.texto pre { background: var(--codigo); padding: 16px 18px; border-radius: 6px; overflow-x: auto; line-height: 1.45; }
+.texto pre code { background: none; padding: 0; overflow-wrap: normal; }
+.texto blockquote { margin: 1.4em 0; padding: 2px 0 2px 18px; border-left: 4px solid var(--mascara); color: var(--tinta-suave); }
+.texto table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; font-size: 0.95rem; }
+.texto th, .texto td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--linea); vertical-align: top; }
+.texto th { border-bottom-width: 2px; }
+.texto hr { border: 0; border-top: 1px solid var(--linea); margin: 2.5em 0; }
+
+.novedades { margin-top: 3em; padding-top: 0.5em; border-top: 2px solid var(--linea); }
+
+/* catálogo de payloads */
+
+.copiar code { font-size: 0.95rem; padding: 6px 10px; display: inline-block; }
+.payloads { list-style: none; padding: 0; margin: 0 0 1.5em; display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); }
+.payloads .payload { margin: 0; border: 1px solid var(--linea); border-radius: 6px; padding: 14px 16px; display: flex; flex-direction: column; }
+.payload p { margin: 0; }
+.payload-nombre { font-weight: 700; }
+.payload-version { font-weight: 400; color: var(--tinta-suave); }
+.payload-autor { display: block; font-weight: 400; font-size: 0.9rem; color: var(--tinta-suave); }
+.payload-desc { font-size: 0.95rem; margin: 8px 0 12px !important; flex: 1; }
+.payload-enlaces { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; font-size: 0.92rem; }
+
+/* página de descargas */
+
+.descargas { list-style: none; margin: 0; padding: 0; }
+.descarga {
+  display: flex; justify-content: space-between; align-items: center; gap: 20px 32px; flex-wrap: wrap;
+  padding: 24px 0; border-top: 1px solid var(--linea);
+}
+.descarga:last-child { border-bottom: 1px solid var(--linea); }
+.descarga h2 { font-family: "Bricolage", system-ui, sans-serif; font-weight: 750; font-stretch: 85%; font-size: 1.4rem; margin: 0; }
+.descarga h2 a { color: var(--tinta); }
+.descarga-info p { margin: 4px 0 0; color: var(--tinta-suave); }
+
+@media (max-width: 560px) {
+  .portada { padding-top: 48px; }
+  .cabecera nav { gap: 16px; }
+  .chip-enlace { padding: 24px 20px 20px 30px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; transition: none !important; }
+}

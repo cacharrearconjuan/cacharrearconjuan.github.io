@@ -1,0 +1,227 @@
+{
+ "/users/cacharrearconjuan/repos?type=owner&sort=created&direction=desc&per_page=100&page=1": [
+  {
+   "name": "lanzador-scrcpy",
+   "html_url": "https://github.com/cacharrearconjuan/lanzador-scrcpy",
+   "private": false,
+   "fork": false,
+   "archived": false,
+   "default_branch": "main",
+   "created_at": "2026-10-29T09:12:00Z",
+   "pushed_at": "2026-10-29T13:40:00Z",
+   "updated_at": "2026-10-29T13:40:00Z",
+   "description": null,
+   "topics": [],
+   "language": "Batchfile",
+   "stargazers_count": 0
+  },
+  {
+   "name": "prueba-nueva",
+   "html_url": "https://github.com/cacharrearconjuan/prueba-nueva",
+   "private": false,
+   "fork": false,
+   "archived": false,
+   "default_branch": "main",
+   "created_at": "2026-10-27T18:00:00Z",
+   "pushed_at": "2026-10-27T18:05:00Z",
+   "updated_at": "2026-10-27T18:05:00Z",
+   "description": "Repositorio de prueba con <html> & enlaces raros",
+   "topics": [],
+   "language": null,
+   "stargazers_count": 0
+  },
+  {
+   "name": "PS5-AutoupdaterPM",
+   "html_url": "https://github.com/cacharrearconjuan/PS5-AutoupdaterPM",
+   "private": false,
+   "fork": false,
+   "archived": false,
+   "default_branch": "main",
+   "created_at": "2026-10-05T10:00:00Z",
+   "pushed_at": "2026-10-26T20:00:00Z",
+   "updated_at": "2026-10-26T20:00:00Z",
+   "description": null,
+   "topics": [],
+   "language": "C",
+   "stargazers_count": 3
+  },
+  {
+   "name": "cacharrearconjuan.github.io",
+   "html_url": "https://github.com/cacharrearconjuan/cacharrearconjuan.github.io",
+   "private": false,
+   "fork": false,
+   "archived": false,
+   "default_branch": "main",
+   "created_at": "2026-10-29T15:00:00Z",
+   "pushed_at": "2026-10-29T15:00:00Z",
+   "updated_at": "2026-10-29T15:00:00Z",
+   "description": null,
+   "topics": [],
+   "language": null,
+   "stargazers_count": 0
+  },
+  {
+   "name": "un-fork",
+   "html_url": "https://github.com/cacharrearconjuan/un-fork",
+   "private": false,
+   "fork": true,
+   "archived": false,
+   "default_branch": "main",
+   "created_at": "2026-10-01T10:00:00Z",
+   "pushed_at": "2026-10-01T10:00:00Z",
+   "updated_at": "2026-10-01T10:00:00Z",
+   "description": null,
+   "topics": [],
+   "language": null,
+   "stargazers_count": 0
+  },
+  {
+   "name": "archivado",
+   "html_url": "https://github.com/cacharrearconjuan/archivado",
+   "private": false,
+   "fork": false,
+   "archived": true,
+   "default_branch": "main",
+   "created_at": "2026-08-01T10:00:00Z",
+   "pushed_at": "2026-08-01T10:00:00Z",
+   "updated_at": "2026-08-01T10:00:00Z",
+   "description": null,
+   "topics": [],
+   "language": null,
+   "stargazers_count": 0
+  },
+  {
+   "name": "oculto-por-tema",
+   "html_url": "https://github.com/cacharrearconjuan/oculto-por-tema",
+   "private": false,
+   "fork": false,
+   "archived": false,
+   "default_branch": "main",
+   "created_at": "2026-08-01T10:00:00Z",
+   "pushed_at": "2026-08-01T10:00:00Z",
+   "updated_at": "2026-08-01T10:00:00Z",
+   "description": null,
+   "topics": [
+    "no-web"
+   ],
+   "language": null,
+   "stargazers_count": 0
+  },
+  {
+   "name": "mis-payloads-ps5",
+   "html_url": "https://github.com/cacharrearconjuan/mis-payloads-ps5",
+   "private": false,
+   "fork": false,
+   "archived": false,
+   "default_branch": "main",
+   "created_at": "2026-09-20T10:00:00Z",
+   "pushed_at": "2026-10-29T14:55:00Z",
+   "updated_at": "2026-10-29T14:55:00Z",
+   "description": null,
+   "topics": [],
+   "language": "Python",
+   "stargazers_count": 0
+  }
+ ],
+ "/repos/cacharrearconjuan/lanzador-scrcpy/readme": {
+  "path": "README.md",
+  "content": "IyBMYW56YWRvciBkZSBzY3JjcHkKClVuIHNvbG8gYXJjaGl2byBgLmJhdGAgcGFyYSB2ZXIgeSBtYW5lamFyIGRlc2RlIGVsIFBDIHR1ICoqRmlyZSBUViwgQW5kcm9pZCBUViwgVFYgYm94IG8gbcOzdmlsIEFuZHJvaWQqKiBwb3IgbGEgcmVkLCBjb24gW3NjcmNweV0oaHR0cHM6Ly9naXRodWIuY29tL0dlbnltb2JpbGUvc2NyY3B5KS4KClRlIGVuY2FyZ2FzIHNvbG8gZGUgZXNjcmliaXIgbGEgSVAuIExvIGRlbcOhcyBsbyBoYWNlIMOpbDoKCi0gKipJbnN0YWxhIHNjcmNweSoqIHNpIG5vIGxvIHRpZW5lcy4KLSAqKkxvIG1hbnRpZW5lIGFsIGTDrWEqKjogY2FkYSB2ZXogcXVlIGxvIGFicmVzIGNvbXBydWViYSBzaSBoYXkgdmVyc2nDs24gbnVldmEgeSBsYSBpbnN0YWxhLgotICoqQ29uZWN0YSBwb3IgQURCKiogeSBhYnJlIHNjcmNweS4KCiMjIERlc2NhcmdhCgpWZSBhICoqW1JlbGVhc2VzXSguLi8uLi9yZWxlYXNlcy9sYXRlc3QpKiogeSBkZXNjYXJnYSAqKmBMYW56YWRvci1zY3JjcHkuYmF0YCoqLgoKPiBBbCB2ZW5pciBkZSBJbnRlcm5ldCwgbGEgcHJpbWVyYSB2ZXogV2luZG93cyBwdWVkZSBkZWNpciAqKsKrV2luZG93cyBwcm90ZWdpw7Mgc3UgUEPCuyoqLiBQdWxzYSAqKk3DoXMgaW5mb3JtYWNpw7NuIOKGkiBFamVjdXRhciBkZSB0b2RhcyBmb3JtYXMqKi4KPiBUYW1iacOpbiBwdWVkZXMgaGFjZXIgY2xpYyBkZXJlY2hvIGVuIGVsIGFyY2hpdm8g4oaSICoqUHJvcGllZGFkZXMqKiDihpIgbWFyY2FyICoqRGVzYmxvcXVlYXIqKiDihpIgKipBY2VwdGFyKiouCgojIyBSZXF1aXNpdG9zCgotICoqV2luZG93cyAxMCB1IDExLioqIFVzYSBQb3dlclNoZWxsLCBxdWUgeWEgdmllbmUgY29uIFdpbmRvd3M7IG5vIGhheSBxdWUgaW5zdGFsYXIgbmFkYSBtw6FzLgotIEVsIFBDIHkgZWwgZGlzcG9zaXRpdm8sICoqZW4gbGEgbWlzbWEgcmVkKiouCi0gRW4gZWwgZGlzcG9zaXRpdm8sICoqbGEgZGVwdXJhY2nDs24gQURCIGFjdGl2YWRhKiogKHZlciBtw6FzIGFiYWpvKS4KCiMjIFVzbwoKMS4gSGF6IGRvYmxlIGNsaWMgZW4gYExhbnphZG9yLXNjcmNweS5iYXRgLgoyLiBFc2NyaWJlIGxhIElQIGRlbCBkaXNwb3NpdGl2byAqKnNpbiBwdW50b3MqKiwgcXVlIGxvcyBwb25lIGVsIGxhbnphZG9yOgogICAtIFNpIHVuIG7Dum1lcm8gdGllbmUgKiozIGNpZnJhcyoqLCBlbCBwdW50byBzYWxlIHNvbG8uCiAgIC0gU2kgdGllbmUgKioxIG8gMiBjaWZyYXMqKiAoY29tbyBgMGAgbyBgMTBgKSwgcHVsc2EgKipFbnRlcioqIHBhcmEgcGFzYXIgYWwgc2lndWllbnRlLgoKICAgfCBFc2NyaWJlcyB8IFF1ZWRhIHwKICAgfC0tLXwtLS18CiAgIHwgYDE5MmAgYDE2OGAgYDFgICoqRW50ZXIqKiBgMjVgICoqRW50ZXIqKiB8IGAxOTIuMTY4LjEuMjVgIHwKICAgfCBgMTBgICoqRW50ZXIqKiBgMGAgKipFbnRlcioqIGAwYCAqKkVudGVyKiogYDVgICoqRW50ZXIqKiB8IGAxMC4wLjAuNWAgfAoKICAgU2kgZXNjcmliZXMgbG9zIHB1bnRvcyBwb3IgY29zdHVtYnJlLCB0YW1iacOpbiB2YWxlLiAqKlJldHJvY2VzbyoqIGJvcnJhICh0YW1iacOpbiBsb3MgcHVudG9zKSB5ICoqRXNjKiogZW1waWV6YSBkZSBudWV2by4KMy4gTGEgcHJpbWVyYSB2ZXosIGVsIGRpc3Bvc2l0aXZvIHRlIHBlZGlyw6EgcGVybWlzbzogYWNlcHRhICoqwqtQZXJtaXRpciBsYSBkZXB1cmFjacOzbsK7KiogeSBtYXJjYSAqKsKrUGVybWl0aXIgc2llbXByZSBkZXNkZSBlc3RlIG9yZGVuYWRvcsK7KiouCjQuIFNlIGFicmUgc2NyY3B5IHkgeWEgcHVlZGVzIG1hbmVqYXIgZWwgZGlzcG9zaXRpdm8gY29uIGVsIHJhdMOzbiB5IGVsIHRlY2xhZG8uCgpMYSBwcsOzeGltYSB2ZXosICoqRW50ZXIgc2luIGVzY3JpYmlyIG5hZGEqKiB2dWVsdmUgYSB1c2FyIGxhIMO6bHRpbWEgSVAuCgo+ICoqwr9Qb3IgcXXDqSBubyBzZSBwdWVkZSBlc2NyaWJpciBsYSBJUCBzaW4gbmluZ8O6biBwdW50bz8qKiBQb3JxdWUgc2Vyw61hIGFtYmlndW86IGAxOTIxNjgxMTAwYCBwdWVkZSBzZXIgYDE5Mi4xNjguMS4xMDBgIG8gYDE5Mi4xNjguMTEwLjBgLiBDb24gbGEgcmVnbGEgZGUgbGFzIDMgY2lmcmFzIHNvbG8gaGF5IHF1ZSBwdWxzYXIgRW50ZXIgZW4gbG9zIG7Dum1lcm9zIGNvcnRvcy4KCiMjIEFjdGl2YXIgbGEgZGVwdXJhY2nDs24gQURCCgojIyMgRmlyZSBUVgoKMS4gKipBanVzdGVzIOKGkiBNaSBGaXJlIFRWIOKGkiBBY2VyY2EgZGUqKiB5IHB1bHNhIDcgdmVjZXMgc29icmUgZWwgbm9tYnJlIGRlbCBkaXNwb3NpdGl2byBoYXN0YSBxdWUgYXBhcmV6Y2FuIGxhcyBvcGNpb25lcyBwYXJhIGRlc2Fycm9sbGFkb3Jlcy4KMi4gKipBanVzdGVzIOKGkiBNaSBGaXJlIFRWIOKGkiBPcGNpb25lcyBwYXJhIGRlc2Fycm9sbGFkb3JlcyDihpIgRGVwdXJhY2nDs24gQURCOiBhY3RpdmFkYS4qKgozLiBMYSBJUCBlc3TDoSBlbiAqKkFqdXN0ZXMg4oaSIE1pIEZpcmUgVFYg4oaSIEFjZXJjYSBkZSDihpIgUmVkKiouCgojIyMgQW5kcm9pZCBUViwgR29vZ2xlIFRWIHkgVFYgYm94CgoxLiAqKkFqdXN0ZXMg4oaSIFNpc3RlbWEg4oaSIEluZm9ybWFjacOzbioqIHkgcHVsc2EgNyB2ZWNlcyBzb2JyZSAqKkNvbXBpbGFjacOzbioqLgoyLiBFbiAqKk9wY2lvbmVzIHBhcmEgZGVzYXJyb2xsYWRvcmVzKiosIGFjdGl2YSAqKkRlcHVyYWNpw7NuIFVTQioqIHksIHNpIGFwYXJlY2UsICoqRGVwdXJhY2nDs24gcG9yIHJlZCoqIG8gKipBREIgcG9yIHJlZCoqLgozLiBMYSBJUCBlc3TDoSBlbiBsb3MgYWp1c3RlcyBkZSByZWQgbyBXaS1GaS4KCkxvcyBub21icmVzIGRlIGxvcyBtZW7DunMgY2FtYmlhbiBzZWfDum4gbGEgbWFyY2EuCgojIyMgTcOzdmlsZXMgQW5kcm9pZAoKRWwgbGFuemFkb3IgY29uZWN0YSBwb3IgZWwgcHVlcnRvICoqNTU1NSoqLCBlbCBkZSBzaWVtcHJlIGVuIHRlbGVzIHkgVFYgYm94LiBFbiBsb3MgbcOzdmlsZXMsIGxhIMKrZGVwdXJhY2nDs24gaW5hbMOhbWJyaWNhwrsgZGUgQW5kcm9pZCAxMSBvIHN1cGVyaW9yIHVzYSBvdHJvIHB1ZXJ0bywgcXVlIGFkZW3DoXMgY2FtYmlhLiBQYXJhIHVzYXIgZWwgbGFuemFkb3IgY29uIHVuIG3Ds3ZpbDoKCjEuIEFjdGl2YSAqKk9wY2lvbmVzIHBhcmEgZGVzYXJyb2xsYWRvcmVzIOKGkiBEZXB1cmFjacOzbiBVU0IqKiB5IGNvbmVjdGEgZWwgbcOzdmlsIGFsIFBDIHBvciBjYWJsZS4KMi4gQWJyZSB1bmEgdmVudGFuYSBkZSBjb21hbmRvcyBlbiBsYSBjYXJwZXRhIGRlIHNjcmNweSAocG9yIGVqZW1wbG8gYEM6XHNjcmNweS13aW42NC12NS4wLjFgKSB5IGVzY3JpYmUgYGFkYiB0Y3BpcCA1NTU1YC4KMy4gRGVzY29uZWN0YSBlbCBjYWJsZSB5IHVzYSBlbCBsYW56YWRvciBjb24gbGEgSVAgZGVsIG3Ds3ZpbC4gQWwgcmVpbmljaWFyIGVsIG3Ds3ZpbCBoYXkgcXVlIHJlcGV0aXJsby4KCiMjIFF1w6kgaW5zdGFsYSB5IGTDs25kZQoKLSAqKnNjcmNweToqKiBsbyBkZXNjYXJnYSBkZSBsYXMgW3JlbGVhc2VzIG9maWNpYWxlc10oaHR0cHM6Ly9naXRodWIuY29tL0dlbnltb2JpbGUvc2NyY3B5L3JlbGVhc2VzKSBlbiBgJVRFTVAlYCB5IGxvIGRlamEgZW4gYEM6XHNjcmNweS13aW42NC12WC5ZLlpgLgogIC0gVXNhIGxhIHZlcnNpw7NuIGRlIFdpbmRvd3MgcXVlIGNvcnJlc3BvbmRlOiA2NCBiaXRzLCAzMiBiaXRzIG8gQVJNNjQuCiAgLSBBbnRlcyBkZSBpbnN0YWxhciwgKipjb21wcnVlYmEgbGEgc3VtYSBTSEEtMjU2KiogcHVibGljYWRhIHBvciBzY3JjcHkuIFNpIG5vIGNvaW5jaWRlLCBubyBpbnN0YWxhIG5hZGEuCi0gKipBbCBhY3R1YWxpemFyOioqIHByaW1lcm8gZGVzY2FyZ2EgbGEgdmVyc2nDs24gbnVldmEuIFNvbG8gZGVzcHXDqXMgcmVub21icmEgbGEgYW50ZXJpb3IgYSBgb2xkX3NjcmNweS13aW42NC124oCmYCB5IHBvbmUgbGEgbnVldmEgZW4gc3Ugc2l0aW8uIFNpIGZhbGxhIGxhIGRlc2NhcmdhLCB0ZSBxdWVkYXMgY29uIGxhIHF1ZSB0ZW7DrWFzLgogIC0gTGFzIGNhcnBldGFzIGBvbGRf4oCmYCBzZSBwdWVkZW4gYm9ycmFyIGN1YW5kbyBxdWllcmFzLgotICoqVW5hIGNvcGlhIGRlbCBsYW56YWRvcjoqKiBsbyBkZWphIGRlbnRybyBkZSBsYSBjYXJwZXRhIGRlIHNjcmNweSBxdWUgdXNhLgotICoqTGEgw7psdGltYSBJUDoqKiBzZSBndWFyZGEgZW4gYCVMT0NBTEFQUERBVEElXExhbnphZG9yU2NyY3B5XHVsdGltYV9pcC50eHRgLgoKU2kgZW4gYEM6XGAgaGF5IHZhcmlhcyBjYXJwZXRhcyBxdWUgZW1waWV6YW4gcG9yIGBzY3JjcHlgLCB1c2EgbGEgZGUgdmVyc2nDs24gbcOhcyBhbHRhLgoKIyMgQWp1c3RlcwoKQWwgcHJpbmNpcGlvIGRlbCBgLmJhdGAgaGF5IHVuIGFwYXJ0YWRvICoqQUpVU1RFUyoqLiDDgWJyZWxvIGNvbiBlbCBCbG9jIGRlIG5vdGFzOgoKfCBBanVzdGUgfCBQb3IgZGVmZWN0byB8IFBhcmEgcXXDqSB8CnwtLS18LS0tfC0tLXwKfCBgJFJlZEZpamFgIHwgYCcnYCB8IFBhcnRlIGZpamEgZGUgbGEgSVAuIENvbiBgJzE5Mi4xNjguMSdgIHNvbG8gdGVuZHLDoXMgcXVlIGVzY3JpYmlyIGVsIGZpbmFsLiB8CnwgYCRQdWVydG9gIHwgYDU1NTVgIHwgUHVlcnRvIEFEQiBkZWwgZGlzcG9zaXRpdm8uIHwKfCBgJE9wY2lvbmVzYCB8IGAtLXZpZGVvLWJpdC1yYXRlPTJNIC0tbWF4LXNpemU9MTAyNCAtLW5vLWF1ZGlvYCB8IE9wY2lvbmVzIGRlIHNjcmNweSAoW2xpc3RhIGNvbXBsZXRhXShodHRwczovL2dpdGh1Yi5jb20vR2VueW1vYmlsZS9zY3JjcHkjdXNlci1kb2N1bWVudGF0aW9uKSkuIHwKfCBgJEJ1c2NhckVuYCAvIGAkUHJlZmlqb2AgfCBgQzpcYCAvIGBzY3JjcHlgIHwgRMOzbmRlIGJ1c2NhIGUgaW5zdGFsYSBzY3JjcHkuIHwKfCBgJEFjdHVhbGl6YXJgIHwgYCR0cnVlYCB8IENvbiBgJGZhbHNlYCBubyBjb25zdWx0YSBHaXRIdWIgYWwgYXJyYW5jYXIuIHwKfCBgJENvcnJlZ2lyVmFyaWFibGVBREJgIHwgYCRmYWxzZWAgfCBDb24gYCR0cnVlYCwgc2kgV2luZG93cyB0aWVuZSB1bmEgdmFyaWFibGUgYEFEQmAgcXVlIGFwdW50YSBhIG90cmEgY2FycGV0YSwgbGEgY29ycmlnZSBwYXJhIHNpZW1wcmUuIHwKfCBgJENvcGlhckFMYUNhcnBldGFgIHwgYCR0cnVlYCB8IENvcGlhIGVsIGxhbnphZG9yIGRlbnRybyBkZSBsYSBjYXJwZXRhIGRlIHNjcmNweS4gfAoKIyMgUHJvYmxlbWFzIGZyZWN1ZW50ZXMKCioqwqtObyBzZSBoYSBwb2RpZG8gY29uZWN0YXLCuy4qKiBDb21wcnVlYmEgcXVlIGVsIGRpc3Bvc2l0aXZvIGVzdMOhIGVuY2VuZGlkbywgZW4gbGEgbWlzbWEgcmVkIHkgY29uIGxhIGRlcHVyYWNpw7NuIEFEQiBhY3RpdmFkYSwgeSBxdWUgbGEgSVAgbm8gaGEgY2FtYmlhZG8uIEVsIGxhbnphZG9yIGVuc2XDsWEgbGEgcmVzcHVlc3RhIGRlIGFkYiB5IHRlIGRlamEgcmVpbnRlbnRhciBvIGNhbWJpYXIgbGEgSVAuCgoqKkxhIGNvbmV4acOzbiBzZSBxdWVkYSBlbiDCq3VuYXV0aG9yaXplZMK7LioqIEVsIGRpc3Bvc2l0aXZvIGVzdMOhIGVzcGVyYW5kbyBhIHF1ZSBhY2VwdGVzIGVsIHBlcm1pc28gZW4gc3UgcGFudGFsbGEuIFNpIG5vIGFwYXJlY2UgZWwgYXZpc28sIGVsIGxhbnphZG9yIHJlY29uZWN0YSBwYXJhIHF1ZSBzYWxnYSBvdHJhIHZlei4KCioqYENyZWF0ZVByb2Nlc3NXKCkgZXJyb3IgMmAgbyDCq0NvbW1hbmQgbm90IGZvdW5kIOKApiBhZGIuZXhlwrsuKiogV2luZG93cyB0aWVuZSB1bmEgdmFyaWFibGUgYEFEQmAgcXVlIGFwdW50YSBhIHVuYSBjYXJwZXRhIGRlIHNjcmNweSBxdWUgeWEgbm8gZXhpc3RlLiBFbCBsYW56YWRvciBsYSBjb3JyaWdlIG1pZW50cmFzIGVzdMOhIGFiaWVydG8uIFBhcmEgYXJyZWdsYXJsYSBwYXJhIHNpZW1wcmUsIHBvbiBgJENvcnJlZ2lyVmFyaWFibGVBREIgPSAkdHJ1ZWAuCgoqKkxhIGltYWdlbiBzYWxlIG5lZ3JhLCBhIHRyb3pvcyBvIGNvbiB0aXJvbmVzLioqIERlc2RlIGxhIHZlcnNpw7NuIDUuMCwgc2NyY3B5IGRlY29kaWZpY2EgZWwgdsOtZGVvIHBvciBoYXJkd2FyZS4gQcOxYWRlIGAnLS1od2RlYz1kaXNhYmxlZCdgIGEgYCRPcGNpb25lc2AuCgoqKsKrTm8gaGUgcG9kaWRvIGNvbXByb2JhciBzaSBoYXkgdmVyc2nDs24gbnVldmHCuy4qKiBObyBoYWLDrWEgSW50ZXJuZXQgbyBHaXRIdWIgbm8gcmVzcG9uZGnDsy4gRWwgbGFuemFkb3Igc2lndWUgY29uIGxhIHZlcnNpw7NuIHF1ZSB0aWVuZXMuCgojIyBEZXNpbnN0YWxhcgoKQm9ycmEgbGFzIGNhcnBldGFzIGBDOlxzY3JjcHktd2luNjQt4oCmYCB5IGBDOlxvbGRfc2NyY3B5LeKApmAsIHkgdGFtYmnDqW4gYCVMT0NBTEFQUERBVEElXExhbnphZG9yU2NyY3B5YC4KCiMjIFByaXZhY2lkYWQKCkVsIGxhbnphZG9yIHNvbG8gc2UgY29uZWN0YSBhIEdpdEh1YiBwYXJhIGNvbnN1bHRhciB5IGRlc2NhcmdhciBzY3JjcHksIHkgYSB0dSBkaXNwb3NpdGl2byBwb3IgQURCLiBObyBlbnbDrWEgbmFkYSBhIG5pbmfDum4gb3RybyBzaXRpby4gTGEgw7psdGltYSBJUCBzZSBxdWVkYSBlbiB0dSBQQy4KCiMjIENyw6lkaXRvcyB5IGxpY2VuY2lhCgotIFtzY3JjcHldKGh0dHBzOi8vZ2l0aHViLmNvbS9HZW55bW9iaWxlL3NjcmNweSkgZXMgZGUgR2VueW1vYmlsZSB5IHNlIGRpc3RyaWJ1eWUgY29uIGxpY2VuY2lhIEFwYWNoZSAyLjAuIEVzdGUgcHJveWVjdG8gbm8gZXN0w6EgcmVsYWNpb25hZG8gY29uIGVsbG9zIHkgbm8gaW5jbHV5ZSBzY3JjcHk6IGxvIGRlc2NhcmdhIGRlIHN1cyByZWxlYXNlcyBvZmljaWFsZXMuCi0gRWwgbGFuemFkb3Igc2UgcHVibGljYSBjb24gbGljZW5jaWEgW01JVF0oTElDRU5TRSkuCgojIyBQYXJhIHF1aWVuIG1hbnRpZW5lIGVsIHJlcG9zaXRvcmlvCgotICoqRWwgY8OzZGlnbzoqKiBgTGFuemFkb3Itc2NyY3B5LmJhdGAgZXMgdW4gYXJjaGl2byBow61icmlkby4gTGFzIHByaW1lcmFzIGzDrW5lYXMgc29uIGRlIGBjbWRgIHkgYXJyYW5jYW4gUG93ZXJTaGVsbCBjb24gZWwgcmVzdG8gZGVsIG1pc21vIGFyY2hpdm8uIFRpZW5lIHF1ZSBpciAqKmVuIEFTQ0lJIHkgY29uIGZpbmFsZXMgZGUgbMOtbmVhIENSTEYqKjsgZWwgYC5naXRhdHRyaWJ1dGVzYCBldml0YSBxdWUgR2l0IGxvcyBjYW1iaWUuCi0gKipMYXMgcHJ1ZWJhczoqKiBgdGVzdHMvY29tcHJvYmFyLnBzMWAgY29tcHJ1ZWJhIGVsIGZvcm1hdG8sIGxhIHNpbnRheGlzIHkgbGEgbGVjdHVyYSBkZSBsYSBJUCBjb24gdGVjbGFzIHNpbXVsYWRhcy4gU2UgZWplY3V0YW4gZW4gY2FkYSBwdXNoICh3b3JrZmxvdyAqKlBydWViYXMqKikuCi0gKipQdWJsaWNhciB1bmEgdmVyc2nDs246KioKICAxLiBFbnRyYSBlbiAqKkFjdGlvbnMg4oaSIFB1YmxpY2FyIHZlcnNpb24g4oaSIFJ1biB3b3JrZmxvdyoqIHkgZWxpZ2UgcXXDqSBuw7ptZXJvIHN1YmU6IGBtaW5vcmAgKDEuMC4wIOKGkiAxLjEuMCksIGBwYXRjaGAgKDEuMC4wIOKGkiAxLjAuMSkgbyBgbWFqb3JgICgxLjAuMCDihpIgMi4wLjApLgogIDIuIEVsIHdvcmtmbG93IHBhc2EgbGFzIHBydWViYXMsIHBvbmUgZWwgbsO6bWVybyBkZSB2ZXJzacOzbiBlbiBlbCBgLmJhdGAsIGNhbGN1bGEgZWwgU0hBLTI1NiB5IGNyZWEgbGEgcmVsZWFzZSBjb24gZWwgYC5iYXRgIHkgYFNIQTI1NlNVTVMudHh0YC4KICAzLiBMYSBwcmltZXJhIHZleiBzYWxlIGxhIGB2MS4wLjBgLgo="
+ },
+ "/repos/cacharrearconjuan/PS5-AutoupdaterPM/readme": {
+  "path": "README.md",
+  "content": "IyBQUzUtQXV0b3VwZGF0ZXJQTQoKUGF5bG9hZCBwYXJhIFBTNSBxdWUgZGVzY2FyZ2EgbGEgw7psdGltYSB2ZXJzacOzbiBkZSAqKltQUzUgUGF5bG9hZCBNYW5hZ2VyXShodHRwczovL2dpdGh1Yi5jb20vaXRzUExLL3BzNS1wYXlsb2FkLW1hbmFnZXIpKiogeSBsYSBkZWphIGluc3RhbGFkYSBlbiBgL2RhdGEvcHM1X2F1dG9sb2FkZXJgLCBwYXJhIHF1ZSBlbCBhdXRvbG9hZGVyIGxhIGNhcmd1ZSBlbiBlbCBzaWd1aWVudGUgYXJyYW5xdWUuCgojIyBRdcOpIGhhY2UKCkNhZGEgdmV6IHF1ZSBzZSBlamVjdXRhOgoKMC4gKipETlMgbG9jYWwgcHJpbWVyby4qKiBTaSBubyByZXNwb25kZSBuaW5nw7puIEROUyBlbiBgMTI3LjAuMC4xOjUzYCB5IGhheSB1biAqKnBlcGVkbnMqKiBvIHVuICoqbmFub0ROUyoqIGVuIGAvZGF0YS9wbGRtZ3JgIChvIHN1cyBzdWJjYXJwZXRhcykgbyBlbiBgL2RhdGEvcHM1X2F1dG9sb2FkZXJgLCBsbyBsYW56YSBwb3IgZWxmbGRyIHkgZXNwZXJhIGhhc3RhIDIwIHNlZ3VuZG9zIGEgcXVlIHJlc3BvbmRhLiBDb24gZWwgRE5TIGRlIGxhIGNvbnNvbGEgZW4gYDEyNy4wLjAuMWAsIHNpbiDDqWwgbm8gaGF5IGludGVybmV0LiBQcmVmaWVyZSBwZXBlZG5zOyBzaSBoYXkgdmFyaWFzIHZlcnNpb25lcywgbGEgbcOhcyByZWNpZW50ZS4KMS4gQ3JlYSBgL2RhdGEvcHM1X2F1dG9sb2FkZXJgIHNpIG5vIGV4aXN0ZS4KMi4gTGVlIGVsIHJlcG9zaXRvcmlvIGRlIHBheWxvYWRzIFtgcGF5bG9hZHMuanNvbmBdKGh0dHBzOi8vY2FjaGFycmVhcmNvbmp1YW4uZ2l0aHViLmlvL21pcy1wYXlsb2Fkcy1wczUvcGF5bG9hZHMuanNvbikgeSBidXNjYSBsYSBlbnRyYWRhIGBwbGRtZ3JgLgozLiBTaSBlbCBgcGxkbWdyLmVsZmAgaW5zdGFsYWRvIHlhIHRpZW5lIGVsIG1pc21vIFNIQS0yNTYgcXVlIGVsIGBjaGVja3N1bWAgZGVsIEpTT04sIG5vIGRlc2NhcmdhIG5hZGE6IGF2aXNhIGRlIHF1ZSBlc3TDoSBhbCBkw61hLgo0LiBTaSBoYXkgdmVyc2nDs24gbnVldmEsIGxhIGRlc2NhcmdhIGEgdW4gZmljaGVybyB0ZW1wb3JhbCwgY29tcHJ1ZWJhIHF1ZSBlcyB1biBFTEYgeSBxdWUgc3UgKipTSEEtMjU2IGNvaW5jaWRlKiosIHkgc29sbyBlbnRvbmNlcyBsYSByZW5vbWJyYSBhIGBwbGRtZ3IuZWxmYC4gU2kgYWxnbyBmYWxsYSwgbGEgdmVyc2nDs24gYW50ZXJpb3Igc2UgcXVlZGEgaW50YWN0YS4KNS4gYGF1dG9sb2FkLnR4dGA6IHNpIG5vIGV4aXN0ZSwgbG8gY3JlYSBjb24gYCEzMDAwYCB5IGBwbGRtZ3IuZWxmYDsgc2kgZXhpc3RlLCAqKnJlc3BldGEgbG8gcXVlIGhheWEqKiB5IHNvbG8gYcOxYWRlIGBwbGRtZ3IuZWxmYCBhbCBmaW5hbCBzaSBmYWx0YS4KNi4gUG9uZSBhbCBkw61hIHN1IHByb3BpYSBjb3BpYSBjb24gbGEgdmVyc2nDs24gZGVsIHJlcG9zaXRvcmlvIChlbnRyYWRhIGBwczUtYXV0b3VwZGF0ZXJwbWApOgogICAtICoqc2kgbG8gaW5zdGFsYXN0ZSBkZXNkZSBQYXlsb2FkIE1hbmFnZXIqKiwgYWN0dWFsaXphIGVzYSBjb3BpYSAoYC9kYXRhL3BsZG1nci9wYXlsb2Fkcy9yZXBvL3BzNS1hdXRvdXBkYXRlcnBtQOKApi9gKSB5IHN1IGBtZXRhLmpzb25gLCBwYXJhIHF1ZSBQYXlsb2FkIE1hbmFnZXIgZW5zZcOxZSBsYSB2ZXJzacOzbiBudWV2YSwgeSBib3JyYSBsYSBjb3BpYSBzdWVsdGEgYC9kYXRhL3BsZG1nci9QUzUtQXV0b3VwZGF0ZXJQTS5lbGZgIHNpIGxhIGhheTsKICAgLSBzaSBubywgdXNhIGAvZGF0YS9wbGRtZ3IvUFM1LUF1dG91cGRhdGVyUE0uZWxmYC4KCioqTm8gYXJyYW5jYSBzb2xvLioqIFNpIHVuYSB2ZXJzacOzbiBhbnRlcmlvciBzZSBoYWLDrWEgYcOxYWRpZG8gYSBgYXV0b2xvYWQudHh0YCwgcXVpdGEgZXNhIGzDrW5lYSB5IGJvcnJhIHN1IGNvcGlhIGRlIGAvZGF0YS9wczVfYXV0b2xvYWRlcmAuCgpTaSBsYSBkZXNjYXJnYSBmYWxsYSwgbGEgbm90aWZpY2FjacOzbiBkaWNlIHBvciBxdcOpOiBmYWx0YSBkZSBETlMsIHNpbiBjb25leGnDs24sIGNlcnRpZmljYWRvIChmZWNoYSB5IGhvcmEgZGUgbGEgY29uc29sYSkgbyBjw7NkaWdvIEhUVFAuCgo+IEVsIGF1dG9sb2FkZXIgZGEgcHJpb3JpZGFkIGEgbGEgY2FycGV0YSBgcHM1X2F1dG9sb2FkZXJgIGRlIHVuIFVTQi4gU2kgdXNhcyB1bmEgZW4gVVNCLCBsYSBkZSBgL2RhdGFgIHNlIGlnbm9yYS4KCiMjIFVzbwoKRWplY3V0YSBgUFM1LUF1dG91cGRhdGVyUE0uZWxmYCBkZXNkZSBQYXlsb2FkIE1hbmFnZXIgKG8gbcOhbmRhbG8gYSBlbGZsZHIgZW4gZWwgcHVlcnRvIDkwMjEpIGNhZGEgdmV6IHF1ZSBxdWllcmFzIGFjdHVhbGl6YXIuIExhIHZlcnNpw7NuIG51ZXZhIGRlIFBheWxvYWQgTWFuYWdlciBzZSBjYXJnYSBlbiBlbCBzaWd1aWVudGUgYXJyYW5xdWUuCgpEZXNjYXJnYTogW1JlbGVhc2VzXShodHRwczovL2dpdGh1Yi5jb20vY2FjaGFycmVhcmNvbmp1YW4vUFM1LUF1dG91cGRhdGVyUE0vcmVsZWFzZXMvbGF0ZXN0KS4KCiMjIENvbXBpbGFjacOzbiBhdXRvbcOhdGljYSAoR2l0SHViIEFjdGlvbnMpCgpDYWRhIHB1c2ggYSBgbWFpbmAgcXVlIHRvcXVlIGVsIGPDs2RpZ28gKGAqLmNgLCBgKi5oYCwgYE1ha2VmaWxlYCwgYHNjcmlwdHMvYCwgYHRvb2xzL2AgbyBlbCB3b3JrZmxvdykgY29tcGlsYSBlbCBFTEYgeSBwdWJsaWNhIHVuYSAqKnJlbGVhc2UgbnVldmEqKiBzdWJpZW5kbyBsYSB2ZXJzacOzbiBtZW5vcjoKCmB2MS4wLjBgIOKGkiBgdjEuMC4xYCDihpIgYHYxLjAuMmAg4oCmCgpUYW1iacOpbiBzZSBwdWVkZSBsYW56YXIgYSBtYW5vIGRlc2RlICoqQWN0aW9ucyDihpIgQ29tcGlsYXIgeSBwdWJsaWNhciByZWxlYXNlIOKGkiBSdW4gd29ya2Zsb3cqKiwgZWxpZ2llbmRvIHF1w6kgc3ViaXI6Cgp8IE9wY2nDs24gfCBFamVtcGxvIGRlc2RlIHYxLjIuMCB8CnwtLS18LS0tfAp8IGBtaW5vcmAgKHBvciBkZWZlY3RvKSB8IHYxLjIuMSB8CnwgYHBhdGNoYCB8IHYxLjMuMCB8CnwgYG1ham9yYCB8IHYyLjAuMCB8CgpMYSB2ZXJzacOzbiBzZSBncmFiYSBkZW50cm8gZGVsIEVMRiAoc2FsZSBlbiBsYSBub3RpZmljYWNpw7NuKSB5IGVsIFNIQS0yNTYgdmEgZW4gbGFzIG5vdGFzIGRlIGxhIHJlbGVhc2UuIEVsIFNESywgbWJlZFRMUyB5IGN1cmwgc2UgZ3VhcmRhbiBlbiBjYWNow6ksIGFzw60gcXVlIHNvbG8gbGEgcHJpbWVyYSBlamVjdWNpw7NuIHRhcmRhIHVub3MgbWludXRvcy4KCiMjIENvbXBpbGFjacOzbiBsb2NhbAoKUmVxdWlzaXRvczogYGNsYW5nLTE4YCwgYGxsZC0xOGAsIGBtYWtlYCwgYGN1cmxgLCBgcHl0aG9uM2AsIGB1bnppcGAuCgpgYGBiYXNoCmV4cG9ydCBQUzVfUEFZTE9BRF9TREs9JEhPTUUvcHM1LXBheWxvYWQtc2RrCi4vc2NyaXB0cy9idWlsZF9kZXBzLnNoICAgICAgICAgICMgU0RLICsgbWJlZFRMUyArIGN1cmwgcGFyYSBQUzUgKHNvbG8gbGEgcHJpbWVyYSB2ZXopCm1ha2UgVkVSU0lPTj0xLjAuMApgYGAKCiMjIENyw6lkaXRvcwoKLSBbaXRzUExLXShodHRwczovL2dpdGh1Yi5jb20vaXRzUExLKSBwb3IgUFM1IFBheWxvYWQgTWFuYWdlci4KLSBbSm9obiBUw7ZybmJsb21dKGh0dHBzOi8vZ2l0aHViLmNvbS9qb2huLXRvcm5ibG9tKSB5IGNvbGFib3JhZG9yZXMgZGVsIFtQUzUgUGF5bG9hZCBTREtdKGh0dHBzOi8vZ2l0aHViLmNvbS9wczUtcGF5bG9hZC1kZXYvc2RrKS4K"
+ },
+ "/repos/cacharrearconjuan/prueba-nueva/readme": {
+  "path": "docs/README.md",
+  "content": "IyBQcnVlYmEgbnVldmEKClByaW1lciBww6FycmFmbyBjb24gYGPDs2RpZ29gIHkgKipuZWdyaXRhKiouCgojIyBRdcOpIGhhY2UKCkVubGFjZXM6IFtyZWxhdGl2b10oc2NyaXB0cy9hLnNoKSwgW3Jhw616XSgvTElDRU5TRSksIFtzdWJpcl0oLi4vb3Ryby5tZCksIFthbmNsYV0oI3F1w6ktaGFjZSksIFtmdWVyYV0oaHR0cHM6Ly9leGFtcGxlLm9yZy94P2E9MSZiPTIpLgoKIVtjYXB0dXJhXShpbWcvY2FwdHVyYS5wbmcpCgo8aW1nIHNyYz0iZG9jcy9mb3RvLmpwZyIgb25lcnJvcj0iYWxlcnQoMSkiIHdpZHRoPSIyMDAiPgoKPHNjcmlwdD5hbGVydCgnZnVlcmEnKTwvc2NyaXB0PgoKPGEgaHJlZj0iamF2YXNjcmlwdDphbGVydCgyKSI+bWFsbzwvYT4KCiMjIFF1w6kgaGFjZQoKfCBBIHwgQiB8CnwtLS18LS0tfAp8IDEgfCA8Yj4yPC9iPiB8CgotIHVubwogICAtIGRvcyBjb24gc2FuZ3LDrWEgZGUgMwoKYGBgYmF0CmVjaG8gImhvbGEiICYgZWNobyA8YWRpb3M+CmBgYAoKPGRldGFpbHMgb3Blbj4KPHN1bW1hcnk+TcOhczwvc3VtbWFyeT4KCk9jdWx0byBhbCBwcmluY2lwaW8uCgo8L2RldGFpbHM+Cg=="
+ },
+ "/repos/cacharrearconjuan/mis-payloads-ps5/readme": {
+  "__estado": 404
+ },
+ "/repos/cacharrearconjuan/PS5-AutoupdaterPM/releases?per_page=20": [
+  {
+   "id": 301,
+   "tag_name": "v3.1.0",
+   "name": "v3.1.0",
+   "draft": false,
+   "prerelease": false,
+   "published_at": "2026-10-26T20:10:00Z",
+   "html_url": "https://github.com/cacharrearconjuan/PS5-AutoupdaterPM/releases/tag/v3.1.0",
+   "body": "PS5-AutoupdaterPM v3.1.0\n\nSHA-256 del ELF:\n\n```\n99446e930801482752d614f38a46375c9b9dcaf8aaaabbbbccccdddd00001111\n```\n\n**Full Changelog**: https://github.com/x/y/compare/v3.0.1...v3.1.0",
+   "assets": [
+    {
+     "name": "PS5-AutoupdaterPM.elf",
+     "size": 187392,
+     "download_count": 42,
+     "browser_download_url": "https://github.com/cacharrearconjuan/PS5-AutoupdaterPM/releases/download/v3.1.0/PS5-AutoupdaterPM.elf"
+    }
+   ]
+  },
+  {
+   "id": 300,
+   "tag_name": "v3.0.1",
+   "name": "v3.0.1",
+   "draft": false,
+   "prerelease": false,
+   "published_at": "2026-10-25T20:10:00Z",
+   "body": "",
+   "assets": []
+  },
+  {
+   "id": 299,
+   "tag_name": "v9.9.9",
+   "name": "borrador",
+   "draft": true,
+   "prerelease": false,
+   "published_at": null,
+   "body": "",
+   "assets": []
+  }
+ ],
+ "/repos/cacharrearconjuan/lanzador-scrcpy/releases?per_page=20": [
+  {
+   "id": 401,
+   "tag_name": "v1.0.0",
+   "name": "Lanzador de scrcpy v1.0.0",
+   "draft": false,
+   "prerelease": false,
+   "published_at": "2026-10-29T13:45:00Z",
+   "html_url": "https://github.com/cacharrearconjuan/lanzador-scrcpy/releases/tag/v1.0.0",
+   "body": "Primera versión.",
+   "assets": [
+    {
+     "name": "SHA256SUMS.txt",
+     "size": 90,
+     "download_count": 3,
+     "browser_download_url": "https://github.com/cacharrearconjuan/lanzador-scrcpy/releases/download/v1.0.0/SHA256SUMS.txt"
+    },
+    {
+     "name": "Lanzador-scrcpy.bat",
+     "size": 31744,
+     "download_count": 7,
+     "browser_download_url": "https://github.com/cacharrearconjuan/lanzador-scrcpy/releases/download/v1.0.0/Lanzador-scrcpy.bat"
+    }
+   ]
+  }
+ ],
+ "/repos/cacharrearconjuan/mis-payloads-ps5/releases?per_page=20": [],
+ "/repos/cacharrearconjuan/prueba-nueva/releases?per_page=20": [
+  {
+   "id": 501,
+   "tag_name": "v0.1.0-beta",
+   "name": "",
+   "draft": false,
+   "prerelease": true,
+   "published_at": "2026-10-28T10:00:00Z",
+   "body": "## Ojo\n\nEs una beta.",
+   "assets": [
+    {
+     "name": "cosa con espacios.zip",
+     "size": 5400000,
+     "download_count": 0,
+     "browser_download_url": "https://github.com/cacharrearconjuan/prueba-nueva/releases/download/v0.1.0-beta/cosa.con.espacios.zip"
+    }
+   ]
+  }
+ ]
+}
