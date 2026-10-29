@@ -1,1 +1,66 @@
+name: Web
 
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "23 * * * *"   # cada hora: así aparecen solos los repos y versiones nuevos
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    outputs:
+      publicar: ${{ steps.comparar.outputs.publicar }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Pruebas
+        run: python3 tests/probar.py
+
+      - name: Generar la web
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 web/generar.py --salida _site
+
+      - name: ¿Ha cambiado algo?
+        id: comparar
+        env:
+          EVENTO: ${{ github.event_name }}
+        run: |
+          nueva=$(cat _site/huella.txt)
+          url=$(python3 -c "import json;print(json.load(open('sitio.json'))['url'].rstrip('/'))")
+          publicada=$(curl -fsSL --max-time 20 "$url/huella.txt?t=$(date +%s)" 2>/dev/null || true)
+          if [ "$EVENTO" = "schedule" ] && [ "$nueva" = "$publicada" ]; then
+            echo "Sin cambios: no se publica."
+            echo "publicar=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "Se publica (huella $nueva)."
+            echo "publicar=si" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        if: steps.comparar.outputs.publicar == 'si'
+        with:
+          path: _site
+
+  publicar:
+    needs: construir
+    if: needs.construir.outputs.publicar == 'si'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - id: despliegue
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
