@@ -34,9 +34,14 @@ def comprobar(cond, texto):
         print("  FALLA:", texto)
 
 
-def generar(salida, datos="basico", ahora="2026-10-29", carpeta_datos=None, guias=None):
+def generar(salida, datos="basico", ahora="2026-10-29", carpeta_datos=None, guias=None, enlaces=None, sitio=None, notas=None):
+    notas = notas or os.path.join(DATOS, "notas")
     args = ["--salida", salida, "--datos", carpeta_datos or os.path.join(DATOS, datos), "--ahora", ahora,
-            "--guias", guias or os.path.join(DATOS, "guias")]
+            "--guias", guias or os.path.join(DATOS, "guias"),
+            "--enlaces", enlaces or os.path.join(os.path.dirname(salida), "enlaces.json")]
+    if sitio:
+        args += ["--sitio", sitio]
+    args += ["--notas", notas]
     with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()) as err:
         codigo = g.main(args)
     return codigo, err.getvalue()
@@ -150,6 +155,9 @@ def prueba_web():
         comprobar(dict(sellos) == {"lanzador-scrcpy": '<span class="sello">Nuevo</span>', "prueba-nueva": '<span class="sello">Nuevo</span>',
                                    "ps5-autoupdaterpm": "", "mis-payloads-ps5": ""}, f"sello Nuevo ({sellos})")
         comprobar("Repositorio de prueba con &lt;html&gt; &amp; enlaces raros" in portada, "portada: descripción escapada")
+        comprobar("Resumen escrito en una nota de prueba." in portada, "notas: el resumen de la nota manda")
+        comprobar("Mis payloads PS5" in portada, "sin README: nombre arreglado")
+        comprobar(g.nombre_bonito("lanzador_scrcpy") == "Lanzador scrcpy" and g.nombre_bonito("micosa") == "micosa", "nombre arreglado: casos")
 
         # últimos vídeos
         vids = re.findall(r'href="https://www\.youtube\.com/watch\?v=([^"]+)" target="_blank" rel="noopener"', portada)
@@ -163,6 +171,26 @@ def prueba_web():
         orden_secciones = [portada.find(f'id="{x}"') for x in ("proyectos", "videos", "canales")]
         comprobar(orden_secciones == sorted(orden_secciones) and -1 not in orden_secciones, "vídeos: entre proyectos y canales")
         comprobar("28 de octubre de 2026" in portada, "vídeos: fecha")
+
+        # número de descargas (sin contar SHA256SUMS.txt)
+        comprobar('<span class="chip-descargas">7 descargas</span>' in portada, "descargas: lanzador sin contar las sumas")
+        comprobar('<span class="chip-descargas">42 descargas</span>' in portada, "descargas: PS5")
+        comprobar("chip-descargas" not in portada.split('proyectos/prueba-nueva/', 1)[1].split("</li>", 1)[0], "descargas: con 0 no sale")
+
+        # vídeo enlazado a su proyecto
+        ps5v = leer(salida, "proyectos/ps5-autoupdaterpm/index.html")
+        lanzv = leer(salida, "proyectos/lanzador-scrcpy/index.html")
+        comprobar('href="https://www.youtube.com/watch?v=vidBBBBBBBB" target="_blank"' in ps5v and "Actualiza Payload Manager solo" in ps5v,
+                  "vídeo: enlazado por el enlace al repo")
+        comprobar("watch?v=vidAAAAAAAA" in lanzv and "vidZZZZZZZZ" not in lanzv, "vídeo: enlazado por la página de la web, gana el más nuevo")
+        comprobar("Ver el vídeo" not in leer(salida, "proyectos/mis-payloads-ps5/index.html"), "vídeo: sin enlace no hay botón")
+        enl = json.load(open(os.path.join(t, "enlaces.json"), encoding="utf-8"))
+        comprobar(set(enl) == {"ps5-autoupdaterpm", "lanzador-scrcpy"}, f"vídeo: se guarda lo visto ({sorted(enl)})")
+
+        # vista previa al compartir
+        comprobar('<meta property="og:image" content="https://cacharrearconjuan.github.io/og.png">' in portada
+                  and os.path.exists(os.path.join(salida, "og.png")), "vista previa: og.png")
+        comprobar("goatcounter" not in portada, "visitas: sin código no hay contador")
 
         lanz = leer(salida, "proyectos/lanzador-scrcpy/index.html")
         comprobar(f"https://github.com/{U}/lanzador-scrcpy/releases/download/v1.0.0/Lanzador-scrcpy.bat" in lanz, "lanzador: .bat")
@@ -279,7 +307,7 @@ def prueba_repo_nuevo():
         comprobar(f"https://github.com/{U}/Recien-Creado/archive/refs/heads/master.zip" in p, "repo vacío: zip del código")
         comprobar("aún no tiene explicación" in p, "repo vacío: aviso sin README")
         comprobar("recien-creado" not in leer(salida, "descargas/index.html"), "repo vacío: no sale en descargas")
-        comprobar("Nuevo proyecto: Recien-Creado" in leer(salida, "feed.xml"), "repo vacío: entrada en el feed")
+        comprobar("Nuevo proyecto: Recien Creado" in leer(salida, "feed.xml"), "repo vacío: entrada en el feed")
         # el catálogo externo cae: la web se genera igual
         os.remove(os.path.join(t, "d", "urls.json"))
         codigo, err = generar(salida, carpeta_datos=os.path.join(t, "d"))
@@ -304,6 +332,41 @@ def prueba_guias():
             f.write("---\nfecha: 29/10/2026\n---\nHola\n")
         codigo, err = generar(salida, guias=mala)
         comprobar(codigo == 1 and "AAAA-MM-DD" in err, "fecha mal escrita: error claro")
+
+
+def prueba_enlaces_guardados():
+    print("Vídeos guardados y contador de visitas")
+    with tempfile.TemporaryDirectory() as t:
+        enlaces = os.path.join(t, "enlaces.json")
+        with open(enlaces, "w", encoding="utf-8") as f:
+            json.dump({"prueba-nueva": {"id": "vidVIEJO123", "titulo": "Vídeo que ya no está en el feed", "fecha": "2026-01-01T00:00:00+00:00"}}, f)
+        sitio = os.path.join(t, "sitio.json")
+        with open(os.path.join(RAIZ, "sitio.json"), encoding="utf-8") as f:
+            datos = json.load(f)
+        datos["goatcounter"] = "mi-contador"
+        with open(sitio, "w", encoding="utf-8") as f:
+            json.dump(datos, f)
+        salida = os.path.join(t, "web")
+        codigo, _ = generar(salida, enlaces=enlaces, sitio=sitio)
+        comprobar(codigo == 0, "genera con vídeos guardados")
+        comprobar("watch?v=vidVIEJO123" in leer(salida, "proyectos/prueba-nueva/index.html"), "vídeo guardado: sigue saliendo")
+        comprobar("prueba-nueva" in json.load(open(enlaces, encoding="utf-8")), "vídeo guardado: no se borra")
+        portada = leer(salida, "index.html")
+        comprobar('data-goatcounter="https://mi-contador.goatcounter.com/count"' in portada and "sin cookies" in portada, "visitas: contador y aviso")
+        datos["goatcounter"] = "malo\"><script>"
+        with open(sitio, "w", encoding="utf-8") as f:
+            json.dump(datos, f)
+        generar(salida, enlaces=enlaces, sitio=sitio)
+        comprobar("goatcounter" not in leer(salida, "index.html"), "visitas: código raro, sin contador")
+        # la nota manda sobre el vídeo detectado
+        notas = os.path.join(t, "notas")
+        os.makedirs(notas)
+        with open(os.path.join(notas, "PS5-AutoupdaterPM.md"), "w", encoding="utf-8") as f:
+            f.write("---\nvideo: https://www.youtube.com/watch?v=MANUAL12345\n---\n")
+        generar(salida, enlaces=enlaces, notas=notas)
+        ps5 = leer(salida, "proyectos/ps5-autoupdaterpm/index.html")
+        comprobar("watch?v=MANUAL12345" in ps5 and "watch?v=vidBBBBBBBB" not in ps5.split('id="descarga"', 1)[1].split("</aside>", 1)[0],
+                  "vídeo: el de la nota manda")
 
 
 def prueba_videos_caidos():
@@ -340,6 +403,7 @@ if __name__ == "__main__":
     prueba_web()
     prueba_repo_nuevo()
     prueba_guias()
+    prueba_enlaces_guardados()
     prueba_videos_caidos()
     prueba_error()
     print(f"\n{hechas - len(fallos)} de {hechas} comprobaciones bien.")

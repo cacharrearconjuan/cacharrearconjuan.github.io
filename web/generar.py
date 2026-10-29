@@ -216,6 +216,34 @@ def leer_nota(carpeta, nombre_repo):
     return datos, cuerpo.strip()
 
 
+def es_archivo_auxiliar(nombre):
+    """Sumas, firmas y notas: no cuentan como descargas del programa."""
+    n = nombre.lower()
+    return n.endswith((".txt", ".sha256", ".sha512", ".md5", ".sig", ".asc", ".md", ".json")) or "sha256sums" in n
+
+
+def descargas_texto(n):
+    if not n:
+        return ""
+    cifra = f"{n:,}".replace(",", ".")
+    return f"{cifra} descarga" if n == 1 else f"{cifra} descargas"
+
+
+def nombre_bonito(nombre):
+    """mis-payloads-ps5 → Mis payloads PS5 (solo si no hay título en el README)."""
+    if not re.search(r"[-_]", nombre):
+        return nombre
+    palabras = [w for w in re.split(r"[-_]+", nombre) if w]
+    salida = []
+    for i, w in enumerate(palabras):
+        if re.search(r"\d", w) and len(w) <= 5:
+            w = w.upper()
+        elif i == 0:
+            w = w[:1].upper() + w[1:]
+        salida.append(w)
+    return " ".join(salida)
+
+
 def si(valor):
     return str(valor).strip().lower() in ("si", "sí", "yes", "true", "1")
 
@@ -466,7 +494,10 @@ def preparar_proyectos(api, sitio, carpeta_notas, ahora):
                 cuerpo_nota, hacer_arreglar_url(usuario, nombre, rama, ""), usados=ids)
             titulo_readme = titulo_readme or titulo_nota
             parrafo = parrafo or parrafo_nota
-        release = elegir_release(api.api(f"/repos/{usuario}/{nombre}/releases?per_page=20"))
+        releases = api.api(f"/repos/{usuario}/{nombre}/releases?per_page=20") or []
+        release = elegir_release(releases)
+        descargas = sum(a.get("download_count") or 0 for r in releases if not r.get("draft")
+                        for a in (r.get("assets") or []) if not es_archivo_auxiliar(a.get("name", "")))
         datos_release = None
         if release:
             html_notas_rel, _, _ = render_markdown(
@@ -485,13 +516,14 @@ def preparar_proyectos(api, sitio, carpeta_notas, ahora):
                     for a in sorted(release.get("assets") or [], key=lambda a: a["name"].lower())
                 ],
             }
-        catalogo = leer_catalogo(api, nota["catalogo"]) if nota.get("catalogo") else None
+        url_catalogo = nota.get("catalogo") or (sitio.get("catalogos") or {}).get(nombre)
+        catalogo = leer_catalogo(api, url_catalogo) if url_catalogo else None
         creado = repo.get("created_at")
         dias = (ahora - fecha_local(creado)).days if creado else 999
         proyectos.append({
             "repo": nombre,
             "slug": re.sub(r"[^a-z0-9._-]", "-", nombre.lower()),
-            "titulo": nota.get("titulo") or titulo_readme or nombre,
+            "titulo": nota.get("titulo") or titulo_readme or nombre_bonito(nombre),
             "resumen": recortar(nota.get("resumen") or repo.get("description") or parrafo or ""),
             "url_repo": repo["html_url"],
             "rama": rama,
@@ -501,11 +533,12 @@ def preparar_proyectos(api, sitio, carpeta_notas, ahora):
             "orden": int(nota["orden"]) if str(nota.get("orden", "")).lstrip("-").isdigit() else 1000,
             "video": nota.get("video"),
             "extra_descargas": nota.get("descarga", []),
-            "catalogo_url": nota.get("catalogo"),
+            "catalogo_url": url_catalogo,
             "catalogo": catalogo,
             "html_nota": html_nota,
             "html_readme": html_readme,
             "release": datos_release,
+            "descargas": descargas,
             "lenguaje": repo.get("language"),
             "estrellas": repo.get("stargazers_count", 0),
         })
@@ -529,7 +562,8 @@ def leer_feed_youtube(api, url):
         if not re.match(r"^[A-Za-z0-9_-]{6,20}$", vid) or "/shorts/" in href:
             continue
         titulo = e.findtext("media:group/media:title", default="", namespaces=NS_YT) or e.findtext("a:title", default="", namespaces=NS_YT)
-        videos.append({"id": vid, "titulo": titulo.strip(), "fecha": e.findtext("a:published", default="", namespaces=NS_YT)})
+        videos.append({"id": vid, "titulo": titulo.strip(), "fecha": e.findtext("a:published", default="", namespaces=NS_YT),
+                       "descripcion": e.findtext("media:group/media:description", default="", namespaces=NS_YT) or ""})
     return videos
 
 
@@ -538,7 +572,7 @@ def leer_videos(api, sitio):
     cfg = sitio.get("youtube") or {}
     canal = cfg.get("canal_id") or ""
     if not re.match(r"^UC[A-Za-z0-9_-]{22}$", canal):
-        return []
+        return [], []
     cuantos = int(cfg.get("cuantos", 3))
     base = "https://www.youtube.com/feeds/videos.xml"
     # UULF… es la lista de subidas sin Shorts ni directos; si no responde, el feed del canal sin /shorts/
@@ -551,8 +585,9 @@ def leer_videos(api, sitio):
         if videos:
             break
     else:
-        return []
+        return [], []
     videos.sort(key=lambda v: v["fecha"], reverse=True)
+    todos = videos
     videos = videos[:cuantos]
     for v in videos:
         try:
@@ -560,7 +595,46 @@ def leer_videos(api, sitio):
         except Exception as e:
             print(f"Aviso: sin miniatura para {v['id']}: {e}", file=sys.stderr)
             v["miniatura"] = None
-    return videos
+    return videos, todos
+
+
+def enlazar_videos(sitio, proyectos, todos, ruta_enlaces):
+    """Un vídeo cuya descripción enlaza un repo (o su página en la web) es el vídeo de ese proyecto.
+
+    El feed de YouTube solo trae los últimos 15 vídeos, así que lo visto se guarda en
+    datos/videos-proyectos.json (el workflow lo sube al repositorio) y no se pierde.
+    """
+    enlaces = {}
+    if ruta_enlaces and os.path.exists(ruta_enlaces):
+        with open(ruta_enlaces, encoding="utf-8") as f:
+            enlaces = json.load(f)
+    antes = json.dumps(enlaces, sort_keys=True)
+    usuario = re.escape(sitio["usuario"])
+    dominio = re.escape(urllib.parse.urlsplit(sitio["url"]).netloc)
+    patrones = [rf"github\.com/{usuario}/([A-Za-z0-9._-]+)", rf"{dominio}/proyectos/([A-Za-z0-9._-]+)"]
+    for v in sorted(todos, key=lambda v: v["fecha"]):  # del más viejo al más nuevo: gana el último
+        texto = f"{v['titulo']}\n{v.get('descripcion', '')}"
+        vistos = set()
+        for patron in patrones:
+            for m in re.finditer(patron, texto, re.I):
+                repo = m.group(1).rstrip(".").lower()
+                if repo.endswith(".git"):
+                    repo = repo[:-4]
+                vistos.add(repo)
+        for repo in vistos:
+            previo = enlaces.get(repo)
+            if not previo or previo.get("fecha", "") <= v["fecha"]:
+                enlaces[repo] = {"id": v["id"], "titulo": v["titulo"], "fecha": v["fecha"]}
+    for p in proyectos:
+        e = enlaces.get(p["repo"].lower()) or enlaces.get(p["slug"])
+        if not p["video"] and e:
+            p["video"] = f"https://www.youtube.com/watch?v={e['id']}"
+            p["video_titulo"] = e["titulo"]
+    if ruta_enlaces and json.dumps(enlaces, sort_keys=True) != antes:
+        os.makedirs(os.path.dirname(os.path.abspath(ruta_enlaces)), exist_ok=True)
+        with open(ruta_enlaces, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(enlaces, f, ensure_ascii=False, indent=2, sort_keys=True)
+            f.write("\n")
 
 
 def bloque_videos(sitio, videos):
@@ -705,6 +779,14 @@ def pagina(sitio, titulo, descripcion, cuerpo, nivel, ruta, actual="", pre=None)
 <meta property="og:description" content="{esc(descripcion)}">
 <meta property="og:url" content="{esc(url)}">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="{esc(sitio['titulo'])}">
+<meta property="og:locale" content="es_ES">
+<meta property="og:image" content="{esc(sitio['url'].rstrip('/'))}/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{esc(sitio['titulo'])}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{esc(sitio['url'].rstrip('/'))}/og.png">{contador_visitas(sitio)}
 <meta name="theme-color" content="#1d5a43">
 <link rel="alternate" type="application/atom+xml" title="{esc(sitio['titulo'])}" href="{pre}feed.xml">
 <link rel="icon" href="{pre}icono.svg" type="image/svg+xml">
@@ -724,7 +806,7 @@ def pagina(sitio, titulo, descripcion, cuerpo, nivel, ruta, actual="", pre=None)
 <footer class="pie">
   <div class="ancho pie-fila">
     <p>Todo el código está en <a href="https://github.com/{esc(sitio['usuario'])}">GitHub</a>.
-    Las novedades llegan también por <a href="{pre}feed.xml">el feed</a>.</p>
+    Las novedades llegan también por <a href="{pre}feed.xml">el feed</a>.{aviso_visitas(sitio)}</p>
     <p class="pie-canales">{enlaces_canales(sitio, clase="")}</p>
   </div>
 </footer>
@@ -732,6 +814,26 @@ def pagina(sitio, titulo, descripcion, cuerpo, nivel, ruta, actual="", pre=None)
 </body>
 </html>
 """
+
+
+def codigo_goatcounter(sitio):
+    codigo = str(sitio.get("goatcounter") or "").strip().lower()
+    return codigo if re.match(r"^[a-z0-9][a-z0-9-]{1,60}$", codigo) else ""
+
+
+def contador_visitas(sitio):
+    codigo = codigo_goatcounter(sitio)
+    if not codigo:
+        return ""
+    return (f'\n<script data-goatcounter="https://{codigo}.goatcounter.com/count" '
+            'async src="https://gc.zgo.at/count.js"></script>')
+
+
+def aviso_visitas(sitio):
+    if not codigo_goatcounter(sitio):
+        return ""
+    return (' Las visitas se cuentan con <a href="https://www.goatcounter.com">GoatCounter</a>, '
+            'sin cookies y sin guardar datos de quien entra.')
 
 
 # botón «Copiar» en cada bloque de código (sin dependencias)
@@ -786,6 +888,8 @@ def chip_proyecto(p, pre):
     else:
         estado = f'Actualizado el {esc(fecha_texto(p["actualizado"]))}'
     nuevo = '<span class="sello">Nuevo</span>' if p["nuevo"] else ""
+    if p.get("descargas"):
+        estado += f'<span class="chip-descargas">{descargas_texto(p["descargas"])}</span>'
     return f"""<li class="chip">
   <a class="chip-enlace" href="{pre}proyectos/{esc(p['slug'])}/">
     <span class="chip-nombre">{esc(p['titulo'])}</span>{nuevo}
@@ -844,6 +948,8 @@ def caja_descarga(p):
         else:
             filas.append(f'<div class="pads"><a class="pad" href="{esc(p["url_repo"])}/archive/refs/tags/{esc(urllib.parse.quote(rel["tag"]))}.zip">'
                          '<span class="pad-nombre">Código de esta versión (zip)</span></a></div>')
+        if p.get("descargas"):
+            filas.append(f'<p class="caja-fecha">{descargas_texto(p["descargas"])} en total</p>')
         filas.append(f'<p class="caja-mas"><a href="{esc(p["url_repo"])}/releases">Versiones anteriores</a></p>')
     for texto, url in p["extra_descargas"]:
         filas.append(f'<div class="pads"><a class="pad" href="{esc(url)}"><span class="pad-nombre">{esc(texto)}</span></a></div>')
@@ -856,7 +962,8 @@ def caja_descarga(p):
             filas.append(f'<div class="pads"><a class="pad" href="{esc(p["url_repo"])}/archive/refs/heads/{esc(p["rama"])}.zip">'
                          '<span class="pad-nombre">Código (zip)</span></a></div>')
     if p["video"]:
-        filas.append(f'<p class="caja-video"><a href="{esc(p["video"])}" rel="noopener">Ver el vídeo</a></p>')
+        titulo_v = f'<span class="caja-video-titulo">{esc(p["video_titulo"])}</span>' if p.get("video_titulo") else ""
+        filas.append(f'<p class="caja-video"><a href="{esc(p["video"])}" target="_blank" rel="noopener">Ver el vídeo</a>{titulo_v}</p>')
     filas.append(f'<p class="caja-mas"><a href="{esc(p["url_repo"])}">Código en GitHub</a></p>')
     return '<aside class="caja chip-caja" id="descarga" aria-label="Descarga">\n<h2 class="caja-titulo">Descarga</h2>\n' + "\n".join(filas) + "\n</aside>"
 
@@ -871,10 +978,18 @@ def tabla_catalogo(p):
     grupos = {}
     for x in cat["payloads"]:
         grupos.setdefault(x.get("category") or "Otros", []).append(x)
-    partes = ['<section class="catalogo"><h2 id="lista">Lista de payloads</h2>']
-    if esc(p["catalogo_url"]) not in p["html_nota"]:
-        partes.append(f'<p>Dirección del repositorio para Payload Manager:</p>'
-                      f'<p class="copiar"><code>{esc(p["catalogo_url"])}</code></p>')
+    partes = []
+    if esc(p["catalogo_url"]) not in p["html_nota"] + p["html_readme"]:
+        partes.append(f"""<p>Es un repositorio para <a href="https://github.com/itsPLK/ps5-payload-manager" rel="noopener">PS5 Payload Manager</a>.
+Lo añades una vez y tienes la lista de abajo para descargar e instalar desde la consola. Se actualiza solo.</p>
+<h2 id="como-anadirlo">Cómo añadirlo</h2>
+<ol>
+<li>Abre Payload Manager en la PS5.</li>
+<li>Entra en <strong>Settings</strong> (la rueda dentada) y luego en <strong>Manage Sources</strong>.</li>
+<li>Pulsa <strong>Add Source</strong>, pega esta dirección y pulsa <strong>Add</strong>:</li>
+</ol>
+<pre><code>{esc(p["catalogo_url"])}</code></pre>""")
+    partes.append('<section class="catalogo"><h2 id="lista">Lista de payloads</h2>')
     for grupo in sorted(grupos, key=str.lower):
         partes.append(f"<h3>{esc(grupo)}</h3><ul class=\"payloads\" role=\"list\">")
         for x in sorted(grupos[grupo], key=lambda x: (x.get("name") or "").lower()):
@@ -922,6 +1037,8 @@ def pagina_descargas(sitio, proyectos):
         enlace = f'../proyectos/{esc(p["slug"])}/'
         if rel and rel["archivos"]:
             detalle = f'{esc(rel["tag"])}{" (beta)" if rel["beta"] else ""}, {esc(fecha_texto(rel["fecha"]))}'
+            if p.get("descargas"):
+                detalle += f'. {descargas_texto(p["descargas"])}'
             pads = "".join(boton_archivo(a) for a in rel["archivos"])
         elif p["catalogo"]:
             detalle = f'{len(p["catalogo"]["payloads"])} payloads para Payload Manager'
@@ -998,11 +1115,12 @@ def mapa_sitio(sitio, proyectos, guias=()):
 
 # ---------------------------------------------------------------- todo junto
 
-def generar(api, sitio, salida, carpeta_notas, ahora, carpeta_guias=None):
+def generar(api, sitio, salida, carpeta_notas, ahora, carpeta_guias=None, ruta_enlaces=None):
     guias = preparar_guias(carpeta_guias or os.path.join(RAIZ, "guias"), ahora)
     sitio = dict(sitio, _hay_guias=bool(guias))
     proyectos = preparar_proyectos(api, sitio, carpeta_notas, ahora)
-    videos = leer_videos(api, sitio)
+    videos, todos = leer_videos(api, sitio)
+    enlazar_videos(sitio, proyectos, todos, ruta_enlaces)
     if os.path.exists(salida):
         shutil.rmtree(salida)
     archivos = {
@@ -1056,6 +1174,8 @@ def main(argv=None):
     ap.add_argument("--sitio", default=os.path.join(RAIZ, "sitio.json"))
     ap.add_argument("--notas", default=os.path.join(RAIZ, "notas"))
     ap.add_argument("--guias", default=os.path.join(RAIZ, "guias"))
+    ap.add_argument("--enlaces", default=os.path.join(RAIZ, "datos", "videos-proyectos.json"),
+                    help="dónde se guarda qué vídeo es de qué proyecto")
     ap.add_argument("--datos", help="carpeta con respuestas guardadas (pruebas)")
     ap.add_argument("--ahora", help="fecha AAAA-MM-DD para las pruebas")
     a = ap.parse_args(argv)
@@ -1064,7 +1184,7 @@ def main(argv=None):
     api = ApiFalsa(a.datos) if a.datos else ApiGitHub(os.environ.get("GITHUB_TOKEN"))
     ahora = dt.datetime.now(ZONA) if not a.ahora else dt.datetime.fromisoformat(a.ahora).replace(tzinfo=ZONA)
     try:
-        proyectos, guias, huella = generar(api, sitio, a.salida, a.notas, ahora, a.guias)
+        proyectos, guias, huella = generar(api, sitio, a.salida, a.notas, ahora, a.guias, a.enlaces)
     except ErrorWeb as e:
         print(f"Error: {e}", file=sys.stderr)
         return 1

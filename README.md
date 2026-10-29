@@ -27,11 +27,13 @@ Antes de publicar pasa las pruebas. Si GitHub falla o una prueba no pasa, no pub
 
 ## Qué sale en cada proyecto
 
-- **Título:** el primer encabezado `#` del README. Si no hay, el nombre del repositorio.
+- **Título:** el primer encabezado `#` del README. Si no hay, el nombre del repositorio arreglado (`mis-payloads-ps5` → «Mis payloads PS5»).
 - **Resumen:** la descripción del repositorio (el apartado **About** de GitHub). Si está vacía, el primer párrafo del README.
 - **Texto:** el README entero, con sus enlaces e imágenes arreglados para que funcionen fuera de GitHub.
 - **Descarga:** los archivos de la última release. Si solo hay betas, la beta, marcada. Los borradores no salen nunca. Sin releases, el zip del código.
 - **Novedades:** las notas de la última release.
+- **Descargas:** cuántas veces se han bajado los archivos de sus releases (sin contar los `.txt` de sumas ni las firmas).
+- **Vídeo:** si en la descripción de un vídeo del canal pones el enlace al repositorio (`github.com/cacharrearconjuan/<repo>`) o a su página en la web, sale solo el botón «Ver el vídeo» con su título. Si hay varios, el más nuevo. Lo que se ve se guarda en `datos/videos-proyectos.json` (lo guarda el propio workflow), porque YouTube solo enseña los últimos 15 vídeos. El `video:` de una nota manda sobre esto.
 - **«Nuevo»:** los 14 primeros días de un repositorio.
 
 Los proyectos salen del más nuevo al más antiguo.
@@ -57,9 +59,9 @@ Texto en Markdown que sale antes del README.
 |---|---|
 | `titulo` | Cambia el título. |
 | `resumen` | Cambia el resumen de la portada. |
-| `video` | Pone un botón «Ver el vídeo» en la caja de descarga. |
+| `video` | Pone un botón «Ver el vídeo» en la caja de descarga (si no, se busca solo en las descripciones de los vídeos). |
 | `descarga` | Añade un botón de descarga más. Se puede repetir. Formato: `Texto \| dirección`. |
-| `catalogo` | Dirección de un `payloads.json` de Payload Manager: enseña la lista de payloads. |
+| `catalogo` | Dirección de un `payloads.json` de Payload Manager: enseña la lista de payloads. También se puede poner en `sitio.json`, en `"catalogos"`. |
 | `orden` | Fija el proyecto arriba: `1` va antes que `2`, y los dos antes que los que no tienen orden. |
 | `oculto` | Con `si`, el proyecto no sale en la web. |
 
@@ -98,6 +100,19 @@ Nunca salen los repositorios privados, los forks, los archivados ni este mismo.
 
 En `sitio.json`: el título, la frase de la portada, la dirección de la web y los canales (texto, detalle y enlace).
 
+## Vista previa al compartir
+
+Al pegar un enlace de la web en Telegram, WhatsApp o X sale una tarjeta con la imagen `plantilla/og.png`, el título y el resumen de esa página.
+
+## Contador de visitas (opcional)
+
+Con [GoatCounter](https://www.goatcounter.com), gratuito para webs como esta, sin cookies y sin aviso de cookies:
+
+1. Crea una cuenta en goatcounter.com y elige un código (por ejemplo, `cacharrearconjuan`). Tus estadísticas quedarán en `https://cacharrearconjuan.goatcounter.com`.
+2. En `sitio.json`, pon ese código en `"goatcounter"`: `"goatcounter": "cacharrearconjuan"`.
+
+Mientras esté vacío, la web no cuenta nada. Cuando lo pongas, el pie de la web avisa de que las visitas se cuentan sin cookies.
+
 ## El feed
 
 En `https://cacharrearconjuan.github.io/feed.xml` hay un feed Atom con cada proyecto nuevo y cada versión nueva. Vale para cualquier lector de feeds y para avisar en Telegram con un bot que lea feeds.
@@ -106,7 +121,8 @@ En `https://cacharrearconjuan.github.io/feed.xml` hay un feed Atom con cada proy
 
 - `web/generar.py` hace la web. Solo usa Python 3.11 o superior y lo que trae `web/vendor` ([markdown-it-py](https://github.com/executablebooks/markdown-it-py) y mdurl, licencia MIT): no instala nada.
 - Probar en el PC: `python3 tests/probar.py`. Usa respuestas de GitHub guardadas en `tests/datos/` y las guías de prueba de `tests/datos/guias/`; también comprueba que las guías de `guias/` se generan.
-- Ver la web en el PC sin GitHub: `python3 web/generar.py --salida _site --datos tests/datos/basico` y abrir `_site` con `python3 -m http.server -d _site`.
-- `plantilla/` se copia tal cual: estilo, icono y fuentes.
+- Ver la web en el PC sin GitHub: `python3 web/generar.py --salida _site --datos tests/datos/basico --enlaces _enlaces-prueba.json` y abrir `_site` con `python3 -m http.server -d _site`.
+- `plantilla/` se copia tal cual: estilo, icono, imagen para compartir y fuentes.
+- El workflow necesita permiso de escritura en el repositorio solo para guardar `datos/videos-proyectos.json`.
 - Fuentes: Bricolage Grotesque y Atkinson Hyperlegible Next, con licencia SIL OFL (en `plantilla/fuentes/`). Van dentro de la web: no se cargan de Google ni de ningún otro sitio.
 - Las acciones del workflow van fijadas por commit: checkout v7.0.1, upload-pages-artifact v5.0.0 y deploy-pages v5.0.1.

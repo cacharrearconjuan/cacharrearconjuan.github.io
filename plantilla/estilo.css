@@ -106,7 +106,7 @@ a:hover { text-decoration-thickness: 2px; }
 .placa-titulo {
   position: relative; background: var(--chip); color: var(--chip-tinta);
   border-radius: 9px; margin: 11px 0; padding: clamp(22px, 3.2vh, 34px) 32px clamp(20px, 3vh, 30px) 52px;
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 32px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 32px;
 }
 .placa-titulo::before, .placa-titulo::after {
   content: ""; position: absolute; left: 30px; right: 30px; height: 11px;
@@ -117,8 +117,8 @@ a:hover { text-decoration-thickness: 2px; }
 .portada-titulo {
   position: relative;
   font-family: "Bricolage", system-ui, sans-serif;
-  font-weight: 800; font-stretch: 80%;
-  font-size: clamp(2.3rem, min(5.6vw, 8.5vh), 4.6rem);
+  font-weight: 800; font-stretch: 100%;
+  font-size: clamp(2.3rem, min(5.6vw, 11vh), 4.65rem);
   line-height: 0.95; letter-spacing: -0.02em;
   margin: 0;
 }
@@ -131,7 +131,7 @@ a:hover { text-decoration-thickness: 2px; }
   content: ""; position: absolute; left: 18px; top: 16px; width: 8px; height: 8px; border-radius: 50%; background: #3a423d;
 }
 .portada-lema {
-  font-size: 1.1rem; max-width: 34ch; margin: 0; color: var(--oro); line-height: 1.45;
+  font-size: 1.1rem; max-width: 28ch; margin: 0; color: var(--oro); line-height: 1.45; text-align: right;
 }
 .seccion-proyectos { padding-top: clamp(28px, 4.5vh, 44px); }
 .seccion-proyectos > h2 {
@@ -307,6 +307,12 @@ a:hover { text-decoration-thickness: 2px; }
 .descarga h2 a { color: var(--tinta); }
 .descarga-info p { margin: 4px 0 0; color: var(--tinta-suave); }
 
+/* cuando la frase baja debajo del título, mejor a la izquierda */
+@media (max-width: 940px) {
+  .portada-lema { text-align: left; }
+  .portada-titulo { font-stretch: 85%; }
+}
+
 @media (max-width: 560px) {
   .portada { padding-top: 48px; }
   .cabecera nav { gap: 16px; }
@@ -390,3 +396,7 @@ a:hover { text-decoration-thickness: 2px; }
   }
   .video { scroll-snap-align: start; }
 }
+
+/* descargas y vídeo del proyecto */
+.chip-descargas { display: block; color: var(--chip-suave); margin-top: 2px; }
+.caja-video-titulo { display: block; color: var(--chip-suave); font-size: 0.9rem; margin-top: 2px; }
