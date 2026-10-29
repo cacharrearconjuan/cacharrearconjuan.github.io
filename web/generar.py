@@ -596,14 +596,19 @@ def portada(sitio, proyectos):
     else:
         bloque = '<p class="vacio">Aún no hay repositorios públicos. En cuanto haya uno, aparecerá aquí solo.</p>'
     cuerpo = f"""<section class="portada ancho">
-  <h1 class="portada-titulo">{esc(sitio['titulo'])}</h1>
-  <p class="portada-lema">{esc(sitio.get('lema', ''))}</p>
-  <div class="canales" id="canales">{enlaces_canales(sitio)}</div>
+  <div class="placa-titulo">
+    <h1 class="portada-titulo">{esc(sitio['titulo'])}</h1>
+    <p class="portada-lema">{esc(sitio.get('lema', ''))}</p>
+  </div>
 </section>
-<section class="ancho seccion" id="proyectos" aria-labelledby="t-proyectos">
+<section class="ancho seccion-proyectos" id="proyectos" aria-labelledby="t-proyectos">
   <h2 id="t-proyectos">Proyectos</h2>
   {bloque}
   <p class="a-descargas"><a href="descargas/">Ver todas las descargas en una página</a></p>
+</section>
+<section class="ancho seccion" id="canales" aria-labelledby="t-canales">
+  <h2 id="t-canales">Canales</h2>
+  <div class="canales">{enlaces_canales(sitio)}</div>
 </section>"""
     return pagina(sitio, sitio["titulo"], sitio.get("lema", ""), cuerpo, 0, "", actual="")
 
