@@ -34,8 +34,9 @@ def comprobar(cond, texto):
         print("  FALLA:", texto)
 
 
-def generar(salida, datos="basico", ahora="2026-10-29", carpeta_datos=None):
-    args = ["--salida", salida, "--datos", carpeta_datos or os.path.join(DATOS, datos), "--ahora", ahora]
+def generar(salida, datos="basico", ahora="2026-10-29", carpeta_datos=None, guias=None):
+    args = ["--salida", salida, "--datos", carpeta_datos or os.path.join(DATOS, datos), "--ahora", ahora,
+            "--guias", guias or os.path.join(DATOS, "guias")]
     with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()) as err:
         codigo = g.main(args)
     return codigo, err.getvalue()
@@ -165,8 +166,11 @@ def prueba_web():
         comprobar('<span class="sello">Beta</span>' not in ps5, "PS5: no es beta")
 
         prueba = leer(salida, "proyectos/prueba-nueva/index.html")
+        contenido = prueba.split('<div class="texto">', 1)[1].split("</article>", 1)[0]
         for malo in ("<script", "onerror", "javascript:", "alert("):
-            comprobar(malo not in prueba, f"prueba: sin {malo}")
+            comprobar(malo not in contenido, f"prueba: sin {malo}")
+        comprobar(prueba.count("<script") == 1 and "copiar-boton" in prueba, "prueba: solo el script de Copiar")
+        comprobar("<script" not in leer(salida, "descargas/index.html"), "descargas: sin script (no hay código)")
         comprobar('<span class="sello">Beta</span>' in prueba, "prueba: beta marcada")
         comprobar(re.search(r"<details open>\s*<summary>Más</summary>", prueba) is not None, "prueba: details abierto")
         comprobar(f"https://raw.githubusercontent.com/{U}/prueba-nueva/main/docs/img/captura.png" in prueba, "prueba: imagen relativa")
@@ -195,10 +199,21 @@ def prueba_web():
         ns = {"a": "http://www.w3.org/2005/Atom"}
         entradas = feed.findall("a:entry", ns)
         ids = [e.find("a:id", ns).text for e in entradas]
-        comprobar(len(entradas) == 7 and len(set(ids)) == 7, f"feed: 7 entradas únicas ({len(entradas)})")
+        comprobar(len(entradas) == 8 and len(set(ids)) == 8, f"feed: 8 entradas únicas ({len(entradas)})")
         comprobar(entradas[0].find("a:title", ns).text == "Lanzador de scrcpy v1.0.0", "feed: lo último primero")
         mapa = ET.fromstring(leer(salida, "sitemap.xml"))
-        comprobar(len(mapa) == 6, "sitemap: 6 páginas")
+        comprobar(len(mapa) == 7, "sitemap: 7 páginas")
+
+        guia = leer(salida, "guias/guia-prueba/index.html")
+        comprobar('href="guias/guia-prueba/"' in portada and 'id="guias"' in portada, "portada: sección de guías")
+        comprobar("No sale" not in portada and not os.path.exists(os.path.join(salida, "guias", "oculta")), "guía oculta fuera")
+        comprobar('<a href="#primer-paso">Primer paso</a>' in guia and '<a href="#segundo-paso-con-código">Segundo paso con código</a>' in guia,
+                  "guía: índice de pasos")
+        comprobar(re.search(r"(href|src)=\"\s*javascript:", guia, re.I) is None, "guía: ningún enlace javascript:")
+        comprobar('href="../../descargas/"' in guia, "guía: enlace relativo intacto")
+        comprobar("&lt;dos&gt;" in guia and "copiar-boton" in guia, "guía: código escapado y botón Copiar")
+        comprobar('>Guías</a>' in portada.split("</header>", 1)[0], "menú: Guías")
+        comprobar("2 apartados" in portada, "portada: número de apartados")
 
         for ruta in paginas_html(salida):
             r = revisar_html(leer(salida, ruta))
@@ -259,6 +274,25 @@ def prueba_repo_nuevo():
         comprobar("Ahora mismo no se puede leer la lista" in leer(salida, "proyectos/mis-payloads-ps5/index.html"), "catálogo caído: mensaje")
 
 
+def prueba_guias():
+    print("Guías")
+    with tempfile.TemporaryDirectory() as t:
+        salida = os.path.join(t, "web")
+        codigo, err = generar(salida, guias=os.path.join(RAIZ, "guias"))
+        comprobar(codigo == 0, f"las guías del repositorio se generan ({err.strip()})")
+        vacia = os.path.join(t, "sin-guias")
+        os.makedirs(vacia)
+        generar(salida, guias=vacia)
+        portada = leer(salida, "index.html")
+        comprobar('id="guias"' not in portada and ">Guías</a>" not in portada, "sin guías no hay sección ni menú")
+        mala = os.path.join(t, "mala")
+        os.makedirs(mala)
+        with open(os.path.join(mala, "x.md"), "w", encoding="utf-8") as f:
+            f.write("---\nfecha: 29/10/2026\n---\nHola\n")
+        codigo, err = generar(salida, guias=mala)
+        comprobar(codigo == 1 and "AAAA-MM-DD" in err, "fecha mal escrita: error claro")
+
+
 def prueba_error():
     print("GitHub falla")
     with tempfile.TemporaryDirectory() as t:
@@ -275,6 +309,7 @@ if __name__ == "__main__":
     prueba_utilidades()
     prueba_web()
     prueba_repo_nuevo()
+    prueba_guias()
     prueba_error()
     print(f"\n{hechas - len(fallos)} de {hechas} comprobaciones bien.")
     sys.exit(1 if fallos else 0)

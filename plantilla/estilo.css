@@ -100,42 +100,43 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* portada */
 
-.portada { padding: 46px 0 0; }
+.portada { padding: 30px 0 0; }
 
 /* el título es el chip grande de la placa */
 .placa-titulo {
   position: relative; background: var(--chip); color: var(--chip-tinta);
-  border-radius: 10px; margin: 14px 0; padding: clamp(34px, 6vw, 64px) clamp(28px, 6vw, 72px) clamp(30px, 5vw, 56px) clamp(40px, 7vw, 90px);
+  border-radius: 9px; margin: 11px 0; padding: clamp(22px, 3.2vh, 34px) 32px clamp(20px, 3vh, 30px) 52px;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 32px;
 }
 .placa-titulo::before, .placa-titulo::after {
-  content: ""; position: absolute; left: 36px; right: 36px; height: 14px;
-  background: repeating-linear-gradient(90deg, var(--oro) 0 18px, transparent 18px 40px);
+  content: ""; position: absolute; left: 30px; right: 30px; height: 11px;
+  background: repeating-linear-gradient(90deg, var(--oro) 0 14px, transparent 14px 32px);
 }
-.placa-titulo::before { top: -14px; border-radius: 3px 3px 0 0; }
-.placa-titulo::after { bottom: -14px; border-radius: 0 0 3px 3px; }
+.placa-titulo::before { top: -11px; border-radius: 3px 3px 0 0; }
+.placa-titulo::after { bottom: -11px; border-radius: 0 0 3px 3px; }
 .portada-titulo {
   position: relative;
   font-family: "Bricolage", system-ui, sans-serif;
-  font-weight: 800; font-stretch: 75%;
-  font-size: clamp(3.1rem, 10.5vw, 9.5rem);
-  line-height: 0.88; letter-spacing: -0.03em;
+  font-weight: 800; font-stretch: 80%;
+  font-size: clamp(2.3rem, min(5.6vw, 8.5vh), 4.6rem);
+  line-height: 0.95; letter-spacing: -0.02em;
   margin: 0;
 }
 /* muesca y punto del pin 1 */
 .portada-titulo::before {
-  content: ""; position: absolute; left: clamp(-90px, -7vw, -40px); top: 50%;
-  width: 18px; height: 40px; margin-top: -20px; background: var(--placa); border-radius: 0 20px 20px 0;
+  content: ""; position: absolute; left: -52px; top: 50%;
+  width: 13px; height: 28px; margin-top: -14px; background: var(--placa); border-radius: 0 14px 14px 0;
 }
 .placa-titulo > .portada-lema::before {
-  content: ""; position: absolute; left: 22px; top: 22px; width: 11px; height: 11px; border-radius: 50%; background: #3a423d;
+  content: ""; position: absolute; left: 18px; top: 16px; width: 8px; height: 8px; border-radius: 50%; background: #3a423d;
 }
 .portada-lema {
-  font-size: clamp(1.1rem, 2.2vw, 1.35rem); max-width: 40ch; margin: 22px 0 0; color: var(--oro);
+  font-size: 1.1rem; max-width: 34ch; margin: 0; color: var(--oro); line-height: 1.45;
 }
-.seccion-proyectos { padding-top: 64px; }
+.seccion-proyectos { padding-top: clamp(28px, 4.5vh, 44px); }
 .seccion-proyectos > h2 {
   font-family: "Bricolage", system-ui, sans-serif; font-weight: 750; font-stretch: 85%;
-  font-size: 1.9rem; letter-spacing: -0.01em; margin: 0 0 30px;
+  font-size: 1.7rem; letter-spacing: -0.01em; margin: 0 0 26px;
 }
 
 .canales { display: flex; gap: 12px; flex-wrap: wrap; }
@@ -315,3 +316,38 @@ a:hover { text-decoration-thickness: 2px; }
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; transition: none !important; }
 }
+
+/* guías */
+
+.guias { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+.guia {
+  border: 2px solid var(--mascara); border-radius: 8px; padding: 20px 24px;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 24px; align-items: baseline;
+}
+.guia a { color: var(--tinta); text-decoration: none; }
+.guia a:hover .guia-nombre { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.15em; }
+.guia-nombre { font-family: "Bricolage", system-ui, sans-serif; font-weight: 750; font-stretch: 85%; font-size: 1.4rem; }
+.guia-resumen { grid-column: 1; margin: 0; color: var(--tinta-suave); max-width: 70ch; }
+.guia-detalle {
+  grid-column: 2; grid-row: 1; margin: 0; color: var(--tinta-suave); font-size: 0.92rem;
+  font-family: "Bricolage", system-ui, sans-serif; font-stretch: 92%;
+}
+@media (max-width: 560px) {
+  .guia { grid-template-columns: 1fr; }
+  .guia-detalle { grid-column: 1; grid-row: auto; }
+}
+
+.indice { margin: 4px 0 6px; padding: 0; list-style: none; }
+.indice li + li { margin-top: 6px; }
+.indice a { color: var(--chip-tinta); }
+
+/* bloques de código con botón Copiar */
+
+.bloque-codigo { position: relative; margin: 1em 0 1.3em; }
+.bloque-codigo pre { margin: 0; padding-right: 96px; }
+.copiar-boton {
+  position: absolute; top: 8px; right: 8px;
+  font: inherit; font-size: 0.85rem; font-weight: 700; line-height: 1.2;
+  background: var(--oro); color: var(--oro-tinta); border: 0; border-radius: 5px; padding: 6px 11px; cursor: pointer;
+}
+.copiar-boton:hover { filter: brightness(1.08); }

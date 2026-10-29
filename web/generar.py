@@ -508,15 +508,106 @@ def preparar_proyectos(api, sitio, carpeta_notas, ahora):
     return proyectos
 
 
+# ---------------------------------------------------------------- guías
+
+def arreglar_url_web(url, imagen=False):
+    """Enlaces de una guía: se dejan como están, salvo los esquemas peligrosos."""
+    url = (url or "").strip()
+    if not url:
+        return None
+    if url.startswith("//"):
+        url = "https:" + url
+    esquema = urllib.parse.urlsplit(url).scheme.lower()
+    if esquema and esquema not in ("http", "https", "mailto"):
+        return None
+    return url
+
+
+def preparar_guias(carpeta, ahora):
+    """guias/<nombre>.md: una página por archivo, con la misma cabecera que las notas."""
+    guias = []
+    if not os.path.isdir(carpeta):
+        return guias
+    for f in sorted(os.listdir(carpeta)):
+        if not f.lower().endswith(".md") or f.lower() == "leeme.md":
+            continue
+        nombre = f[:-3]
+        datos, cuerpo = leer_nota(carpeta, nombre)
+        if si(datos.get("oculto", "no")):
+            continue
+        html_guia, titulo, parrafo = render_markdown(cuerpo, arreglar_url_web, usados=set(IDS_RESERVADOS))
+        pasos = [(i, re.sub(r"<[^>]+>", "", t)) for i, t in re.findall(r'<h2 id="([^"]+)">(.*?)</h2>', html_guia)]
+        fecha = datos.get("fecha")
+        if fecha and not re.match(r"^\d{4}-\d{2}-\d{2}$", fecha):
+            raise ErrorWeb(f"guias/{f}: la fecha tiene que ir como AAAA-MM-DD (pone «{fecha}»)")
+        iso = f"{fecha}T09:00:00+00:00" if fecha else None
+        dias = (ahora - fecha_local(iso)).days if iso else 999
+        guias.append({
+            "slug": re.sub(r"[^a-z0-9._-]", "-", nombre.lower()),
+            "titulo": datos.get("titulo") or titulo or nombre,
+            "resumen": recortar(datos.get("resumen") or parrafo or ""),
+            "fecha": iso,
+            "nuevo": dias < 14,
+            "video": datos.get("video"),
+            "orden": int(datos["orden"]) if str(datos.get("orden", "")).lstrip("-").isdigit() else 1000,
+            "html": html_guia,
+            "pasos": [(i, html.unescape(t)) for i, t in pasos],
+        })
+    guias.sort(key=lambda g: (g["orden"], -(fecha_local(g["fecha"]).timestamp() if g["fecha"] else 0), g["slug"]))
+    return guias
+
+
+def lista_guias(guias, pre):
+    filas = []
+    for g in guias:
+        nuevo = ' <span class="sello">Nuevo</span>' if g["nuevo"] else ""
+        n = len(g["pasos"])
+        detalle = f"{n} apartados" if n > 1 else ""
+        filas.append(f"""<li class="guia">
+  <a href="{pre}guias/{esc(g['slug'])}/"><span class="guia-nombre">{esc(g['titulo'])}</span>{nuevo}</a>
+  <p class="guia-resumen">{esc(g['resumen'])}</p>
+  {f'<p class="guia-detalle">{detalle}</p>' if detalle else ''}
+</li>""")
+    return '<ul class="guias" role="list">\n' + "\n".join(filas) + "\n</ul>"
+
+
+def pagina_guia(sitio, g):
+    indice = ""
+    if g["pasos"]:
+        indice = "<ul class=\"indice\">" + "".join(
+            f'<li><a href="#{esc(i)}">{esc(t)}</a></li>' for i, t in g["pasos"]) + "</ul>"
+    video = f'<p class="caja-video"><a href="{esc(g["video"])}" rel="noopener">Ver el vídeo</a></p>' if g["video"] else ""
+    fecha = f'<p class="caja-fecha">Actualizada el {esc(fecha_texto(g["fecha"]))}</p>' if g["fecha"] else ""
+    sello = ' <span class="sello">Nuevo</span>' if g["nuevo"] else ""
+    caja = f"""<aside class="caja chip-caja" aria-label="En esta guía">
+<h2 class="caja-titulo">En esta guía</h2>
+{fecha}{indice}{video}
+</aside>"""
+    cuerpo = f"""<article class="ancho proyecto">
+  <p class="migas"><a href="../../#guias">Guías</a></p>
+  <h1 class="proyecto-titulo">{esc(g['titulo'])}{sello}</h1>
+  <p class="proyecto-resumen">{esc(g['resumen'])}</p>
+  <div class="proyecto-rejilla">
+    {caja}
+    <div class="texto">
+{g['html']}
+    </div>
+  </div>
+</article>"""
+    return pagina(sitio, g["titulo"], g["resumen"] or g["titulo"], cuerpo, 2, f"guias/{g['slug']}/", actual="guias")
+
+
 # ---------------------------------------------------------------- páginas
 
 def pagina(sitio, titulo, descripcion, cuerpo, nivel, ruta, actual="", pre=None):
     if pre is None:
         pre = "../" * nivel
     url = sitio["url"].rstrip("/") + "/" + ruta
-    nav = [("proyectos", "Proyectos", f"{pre}#proyectos"),
-           ("descargas", "Descargas", f"{pre}descargas/"),
-           ("canales", "Canales", f"{pre}#canales")]
+    nav = [("proyectos", "Proyectos", f"{pre}#proyectos")]
+    if sitio.get("_hay_guias"):
+        nav.append(("guias", "Guías", f"{pre}#guias"))
+    nav += [("descargas", "Descargas", f"{pre}descargas/"),
+            ("canales", "Canales", f"{pre}#canales")]
     marca_actual = ' aria-current="page"'
     enlaces_nav = "".join(
         f'<a href="{href}"{marca_actual if clave == actual else ""}>{texto}</a>'
@@ -557,9 +648,44 @@ def pagina(sitio, titulo, descripcion, cuerpo, nivel, ruta, actual="", pre=None)
     <p class="pie-canales">{enlaces_canales(sitio, clase="")}</p>
   </div>
 </footer>
+{SCRIPT_COPIAR if "<pre" in cuerpo else ""}
 </body>
 </html>
 """
+
+
+# botón «Copiar» en cada bloque de código (sin dependencias)
+SCRIPT_COPIAR = """<script>
+document.querySelectorAll('.texto pre').forEach(function (pre) {
+  var caja = document.createElement('div');
+  caja.className = 'bloque-codigo';
+  pre.parentNode.insertBefore(caja, pre);
+  caja.appendChild(pre);
+  var b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'copiar-boton';
+  b.textContent = 'Copiar';
+  b.setAttribute('aria-live', 'polite');
+  caja.appendChild(b);
+  function aviso(ok) {
+    b.textContent = ok ? 'Copiado' : 'Selecciónalo y cópialo';
+    setTimeout(function () { b.textContent = 'Copiar'; }, 2000);
+  }
+  b.addEventListener('click', function () {
+    var texto = pre.innerText.replace(/\\n$/, '');
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(texto).then(function () { aviso(true); }, function () { aviso(false); });
+    } else {
+      var r = document.createRange();
+      r.selectNodeContents(pre);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(r);
+      try { aviso(document.execCommand('copy')); } catch (e) { aviso(false); }
+    }
+  });
+});
+</script>"""
 
 
 def enlaces_canales(sitio, clase="canal"):
@@ -589,12 +715,19 @@ def chip_proyecto(p, pre):
 </li>"""
 
 
-def portada(sitio, proyectos):
+def portada(sitio, proyectos, guias=()):
     if proyectos:
         lista = "\n".join(chip_proyecto(p, "") for p in proyectos)
         bloque = f'<ul class="chips" role="list">\n{lista}\n</ul>'
     else:
         bloque = '<p class="vacio">Aún no hay repositorios públicos. En cuanto haya uno, aparecerá aquí solo.</p>'
+    bloque_guias = ""
+    if guias:
+        bloque_guias = f"""<section class="ancho seccion" id="guias" aria-labelledby="t-guias">
+  <h2 id="t-guias">Guías</h2>
+  {lista_guias(guias, "")}
+</section>
+"""
     cuerpo = f"""<section class="portada ancho">
   <div class="placa-titulo">
     <h1 class="portada-titulo">{esc(sitio['titulo'])}</h1>
@@ -606,7 +739,7 @@ def portada(sitio, proyectos):
   {bloque}
   <p class="a-descargas"><a href="descargas/">Ver todas las descargas en una página</a></p>
 </section>
-<section class="ancho seccion" id="canales" aria-labelledby="t-canales">
+{bloque_guias}<section class="ancho seccion" id="canales" aria-labelledby="t-canales">
   <h2 id="t-canales">Canales</h2>
   <div class="canales">{enlaces_canales(sitio)}</div>
 </section>"""
@@ -744,7 +877,7 @@ def pagina_404(sitio):
     return pagina(sitio, "Página no encontrada", "", cuerpo, 0, "404.html", pre=sitio["url"].rstrip("/") + "/")
 
 
-def feed(sitio, proyectos):
+def feed(sitio, proyectos, guias=()):
     base = sitio["url"].rstrip("/")
     dominio = urllib.parse.urlsplit(base).netloc
     entradas = []
@@ -757,6 +890,10 @@ def feed(sitio, proyectos):
         if r and r["fecha"]:
             entradas.append((r["fecha"], f"tag:{dominio},2026:release-{r['id']}",
                              f"{p['titulo']} {r['tag']}", url + "#descarga", f"Nueva versión de {p['titulo']}."))
+    for gu in guias:
+        if gu["fecha"]:
+            entradas.append((gu["fecha"], f"tag:{dominio},2026:guia-{gu['slug']}",
+                             f"Guía: {gu['titulo']}", f"{base}/guias/{gu['slug']}/", gu["resumen"]))
     entradas.sort(key=lambda e: (fecha_local(e[0]), e[1]), reverse=True)
     entradas = entradas[:30]
     actualizado = entradas[0][0] if entradas else "2026-01-01T00:00:00Z"
@@ -772,30 +909,34 @@ def feed(sitio, proyectos):
     return "\n".join(xml)
 
 
-def mapa_sitio(sitio, proyectos):
+def mapa_sitio(sitio, proyectos, guias=()):
     base = sitio["url"].rstrip("/")
-    urls = [f"{base}/", f"{base}/descargas/"] + [f"{base}/proyectos/{p['slug']}/" for p in proyectos]
+    urls = [f"{base}/", f"{base}/descargas/"] + [f"{base}/proyectos/{p['slug']}/" for p in proyectos] + [f"{base}/guias/{g['slug']}/" for g in guias]
     filas = "".join(f"<url><loc>{esc(u)}</loc></url>" for u in urls)
     return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{filas}</urlset>\n'
 
 
 # ---------------------------------------------------------------- todo junto
 
-def generar(api, sitio, salida, carpeta_notas, ahora):
+def generar(api, sitio, salida, carpeta_notas, ahora, carpeta_guias=None):
+    guias = preparar_guias(carpeta_guias or os.path.join(RAIZ, "guias"), ahora)
+    sitio = dict(sitio, _hay_guias=bool(guias))
     proyectos = preparar_proyectos(api, sitio, carpeta_notas, ahora)
     if os.path.exists(salida):
         shutil.rmtree(salida)
     archivos = {
-        "index.html": portada(sitio, proyectos),
+        "index.html": portada(sitio, proyectos, guias),
         "descargas/index.html": pagina_descargas(sitio, proyectos),
         "404.html": pagina_404(sitio),
-        "feed.xml": feed(sitio, proyectos),
-        "sitemap.xml": mapa_sitio(sitio, proyectos),
+        "feed.xml": feed(sitio, proyectos, guias),
+        "sitemap.xml": mapa_sitio(sitio, proyectos, guias),
         "robots.txt": f"User-agent: *\nAllow: /\nSitemap: {sitio['url'].rstrip('/')}/sitemap.xml\n",
         ".nojekyll": "",
     }
     for p in proyectos:
         archivos[f"proyectos/{p['slug']}/index.html"] = pagina_proyecto(sitio, p)
+    for gu in guias:
+        archivos[f"guias/{gu['slug']}/index.html"] = pagina_guia(sitio, gu)
     for ruta, texto in archivos.items():
         destino = os.path.join(salida, ruta)
         os.makedirs(os.path.dirname(destino), exist_ok=True)
@@ -820,7 +961,7 @@ def generar(api, sitio, salida, carpeta_notas, ahora):
     huella = h.hexdigest()
     with open(os.path.join(salida, "huella.txt"), "w", encoding="utf-8") as f:
         f.write(huella + "\n")
-    return proyectos, huella
+    return proyectos, guias, huella
 
 
 def main(argv=None):
@@ -828,6 +969,7 @@ def main(argv=None):
     ap.add_argument("--salida", default="_site")
     ap.add_argument("--sitio", default=os.path.join(RAIZ, "sitio.json"))
     ap.add_argument("--notas", default=os.path.join(RAIZ, "notas"))
+    ap.add_argument("--guias", default=os.path.join(RAIZ, "guias"))
     ap.add_argument("--datos", help="carpeta con respuestas guardadas (pruebas)")
     ap.add_argument("--ahora", help="fecha AAAA-MM-DD para las pruebas")
     a = ap.parse_args(argv)
@@ -836,7 +978,7 @@ def main(argv=None):
     api = ApiFalsa(a.datos) if a.datos else ApiGitHub(os.environ.get("GITHUB_TOKEN"))
     ahora = dt.datetime.now(ZONA) if not a.ahora else dt.datetime.fromisoformat(a.ahora).replace(tzinfo=ZONA)
     try:
-        proyectos, huella = generar(api, sitio, a.salida, a.notas, ahora)
+        proyectos, guias, huella = generar(api, sitio, a.salida, a.notas, ahora, a.guias)
     except ErrorWeb as e:
         print(f"Error: {e}", file=sys.stderr)
         return 1
@@ -845,7 +987,9 @@ def main(argv=None):
         print(f"- {p['repo']}: {r['tag'] if r else 'sin versiones'}"
               f"{', ' + str(len(r['archivos'])) + ' archivos' if r else ''}"
               f"{', catálogo de ' + str(len(p['catalogo']['payloads'])) if p['catalogo'] else ''}")
-    print(f"{len(proyectos)} proyectos. Huella {huella[:12]}")
+    for gu in guias:
+        print(f"- guía {gu['slug']}: {len(gu['pasos'])} apartados")
+    print(f"{len(proyectos)} proyectos y {len(guias)} guías. Huella {huella[:12]}")
     return 0
 
 

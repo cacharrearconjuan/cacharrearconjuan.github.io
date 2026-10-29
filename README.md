@@ -65,6 +65,15 @@ Texto en Markdown que sale antes del README.
 
 Las líneas que empiezan por `#` dentro de la cabecera no cuentan: sirven para dejar campos preparados, como el `# video:` de las notas que ya hay.
 
+## Guías
+
+Cada archivo de la carpeta `guias/` es una página de la web, en `/guias/<nombre-del-archivo>/`, y sale en la portada, en el apartado «Guías». Ya está `guias/limpiar-fire-tv.md`.
+
+- Se escriben en Markdown, con la misma cabecera que las notas: `titulo`, `resumen`, `video`, `orden`, `oculto` y además `fecha` (`AAAA-MM-DD`, la de la última actualización).
+- Cada `## apartado` sale en el índice «En esta guía».
+- Los comandos van entre tres comillas invertidas (```` ```bash ````): en la web salen con un botón **Copiar**.
+- Para hacer una nueva: **Add file → Create new file**, escribe `guias/nombre.md` como nombre y pega el texto.
+
 ## Que un repositorio no salga
 
 Cualquiera de estas tres:
@@ -86,7 +95,7 @@ En `https://cacharrearconjuan.github.io/feed.xml` hay un feed Atom con cada proy
 ## Para quien mantiene el repositorio
 
 - `web/generar.py` hace la web. Solo usa Python 3.11 o superior y lo que trae `web/vendor` ([markdown-it-py](https://github.com/executablebooks/markdown-it-py) y mdurl, licencia MIT): no instala nada.
-- Probar en el PC: `python3 tests/probar.py`. Usa respuestas de GitHub guardadas en `tests/datos/`.
+- Probar en el PC: `python3 tests/probar.py`. Usa respuestas de GitHub guardadas en `tests/datos/` y las guías de prueba de `tests/datos/guias/`; también comprueba que las guías de `guias/` se generan.
 - Ver la web en el PC sin GitHub: `python3 web/generar.py --salida _site --datos tests/datos/basico` y abrir `_site` con `python3 -m http.server -d _site`.
 - `plantilla/` se copia tal cual: estilo, icono y fuentes.
 - Fuentes: Bricolage Grotesque y Atkinson Hyperlegible Next, con licencia SIL OFL (en `plantilla/fuentes/`). Van dentro de la web: no se cargan de Google ni de ningún otro sitio.
