@@ -10,6 +10,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 import contextlib
@@ -19,6 +20,7 @@ from html.parser import HTMLParser
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(RAIZ, "web"))
 import generar as g  # noqa: E402
+import datos_pc as dpc  # noqa: E402
 
 DATOS = os.path.join(RAIZ, "tests", "datos")
 U = "cacharrearconjuan"
@@ -34,13 +36,16 @@ def comprobar(cond, texto):
         print("  FALLA:", texto)
 
 
-def generar(salida, datos="basico", ahora="2026-10-29", carpeta_datos=None, guias=None, enlaces=None, sitio=None, notas=None):
+def generar(salida, datos="basico", ahora="2026-10-29", carpeta_datos=None, guias=None, enlaces=None, sitio=None, notas=None,
+            pc_datos=None):
     notas = notas or os.path.join(DATOS, "notas")
     args = ["--salida", salida, "--datos", carpeta_datos or os.path.join(DATOS, datos), "--ahora", ahora,
             "--guias", guias or os.path.join(DATOS, "guias"),
             "--enlaces", enlaces or os.path.join(os.path.dirname(salida), "enlaces.json")]
     if sitio:
         args += ["--sitio", sitio]
+    if pc_datos:
+        args += ["--pc-datos", pc_datos]
     args += ["--notas", notas]
     with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()) as err:
         codigo = g.main(args)
@@ -243,7 +248,7 @@ def prueba_web():
         comprobar(len(entradas) == 8 and len(set(ids)) == 8, f"feed: 8 entradas únicas ({len(entradas)})")
         comprobar(entradas[0].find("a:title", ns).text == "Lanzador de scrcpy v1.0.0", "feed: lo último primero")
         mapa = ET.fromstring(leer(salida, "sitemap.xml"))
-        comprobar(len(mapa) == 7, "sitemap: 7 páginas")
+        comprobar(len(mapa) == 8, "sitemap: 8 páginas")
 
         guia = leer(salida, "guias/guia-prueba/index.html")
         comprobar('href="guias/guia-prueba/"' in portada and 'id="guias"' in portada, "portada: sección de guías")
@@ -257,7 +262,10 @@ def prueba_web():
         comprobar("2 apartados" in portada, "portada: número de apartados")
 
         for ruta in paginas_html(salida):
-            r = revisar_html(leer(salida, ruta))
+            texto = leer(salida, ruta)
+            comprobar(texto.count('class="enlace-pc"') == 1 and "¿Qué le va a mi PC?" in texto.split("</header>", 1)[0],
+                      f"{ruta}: enlace a la herramienta del PC arriba")
+            r = revisar_html(texto)
             comprobar(not r.errores and not r.pila, f"{ruta}: etiquetas equilibradas ({r.errores[:3]} {r.pila[:3]})")
             comprobar(len(r.ids) == len(set(r.ids)), f"{ruta}: ids únicos")
             if ruta == "404.html":
@@ -398,6 +406,170 @@ def prueba_error():
         comprobar(os.path.exists(os.path.join(salida, "testigo")), "error de la API: no borra la web anterior")
 
 
+# ------------------------------------------------------------ ¿Qué le va a mi PC?
+
+OPENDB = os.path.join(DATOS, "opendb")
+
+
+def prueba_pc_web():
+    print("¿Qué le va a mi PC? en la web")
+    with tempfile.TemporaryDirectory() as t:
+        salida = os.path.join(t, "web")
+        codigo, err = generar(salida)
+        comprobar(codigo == 0, f"genera con la herramienta ({err.strip()[:200]})")
+        if codigo:
+            return
+        portada = leer(salida, "index.html")
+        cab = portada.split("</header>", 1)[0]
+        comprobar('<div class="cabecera-izquierda">' in cab and cab.index('class="marca"') < cab.index('class="enlace-pc"') < cab.index("<nav"),
+                  "portada: el enlace va arriba a la izquierda, junto al nombre")
+        comprobar('<a class="enlace-pc" href="pc/">' in portada, "portada: enlace relativo a pc/")
+        comprobar('<a class="enlace-pc" href="../../pc/">' in leer(salida, "proyectos/lanzador-scrcpy/index.html"), "proyecto: enlace a ../../pc/")
+        comprobar('href="https://cacharrearconjuan.github.io/pc/"' in leer(salida, "404.html"), "404: enlace absoluto a la herramienta")
+        comprobar('id="proyectos"' in portada and 'href="proyectos/lanzador-scrcpy/"' in portada, "la portada sigue en su sitio")
+        pc = leer(salida, "pc/index.html")
+        comprobar("<title>¿Qué le va a mi PC? | Cacharrear con Juan</title>" in pc, "pc: título")
+        comprobar('<link rel="canonical" href="https://cacharrearconjuan.github.io/pc/">' in pc, "pc: dirección canónica")
+        comprobar('<a class="enlace-pc" href="../pc/" aria-current="page">' in pc, "pc: el enlace marcado como página actual")
+        comprobar('id="pc-app"' in pc and pc.index('src="logica.js"') < pc.index('src="app.js"'), "pc: contenedor y scripts en orden")
+        comprobar("BuildCores OpenDB" in pc and "CC BY-NC-SA 4.0" in pc, "pc: créditos y licencia sin necesidad de JavaScript")
+        for f in g.ARCHIVOS_PC:
+            comprobar(os.path.exists(os.path.join(salida, "pc", f)), f"pc: copia {f}")
+        for f in g.DATOS_PC:
+            ruta = os.path.join(salida, "pc", "datos", f)
+            try:
+                with open(ruta, encoding="utf-8") as fh:
+                    datos = json.load(fh)
+                bien = "campos" in datos and len(datos["datos"]) > 10 if f != "meta.json" else datos.get("licencia") == "CC BY-NC-SA 4.0"
+            except (OSError, ValueError):
+                bien = False
+            comprobar(bien, f"pc: datos {f}")
+        comprobar("https://cacharrearconjuan.github.io/pc/" in leer(salida, "sitemap.xml"), "sitemap: /pc/")
+        comprobar("<script" not in leer(salida, "descargas/index.html"), "descargas: sigue sin scripts")
+        # sin las piezas, error claro y no se borra la web anterior
+        huella = leer(salida, "huella.txt")
+        codigo, err = generar(salida, pc_datos=os.path.join(t, "no-existe"))
+        comprobar(codigo == 1 and "datos del PC" in err, "sin piezas del PC: error claro")
+        comprobar(leer(salida, "huella.txt") == huella, "sin piezas del PC: la web anterior se queda")
+        roto = os.path.join(t, "roto")
+        shutil.copytree(os.path.join(RAIZ, "datos-pc"), roto)
+        with open(os.path.join(roto, "cpu.json"), "w", encoding="utf-8") as f:
+            f.write("{roto")
+        codigo, err = generar(salida, pc_datos=roto)
+        comprobar(codigo == 1 and "no es un JSON" in err, "piezas rotas: error claro")
+
+
+def leer_tabla(ruta):
+    with open(ruta, encoding="utf-8") as f:
+        d = json.load(f)
+    return {r[0]: dict(zip(d["campos"], r)) for r in d["datos"]}
+
+
+def prueba_datos_pc():
+    print("Piezas desde BuildCores (datos_pc.py)")
+    with tempfile.TemporaryDirectory() as t:
+        salida = os.path.join(t, "datos")
+        reglas = os.path.join(RAIZ, "pc", "reglas.json")
+        with contextlib.redirect_stdout(io.StringIO()):
+            codigo = dpc.main(["--opendb", OPENDB, "--salida", salida, "--reglas", reglas])
+        comprobar(codigo == 0, "convierte la copia de prueba")
+        cpus = leer_tabla(os.path.join(salida, "cpu.json"))
+        comprobar(set(cpus) == {"ryzen-5-7500f", "core-i5-12400f", "core-i5-12400", "ryzen-5-5600g", "ryzen-7-5700",
+                                "core-ultra-7-270k-plus", "celeron-g3930", "ryzen-5-3600", "core-i9-14900k", "core-ultra-5-999x"},
+                  f"cpu: los que tocan, sin Xeon, EPYC ni AM3+ ({sorted(cpus)})")
+        c = cpus.get("ryzen-5-7500f", {})
+        comprobar(c.get("nombre") == "AMD Ryzen 5 7500F" and c.get("familia") == "raphael" and c.get("igpu") is False,
+                  "cpu: 7500F limpio («™» y OEM fuera), sin gráfica aunque la ficha diga «0»")
+        comprobar(cpus.get("ryzen-5-3600", {}).get("nombre") == "AMD Ryzen 5 3600", "cpu: «3600 OEM/Tray» se queda en 3600")
+        comprobar(cpus.get("core-i5-12400f", {}).get("igpu") is False and cpus.get("core-i5-12400", {}).get("igpu_modelo") == "Intel UHD Graphics 730",
+                  "cpu: la F sin gráfica; «UHD 730» arreglado")
+        comprobar(cpus.get("ryzen-5-5600g", {}).get("familia") == "cezanne" and cpus.get("ryzen-7-5700", {}).get("familia") == "cezanne"
+                  and cpus["ryzen-7-5700"]["igpu"] is False, "cpu: 5600G y 5700 son Cezanne; el 5700, sin gráfica")
+        comprobar(cpus.get("core-ultra-7-270k-plus", {}).get("familia") == "arrow_r", "cpu: los Plus son Arrow Lake Refresh")
+        comprobar(cpus.get("celeron-g3930", {}).get("familia") == "kaby", "cpu: Celeron G3930 es Kaby Lake")
+        comprobar(cpus.get("core-i9-14900k", {}).get("zocalo") == "LGA 1700", "cpu: zócalo mal en la ficha, manda la familia")
+        nuevo = cpus.get("core-ultra-5-999x", {})
+        comprobar(nuevo.get("zocalo") == "LGA 1954" and nuevo.get("familia") is None, "cpu: zócalo nuevo entra solo, sin familia")
+
+        placas = {p["nombre"]: p for p in leer_tabla(os.path.join(salida, "placas.json")).values()}
+        comprobar(set(placas) == {"MSI MAG B550 TOMAHAWK", "MSI Z270 MORTAR DDR4 Micro ATX", "Gigabyte B450 AORUS ELITE",
+                                  "ASRock B365M Pro4 DDR4", "ASUS PRIME Z990-P", "ASUS TUF GAMING X570-PLUS"},
+                  f"placas: sin servidor ni AM3+, con el fabricante delante ({sorted(placas)})")
+        b550 = placas.get("MSI MAG B550 TOMAHAWK", {})
+        comprobar(b550.get("m2") == [["2242,2260,2280,22110", 4, 4, "p"], ["2242,2260,2280", 3, 4, "ps"]],
+                  f"placas: huecos M.2 leídos, «2242-2280» incluye 2260 y sin el de Wi-Fi ({b550.get('m2')})")
+        comprobar(b550.get("revisada") == "2026-04-27" and b550.get("flashback") is True and b550.get("video") == ["HDMI", "DisplayPort"],
+                  "placas: revisada, Flashback y salidas de vídeo")
+        comprobar(placas.get("MSI Z270 MORTAR DDR4 Micro ATX", {}).get("m2_nota") == "plantilla", "placas: M.2 de plantilla fuera")
+        comprobar(placas.get("Gigabyte B450 AORUS ELITE", {}).get("m2_nota") == "imposible", "placas: PCIe 4.0 en una B450, fuera")
+        b365 = placas.get("ASRock B365M Pro4 DDR4", {})
+        comprobar(b365.get("zocalo") == "LGA 1151" and b365.get("ram") == "DDR4" and b365.get("m2_nota") == "sin_datos",
+                  "placas: 1151v2 es 1151 y el DDR4 del nombre manda")
+        comprobar(placas.get("ASUS TUF GAMING X570-PLUS", {}).get("chipset") == "X570"
+                  and placas["ASUS TUF GAMING X570-PLUS"]["m2"][1][3] == "s", "placas: «570X» es X570; hueco solo SATA")
+        comprobar(placas.get("ASUS PRIME Z990-P", {}).get("zocalo") == "LGA 1954", "placas: zócalo nuevo entra solo")
+
+        ram = {r["nombre"]: r for r in leer_tabla(os.path.join(salida, "ram.json")).values()}
+        comprobar(len(ram) == 3, f"ram: sin SO-DIMM, DDR3 ni ECC ({sorted(ram)})")
+        z5 = ram.get("G.Skill Trident Z5 Neo DDR5-6000 CL30 32GB (2x16GB)", {})
+        comprobar(z5.get("tipo") == "DDR5" and z5.get("velocidad") == 6000 and z5.get("cl") == 30 and z5.get("modulos") == 2
+                  and z5.get("gb") == 16 and z5.get("perfil") == "XMP+EXPO", "ram: kit DDR5 bien leído")
+        ssd = {x["nombre"]: x for x in leer_tabla(os.path.join(salida, "ssd.json")).values()}
+        comprobar(len(ssd) == 4 and not any("2.5" in n for n in ssd), "ssd: solo M.2")
+        comprobar(ssd.get("Crucial MX500 1TB M.2-2280 SATA", {}).get("protocolo") == "sata"
+                  and ssd.get("Crucial T705 2TB M.2-2280 PCIe 5.0 X4 NVME", {}).get("gen") == 5
+                  and ssd.get("WD Black SN770M 1TB M.2-2230 PCIe 4.0 X4 NVME", {}).get("largo") == "2230", "ssd: SATA, PCIe 5.0 y 2230")
+        with open(os.path.join(salida, "meta.json"), encoding="utf-8") as f:
+            meta = json.load(f)
+        comprobar(meta["licencia"] == "CC BY-NC-SA 4.0" and meta["piezas"] == {"cpu": 10, "placas": 6, "ram": 3, "ssd": 4},
+                  f"meta: licencia y cuentas ({meta['piezas']})")
+
+        # misma entrada, mismos archivos
+        antes = {f: open(os.path.join(salida, f), "rb").read() for f in os.listdir(salida)}
+        with contextlib.redirect_stdout(io.StringIO()):
+            dpc.main(["--opendb", OPENDB, "--salida", salida, "--reglas", reglas])
+        comprobar(antes == {f: open(os.path.join(salida, f), "rb").read() for f in os.listdir(salida)}, "misma entrada, mismos datos")
+
+        # si de repente salen muchas menos piezas, no se toca nada
+        anterior = os.path.join(t, "anterior")
+        os.makedirs(anterior)
+        with open(os.path.join(anterior, "meta.json"), "w", encoding="utf-8") as f:
+            json.dump({"piezas": {"cpu": 100, "placas": 6, "ram": 3, "ssd": 4}}, f)
+        otra = os.path.join(t, "otra")
+        try:
+            with contextlib.redirect_stdout(io.StringIO()):
+                dpc.main(["--opendb", OPENDB, "--salida", otra, "--reglas", reglas, "--anterior", anterior])
+            paro = False
+        except SystemExit as e:
+            paro = "antes había 100" in str(e)
+        comprobar(paro and not os.path.exists(otra), "caída de piezas: para y no escribe nada")
+        try:
+            dpc.main(["--opendb", os.path.join(t, "nada"), "--salida", otra])
+            paro = False
+        except SystemExit as e:
+            paro = "No encuentro" in str(e)
+        comprobar(paro, "sin copia de BuildCores: error claro")
+
+    # las piezas del repositorio son las que saldrían de esta versión del conversor (formato al día)
+    with open(os.path.join(RAIZ, "datos-pc", "placas.json"), encoding="utf-8") as f:
+        campos = json.load(f)["campos"]
+    comprobar(campos == dpc.CAMPOS["placas"], "datos-pc/: mismo formato que el conversor")
+
+
+def prueba_logica_pc():
+    print("Lógica del PC (Node)")
+    node = shutil.which("node")
+    if not node:
+        print("  (sin Node: no se prueba la lógica de la página)")
+        return
+    r = subprocess.run([node, os.path.join(RAIZ, "tests", "probar_pc.js")], capture_output=True, text=True, timeout=120)
+    resumen = (r.stdout.strip().splitlines() or [""])[-1]
+    fallas = [l for l in r.stdout.splitlines() if "FALLA" in l]
+    for l in fallas:
+        print(l)
+    comprobar(r.returncode == 0, f"lógica del PC: {resumen} {r.stderr.strip()[:300]}")
+
+
 if __name__ == "__main__":
     prueba_utilidades()
     prueba_web()
@@ -406,5 +578,8 @@ if __name__ == "__main__":
     prueba_enlaces_guardados()
     prueba_videos_caidos()
     prueba_error()
+    prueba_pc_web()
+    prueba_datos_pc()
+    prueba_logica_pc()
     print(f"\n{hechas - len(fallos)} de {hechas} comprobaciones bien.")
     sys.exit(1 if fallos else 0)

@@ -1,0 +1,28 @@
+{
+ "opendb_id": "11111111-0000-4000-8000-000000000009",
+ "socket": "AM3+",
+ "metadata": {
+  "name": "AMD FX-8350",
+  "releaseYear": 2022
+ },
+ "cores": {
+  "total": 6,
+  "threads": 12
+ },
+ "clocks": {
+  "performance": {
+   "boost": 4.6
+  }
+ },
+ "specifications": {
+  "tdp": 65,
+  "integratedGraphics": {
+   "model": "None"
+  },
+  "memory": {
+   "types": [
+    "DDR3"
+   ]
+  }
+ }
+}

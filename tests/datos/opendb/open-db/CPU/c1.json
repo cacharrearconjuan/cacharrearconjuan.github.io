@@ -1,0 +1,28 @@
+{
+ "opendb_id": "11111111-0000-4000-8000-000000000001",
+ "socket": "AM5",
+ "metadata": {
+  "name": "AMD Ryzen™ 5 7500F",
+  "releaseYear": 2022
+ },
+ "cores": {
+  "total": 6,
+  "threads": 12
+ },
+ "clocks": {
+  "performance": {
+   "boost": 4.6
+  }
+ },
+ "specifications": {
+  "tdp": 65,
+  "integratedGraphics": {
+   "model": "0"
+  },
+  "memory": {
+   "types": [
+    "DDR5"
+   ]
+  }
+ }
+}

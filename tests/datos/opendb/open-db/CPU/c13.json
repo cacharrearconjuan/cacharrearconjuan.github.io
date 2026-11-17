@@ -1,0 +1,29 @@
+{
+ "opendb_id": "11111111-0000-4000-8000-000000000013",
+ "socket": "LGA 1200",
+ "metadata": {
+  "name": "Intel Core i9-14900K",
+  "releaseYear": 2022
+ },
+ "cores": {
+  "total": 24,
+  "threads": 32
+ },
+ "clocks": {
+  "performance": {
+   "boost": 6.0
+  }
+ },
+ "specifications": {
+  "tdp": 125,
+  "integratedGraphics": {
+   "model": "Intel UHD 770"
+  },
+  "memory": {
+   "types": [
+    "DDR5",
+    "DDR4"
+   ]
+  }
+ }
+}

@@ -1,0 +1,2727 @@
+{
+ "version": "2026-11-17",
+ "nota": "Reglas sacadas a mano de las fichas de AMD e Intel (y de pruebas publicadas cuando el fabricante no da la cifra). Cada dato lleva su fuente.",
+ "fuentes": {
+  "amd-am4": {
+   "titulo": "AMD: chipsets AM4",
+   "url": "https://www.amd.com/en/products/processors/chipsets/am4.html"
+  },
+  "amd-a12-9800": {
+   "titulo": "AMD: ficha del A12-9800",
+   "url": "https://www.amd.com/pt/support/downloads/drivers.html/processors/a-series/a12-series-apu-for-desktops/7th-gen-a12-9800-apu.html"
+  },
+  "toms-bristol": {
+   "titulo": "Tom's Hardware: Bristol Ridge en AM4",
+   "url": "https://www.tomshardware.com/news/amd-am4-socket-bristol-ridge-apu,32645.html"
+  },
+  "amd-1800x": {
+   "titulo": "AMD: ficha del Ryzen 7 1800X",
+   "url": "https://www.amd.com/pt/support/downloads/drivers.html/processors/ryzen/ryzen-1000-series/amd-ryzen-7-1800x.html"
+  },
+  "amd-2700x": {
+   "titulo": "AMD: ficha del Ryzen 7 2700X",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/processors/ryzen/ryzen-2000-series/amd-ryzen-7-2700x.html"
+  },
+  "guru3d-2700x": {
+   "titulo": "Guru3D: Ryzen 7 2700X y su memoria",
+   "url": "https://guru3d.com/review/amd-ryzen-7-2700x-review/page-2"
+  },
+  "amd-2400g": {
+   "titulo": "AMD: ficha del Ryzen 5 2400G",
+   "url": "https://www.amd.com/es/support/downloads/drivers.html/processors/ryzen/ryzen-2000-series/amd-ryzen-5-2400g.html"
+  },
+  "amd-200ge": {
+   "titulo": "AMD: ficha del Athlon 200GE",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/processors/athlon/athlon-200-series/amd-athlon-200ge.html"
+  },
+  "amd-3400g": {
+   "titulo": "AMD: ficha del Ryzen 5 3400G",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/processors/ryzen/ryzen-3000-series/amd-ryzen-5-3400g.html"
+  },
+  "amd-3200g": {
+   "titulo": "AMD: ficha del Ryzen 3 3200G",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/processors/ryzen/ryzen-3000-series/amd-ryzen-3-3200g.html"
+  },
+  "amd-3000g": {
+   "titulo": "AMD: ficha del Athlon 3000G",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/processors/athlon/athlon-3000-series/amd-athlon-3000g.html"
+  },
+  "amd-3700x": {
+   "titulo": "AMD: ficha del Ryzen 7 3700X",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/processors/ryzen/ryzen-3000-series/amd-ryzen-7-3700x.html"
+  },
+  "pcgamesn-zen2": {
+   "titulo": "PCGamesN: la memoria ideal para Ryzen 3000, según AMD",
+   "url": "https://pcgamesn.com/amd/ryzen-3000-memory-overclocking-sweet-spot"
+  },
+  "amd-4600g": {
+   "titulo": "AMD: ficha del Ryzen 5 4600G",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/processors/ryzen/ryzen-4000-series/amd-ryzen-5-4600g.html"
+  },
+  "amd-5700x3d": {
+   "titulo": "AMD: ficha del Ryzen 7 5700X3D",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/processors/ryzen/ryzen-5000-series/amd-ryzen-7-5700x3d.html"
+  },
+  "amd-5800x": {
+   "titulo": "AMD: ficha del Ryzen 7 5800X",
+   "url": "https://www.amd.com/en/products/processors/desktops/ryzen/5000-series/amd-ryzen-7-5800x.html"
+  },
+  "computerbase-zen3": {
+   "titulo": "ComputerBase: Ryzen 5000 con DDR4-3600 y DDR4-4000",
+   "url": "https://www.computerbase.de/2020-10/amd-ryzen-5000-ddr4-4000-ram/"
+  },
+  "amd-5600gt": {
+   "titulo": "AMD: ficha del Ryzen 5 5600GT",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/processors/ryzen/ryzen-5000-series/amd-ryzen-5-5600gt.html"
+  },
+  "amd-5700": {
+   "titulo": "AMD: ficha del Ryzen 7 5700",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/processors/ryzen/ryzen-5000-series/amd-ryzen-7-5700.html"
+  },
+  "amd-5700g": {
+   "titulo": "AMD: ficha del Ryzen 7 5700G",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/processors/ryzen/ryzen-5000-series/amd-ryzen-7-5700g.html"
+  },
+  "amd-2022-300": {
+   "titulo": "AMD: nota de prensa del 15 de marzo de 2022 (Ryzen 5000 en placas 300)",
+   "url": "https://d1io3yog0oux5.cloudfront.net/_5bffa62f67239251b5003c511991c3ed/amd/news/2022-03-15_AMD_Launches_the_Ultimate_Gaming_Processor_Brings__1053.pdf"
+  },
+  "msi-300-zen3": {
+   "titulo": "MSI: placas 300 listas para Ryzen 5000",
+   "url": "https://msi.com/news/detail/A-Huge-Step-for-Unprecedented-Compatibility--MSI-300-series-Motherboards-Are-Ready-to-Support-Zen-3-Processors140163"
+  },
+  "toms-x570-zen1": {
+   "titulo": "Tom's Hardware: X570 y los Ryzen de primera generación",
+   "url": "https://www.tomshardware.com/news/amd-x570-chipset-first-gen-ryzen-support,39474.html"
+  },
+  "tpu-b450": {
+   "titulo": "TechPowerUp: AMD presenta el B450",
+   "url": "https://techpowerup.com/246352/amd-announces-the-b450-chipset"
+  },
+  "tpu-zen3-400": {
+   "titulo": "TechPowerUp: Ryzen 5000 en B450 y X470",
+   "url": "https://techpowerup.com/267358/amd-backpedals-zen-3-support-coming-to-b450-and-x470"
+  },
+  "tpu-x570": {
+   "titulo": "TechPowerUp: Raven Ridge y Summit Ridge no van en X570",
+   "url": "https://techpowerup.com/255956/amd-raven-ridge-and-summit-ridge-cpus-wont-work-on-x570-chipset"
+  },
+  "tpu-a520": {
+   "titulo": "TechPowerUp: el A520, sin PCIe 4.0",
+   "url": "https://techpowerup.com/271119/amd-launches-a520-entry-level-desktop-chipset-no-pcie-4-0"
+  },
+  "tpu-b550": {
+   "titulo": "TechPowerUp: el B550 al detalle",
+   "url": "https://techpowerup.com/266710/amd-b550-chipset-detailed-its-ready-for-zen-3-older-am4-motherboards-not-compatible?cp=2"
+  },
+  "amd-am5": {
+   "titulo": "AMD: chipsets AM5",
+   "url": "https://www.amd.com/en/products/processors/chipsets/am5.html"
+  },
+  "amd-am5-2029": {
+   "titulo": "AMD: AM5 con soporte hasta 2029",
+   "url": "https://amd.com/en/blogs/2026/amd-computex-2026-10-years-of-am4-am5-support-through.html"
+  },
+  "amd-7950x": {
+   "titulo": "AMD: ficha del Ryzen 9 7950X",
+   "url": "https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-9-7950x.html"
+  },
+  "toms-am5-6000": {
+   "titulo": "Tom's Hardware: AMD confirma DDR5-6000 como punto óptimo de Ryzen 7000",
+   "url": "https://www.tomshardware.com/news/amd-confirms-ddr5-6000-ram-is-the-sweet-spot-for-ryzen-7000-cpus"
+  },
+  "amd-8500g": {
+   "titulo": "AMD: ficha del Ryzen 5 8500G",
+   "url": "https://www.amd.com/en/products/processors/desktops/ryzen/8000-series/amd-ryzen-5-8500g.html"
+  },
+  "tpu-8500g": {
+   "titulo": "TechPowerUp: Ryzen 5 8500G y sus carriles PCIe",
+   "url": "https://techpowerup.com/review/amd-ryzen-5-8500g/2.html"
+  },
+  "amd-8000g": {
+   "titulo": "AMD: Ryzen serie 8000G",
+   "url": "https://amd.com/en/partner/articles/ryzen-8000G-series-processors.html"
+  },
+  "toms-8000g-6000": {
+   "titulo": "Tom's Hardware: AMD recomienda DDR5-6000 para los Ryzen 8000G",
+   "url": "https://www.tomshardware.com/pc-components/cpus/amd-says-dual-channel-ddr5-6000-is-the-sweet-spot-for-ryzen-8000g-apus"
+  },
+  "amd-9950x": {
+   "titulo": "AMD: ficha del Ryzen 9 9950X",
+   "url": "https://www.amd.com/ja/products/processors/desktops/ryzen/9000-series/amd-ryzen-9-9950x.html"
+  },
+  "amd-9950x3d2": {
+   "titulo": "AMD: ficha del Ryzen 9 9950X3D2",
+   "url": "https://www.amd.com/de/products/processors/desktops/ryzen/9000-series/amd-ryzen-9-9950x3d2-dual-edition.html"
+  },
+  "amd-9850x3d": {
+   "titulo": "AMD: ficha del Ryzen 7 9850X3D",
+   "url": "https://www.amd.com/de/products/processors/desktops/ryzen/9000-series/amd-ryzen-7-9850x3d.html"
+  },
+  "tpu-zen5-ram": {
+   "titulo": "TechPowerUp: cómo escala la DDR5 con Zen 5",
+   "url": "https://techpowerup.com/review/ddr5-memory-performance-scaling-with-amd-zen-5/22.html"
+  },
+  "amd-ai-450g": {
+   "titulo": "AMD: ficha del Ryzen AI 7 PRO 450G",
+   "url": "https://amd.com/en/products/processors/desktops/ryzen-pro/ai-400-series/amd-ryzen-ai-7-pro-450g.html"
+  },
+  "amd-ai-435g": {
+   "titulo": "AMD: ficha del Ryzen AI 5 435G",
+   "url": "https://www.amd.com/ja/products/processors/desktops/ryzen/ai-400-series/amd-ryzen-ai-5-435g.html"
+  },
+  "wccftech-ai400": {
+   "titulo": "Wccftech: carriles PCIe de los Ryzen AI 400 de sobremesa",
+   "url": "https://wccftech.com/amd-nerfs-ryzen-ai-400-desktop-cpus-with-just-10-12-usable-pcie-lanes/"
+  },
+  "hothardware-a620": {
+   "titulo": "HotHardware: las A620, pensadas para 65 W",
+   "url": "https://hothardware.com/news/a620-ryzen-boards-no-support-above-65w"
+  },
+  "toms-a620a": {
+   "titulo": "Tom's Hardware: el A620A es un B550 rebautizado",
+   "url": "https://www.tomshardware.com/pc-components/motherboards/biostars-new-amd-motherboard-could-be-perfect-for-budget-builds-a620a-motherboard-arrives-with-a-rebadged-b550-chipset"
+  },
+  "digitalcitizen-600": {
+   "titulo": "Digital Citizen: X670E, X670, B650E y B650",
+   "url": "https://digitalcitizen.life/x670e-x670-b650e-b650-chipsets"
+  },
+  "tpu-800": {
+   "titulo": "TechPowerUp: funciones de los chipsets 800",
+   "url": "https://techpowerup.com/323052/amd-shuffles-feature-sets-of-its-800-series-chipset-x870-is-b650e-successor?cp=3"
+  },
+  "msi-b840": {
+   "titulo": "MSI: ficha de la PRO B840M-B",
+   "url": "https://us.msi.com/Motherboard/PRO-B840M-B/Specification"
+  },
+  "ark-i5-6600k": {
+   "titulo": "Intel: ficha del Core i5-6600K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/88191/intel-core-i56600k-processor-6m-cache-up-to-3-90-ghz/specifications.html"
+  },
+  "ark-i7-6700k": {
+   "titulo": "Intel: ficha del Core i7-6700K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/88195/specifications.html"
+  },
+  "ark-g4400": {
+   "titulo": "Intel: ficha del Pentium G4400",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/88179/intel-pentium-processor-g4400-3m-cache-3-30-ghz/specifications.html"
+  },
+  "techspot-skylake": {
+   "titulo": "TechSpot: Skylake con DDR4 de 2133 a 4000",
+   "url": "https://www.techspot.com/article/1171-ddr4-4000-mhz-performance/page4.html"
+  },
+  "ark-i3-7100": {
+   "titulo": "Intel: ficha del Core i3-7100",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/97455/intel-core-i37100-processor-3m-cache-3-90-ghz/specifications.html"
+  },
+  "ark-i7-7700k": {
+   "titulo": "Intel: ficha del Core i7-7700K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/97129/intel-core-i77700k-processor-8m-cache-up-to-4-50-ghz/specifications.html"
+  },
+  "ark-g3930": {
+   "titulo": "Intel: ficha del Celeron G3930",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/97452/intel-celeron-processor-g3930-2m-cache-2-90-ghz/specifications.html"
+  },
+  "ark-i3-8100": {
+   "titulo": "Intel: ficha del Core i3-8100",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/126688/intel-core-i38100-processor-6m-cache-3-60-ghz/specifications.html"
+  },
+  "ark-i5-8400": {
+   "titulo": "Intel: ficha del Core i5-8400",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/126687/intel-core-i58400-processor-9m-cache-up-to-4-00-ghz/specifications.html"
+  },
+  "ark-i7-8700k": {
+   "titulo": "Intel: ficha del Core i7-8700K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/126684/intel-core-i78700k-processor-12m-cache-up-to-4-70-ghz/specifications.html"
+  },
+  "tpu-8700k-ram": {
+   "titulo": "TechPowerUp: Core i7-8700K y la velocidad de la memoria",
+   "url": "https://techpowerup.com/review/intel-core-i7-8700k-coffee-lake-memory-performance-benchmark-analysis/11.html"
+  },
+  "ark-i3-9100f": {
+   "titulo": "Intel: ficha del Core i3-9100F",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/190886/intel-core-i39100f-processor-6m-cache-up-to-4-20-ghz/specifications.html"
+  },
+  "ark-i5-9400": {
+   "titulo": "Intel: ficha del Core i5-9400",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/134898/intel-core-i59400-processor-9m-cache-up-to-4-10-ghz/specifications.html"
+  },
+  "ark-i9-9900k": {
+   "titulo": "Intel: ficha del Core i9-9900K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/186605/intel-core-i99900k-processor-16m-cache-up-to-5-00-ghz/specifications.html"
+  },
+  "ark-i5-10400": {
+   "titulo": "Intel: ficha del Core i5-10400",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/199271/intel-core-i510400-processor-12m-cache-up-to-4-30-ghz/specifications.html"
+  },
+  "ark-i7-10700k": {
+   "titulo": "Intel: ficha del Core i7-10700K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/199335/intel-core-i710700k-processor-16m-cache-up-to-5-10-ghz/specifications.html"
+  },
+  "ark-i9-10900k": {
+   "titulo": "Intel: ficha del Core i9-10900K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/199332/intel-core-i910900k-processor-20m-cache-up-to-5-30-ghz/specifications.html"
+  },
+  "pcgamer-gear": {
+   "titulo": "PC Gamer: Gear 1 y Gear 2 en la memoria de Intel",
+   "url": "https://www.pcgamer.com/intel-memory-gear-1-vs-gear-2-pc-gaming"
+  },
+  "ark-i5-11400": {
+   "titulo": "Intel: ficha del Core i5-11400",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/212270/intel-core-i511400-processor-12m-cache-up-to-4-40-ghz/specifications.html"
+  },
+  "ark-i9-11900k": {
+   "titulo": "Intel: ficha del Core i9-11900K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/212325/intel-core-i911900k-processor-16m-cache-up-to-5-30-ghz/specifications.html"
+  },
+  "intel-gear-11": {
+   "titulo": "Intel: Gear 1 y Gear 2 en la 11.ª generación",
+   "url": "https://intel.com/content/www/us/en/support/articles/000058859/processors/intel-core-processors.html"
+  },
+  "intel-7700k-compat": {
+   "titulo": "Intel: placas compatibles con el Core i7-7700K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/97129/intel-core-i77700k-processor-8m-cache-up-to-4-50-ghz/compatible.html"
+  },
+  "asus-100-kaby": {
+   "titulo": "ASUS: placas 100 con la 7.ª generación",
+   "url": "https://www.asus.com/support/FAQ/1031846/"
+  },
+  "intel-b250-compat": {
+   "titulo": "Intel: procesadores compatibles con el B250",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/98086/intel-b250-chipset/compatible.html"
+  },
+  "intel-z270": {
+   "titulo": "Intel: resumen del chipset Z270",
+   "url": "https://www.intel.com/content/dam/www/public/us/en/documents/product-briefs/z270-chipset-brief.pdf"
+  },
+  "intel-8700k-compat": {
+   "titulo": "Intel: placas compatibles con el Core i7-8700K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/126684/intel-core-i78700k-processor-12m-cache-up-to-4-70-ghz/compatible.html"
+  },
+  "intel-300-9": {
+   "titulo": "Intel: la 9.ª generación en placas 300",
+   "url": "https://www.intel.com/content/www/us/en/support/articles/000025694.html"
+  },
+  "kitguru-300-9": {
+   "titulo": "KitGuru: BIOS de ASUS para la 9.ª generación en placas 300",
+   "url": "https://www.kitguru.net/components/cpu/matthew-wilson/asus-announces-z370-h370-b360-h310-bios-updates-for-intel-9th-gen-cpus"
+  },
+  "toms-b365": {
+   "titulo": "Tom's Hardware: el chipset B365",
+   "url": "https://www.tomshardware.com/news/intel-b365-chipset-specs,38235.html"
+  },
+  "intel-z390-compat": {
+   "titulo": "Intel: procesadores compatibles con el Z390",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/133293/intel-z390-chipset/compatible.html"
+  },
+  "intel-400-11": {
+   "titulo": "Intel: la 11.ª generación en placas 400",
+   "url": "https://intel.com/content/www/us/en/support/articles/000058324.html"
+  },
+  "intel-11700kf-compat": {
+   "titulo": "Intel: placas compatibles con el Core i7-11700KF",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/212048/intel-core-i711700kf-processor-16m-cache-up-to-5-00-ghz/compatible.html"
+  },
+  "intel-h410": {
+   "titulo": "Intel: ficha del chipset H410",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/201842/intel-h410-chipset/specifications.html"
+  },
+  "hothardware-z490": {
+   "titulo": "HotHardware: PCIe 4.0 en las Z490 de MSI con la 11.ª generación",
+   "url": "https://hothardware.com/news/all-msi-z490-motherboards-to-support-pcie-40-with-11th-gen-rocket-lake-s-cpus"
+  },
+  "intel-500-10": {
+   "titulo": "Intel: la 10.ª generación en placas 500",
+   "url": "https://intel.com/content/www/us/en/support/articles/000058578.html"
+  },
+  "intel-10400-compat": {
+   "titulo": "Intel: placas compatibles con el Core i5-10400",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/199271/intel-core-i510400-processor-12m-cache-up-to-4-30-ghz/compatible.html"
+  },
+  "toms-b560-oc": {
+   "titulo": "Tom's Hardware: Intel permite subir la memoria en B560 y H570",
+   "url": "https://www.tomshardware.com/news/intel-enables-memory-overclocking-on-h570-and-b560-chipsets"
+  },
+  "asus-b560m": {
+   "titulo": "ASUS: ficha de la TUF GAMING B560M-PLUS",
+   "url": "https://asus.com/Motherboards-Components/Motherboards/TUF-Gaming/TUF-GAMING-B560M-PLUS/techspec"
+  },
+  "ark-i9-12900k": {
+   "titulo": "Intel: ficha del Core i9-12900K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/134599/intel-core-i912900k-processor-30m-cache-up-to-5-20-ghz/specifications.html"
+  },
+  "ark-g6900": {
+   "titulo": "Intel: ficha del Celeron G6900",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/96163/intel-celeron-processor-g6900-4m-cache-3-40-ghz/specifications.html"
+  },
+  "intel-12-datasheet": {
+   "titulo": "Intel: datasheet de la 12.ª generación (velocidades con 1 y 2 módulos por canal)",
+   "url": "https://cdrdv2-public.intel.com/655258/655258-011.pdf"
+  },
+  "ark-i3-12100f": {
+   "titulo": "Intel: ficha del Core i3-12100F",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/132223/intel-core-i312100f-processor-12m-cache-up-to-4-30-ghz/specifications.html"
+  },
+  "intel-gfx": {
+   "titulo": "Intel: gráficos de los Core de sobremesa en caja",
+   "url": "https://www.intel.com/content/dam/support/us/en/documents/processors/core/Intel-Core-Desktop-Boxed-Processors-HD-GFX-List.pdf"
+  },
+  "ark-i5-13600k": {
+   "titulo": "Intel: ficha del Core i5-13600K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230493/intel-core-i513600k-processor-24m-cache-up-to-5-10-ghz/specifications.html"
+  },
+  "ark-i5-13600": {
+   "titulo": "Intel: ficha del Core i5-13600",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230574/intel-core-i513600-processor-24m-cache-up-to-5-00-ghz/specifications.html"
+  },
+  "ark-i5-13500": {
+   "titulo": "Intel: ficha del Core i5-13500",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230580/intel-core-i513500-processor-24m-cache-up-to-4-80-ghz/specifications.html"
+  },
+  "ark-i9-13900k": {
+   "titulo": "Intel: ficha del Core i9-13900K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230496/intel-core-i913900k-processor-36m-cache-up-to-5-80-ghz/specifications.html"
+  },
+  "ark-i5-13400f": {
+   "titulo": "Intel: ficha del Core i5-13400F",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230501/intel-core-i513400f-processor-20m-cache-up-to-4-60-ghz/specifications.html"
+  },
+  "intel-14-guia": {
+   "titulo": "Intel: guía rápida de la 14.ª generación de sobremesa",
+   "url": "https://cdrdv2-public.intel.com/787258/Intel%20Core%20Desktop%20Processors%2014th%20gen%20Quick%20Reference%20Guide%20Phase%202.pdf"
+  },
+  "ark-i5-14600": {
+   "titulo": "Intel: ficha del Core i5-14600",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/236845/intel-core-i5-processor-14600-24m-cache-up-to-5-20-ghz/specifications.html"
+  },
+  "ark-i3-14100": {
+   "titulo": "Intel: ficha del Core i3-14100",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/236774/intel-core-i3-processor-14100-12m-cache-up-to-4-70-ghz/specifications.html"
+  },
+  "ark-u9-285k": {
+   "titulo": "Intel: ficha del Core Ultra 9 285K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/241060/intel-core-ultra-9-processor-285k-36m-cache-up-to-5-70-ghz/specifications.html"
+  },
+  "toms-arrow-ram": {
+   "titulo": "Tom's Hardware: velocidades oficiales de memoria de Arrow Lake",
+   "url": "https://www.tomshardware.com/pc-components/ram/intels-arrow-lake-official-memory-speeds-are-unchanged-with-standard-memory-sticks-pricier-cudimm-memory-needed-for-faster-base-spec"
+  },
+  "intel-800-resumen": {
+   "titulo": "Intel: resumen de los chipsets 800",
+   "url": "https://cdrdv2-public.intel.com/842318/intel-800-series-chipset-brief-public.pdf"
+  },
+  "intel-200s": {
+   "titulo": "Intel: presentación de los Core Ultra 200S",
+   "url": "https://download.intel.com/newsroom/2024/client-computing/Intel-Core-Ultra-200S-Series-Presentation.pdf"
+  },
+  "intel-200s-plus": {
+   "titulo": "Intel: anuncio de los Core Ultra 200S Plus",
+   "url": "https://www.intel.com/content/www/us/en/newsroom/news/client-computing/intel-announces-new-intel-core-ultra-200s-plus-series-desktop-processors.html"
+  },
+  "ark-u7-270k-plus": {
+   "titulo": "Intel: ficha del Core Ultra 7 270K Plus",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/245692/intel-core-ultra-7-processor-270k-plus-36m-cache-up-to-5-50-ghz/specifications.html"
+  },
+  "intel-200s-plus-guia": {
+   "titulo": "Intel: guía rápida de los Core Ultra 200S Plus",
+   "url": "https://cdrdv2-public.intel.com/874112/intel-core-ultra-200s-plus-series-processors-quick-reference-guide-ph2-public.pdf"
+  },
+  "toms-arrow-r-ram": {
+   "titulo": "Tom's Hardware: Arrow Lake Refresh y la DDR5-7200 CUDIMM",
+   "url": "https://www.tomshardware.com/pc-components/ram/intel-arrow-lake-refresh-cpus-arrive-with-native-ddr5-7200-cudimm-support-12-5-percent-higher-speeds-than-initial-arrow-lake-chips"
+  },
+  "kitguru-800-plus": {
+   "titulo": "KitGuru: las placas 800 de ASRock y los 200S Plus",
+   "url": "https://www.kitguru.net/channel/generaltech/matthew-wilson/asrocks-800-series-motherboards-already-support-intels-new-core-ultra-200s-plus-cpus/?type=News"
+  },
+  "ark-h610": {
+   "titulo": "Intel: ficha del chipset H610",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/218829/intel-h610-chipset/specifications.html"
+  },
+  "ark-b660": {
+   "titulo": "Intel: ficha del chipset B660",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/218832/intel-b660-chipset/specifications.html"
+  },
+  "ark-h670": {
+   "titulo": "Intel: ficha del chipset H670",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/218831/intel-h670-chipset/specifications.html"
+  },
+  "ark-q670": {
+   "titulo": "Intel: ficha del chipset Q670",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/218827/intel-q670-chipset/specifications.html"
+  },
+  "ark-z690": {
+   "titulo": "Intel: ficha del chipset Z690",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/218833/intel-z690-chipset/specifications.html"
+  },
+  "ark-w680": {
+   "titulo": "Intel: ficha del chipset W680",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/218834/intel-w680-chipset/specifications.html"
+  },
+  "ark-b760": {
+   "titulo": "Intel: ficha del chipset B760",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/229719/intel-b760-chipset/specifications.html"
+  },
+  "intel-700-resumen": {
+   "titulo": "Intel: resumen de los chipsets 700",
+   "url": "https://cdrdv2-public.intel.com/786840/700-series-chipset-brief.pdf"
+  },
+  "ark-h770": {
+   "titulo": "Intel: ficha del chipset H770",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/229720/intel-h770-chipset/specifications.html"
+  },
+  "ark-z790": {
+   "titulo": "Intel: ficha del chipset Z790",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/229721/intel-z790-chipset/specifications.html"
+  },
+  "ark-h810": {
+   "titulo": "Intel: ficha del chipset H810",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/241150/intel-h810-chipset/specifications.html"
+  },
+  "ark-b860": {
+   "titulo": "Intel: ficha del chipset B860",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/241152/intel-b860-chipset/specifications.html"
+  },
+  "ark-z890": {
+   "titulo": "Intel: ficha del chipset Z890",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/237777/intel-z890-chipset/specifications.html"
+  },
+  "ark-q870": {
+   "titulo": "Intel: ficha del chipset Q870",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/240125/intel-q870-chipset/specifications.html"
+  },
+  "ark-w880": {
+   "titulo": "Intel: ficha del chipset W880",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/241151/intel-w880-chipset/specifications.html"
+  },
+  "ark-i5-12400": {
+   "titulo": "Intel: ficha del Core i5-12400 (configuraciones PCIe)",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/134586/intel-core-i512400-processor-18m-cache-up-to-4-40-ghz/specifications.html"
+  },
+  "gigabyte-z790-aero": {
+   "titulo": "Gigabyte: ficha de la Z790 AERO G",
+   "url": "https://www.gigabyte.com/Motherboard/Z790-AERO-G-rev-10/sp"
+  },
+  "asus-z790-formula": {
+   "titulo": "ASUS: manual de la ROG MAXIMUS Z790 FORMULA",
+   "url": "https://www.manualowl.com/m/Asus/ROG-MAXIMUS-Z790-FORMULA/Manual/714174?page=15"
+  },
+  "intel-vmin": {
+   "titulo": "Intel: la inestabilidad «Vmin Shift» de la 13.ª y la 14.ª generación",
+   "url": "https://community.intel.com/t5/Processors/Intel-Core-13th-and-14th-Gen-Vmin-Shift-Instabilty-Update-New/m-p/1686948"
+  },
+  "intel-200s-boost": {
+   "titulo": "Intel: el perfil 200S Boost",
+   "url": "https://game.intel.com/stories/200s-boost-overclocking-profile/"
+  },
+  "wccftech-x3d-agesa": {
+   "titulo": "Wccftech: BIOS con AGESA 1.0.0.5 para los Ryzen 7000X3D",
+   "url": "https://wccftech.com/motherboard-vendors-roll-out-agesa-1-0-0-5-bios-firmware-support-for-amd-ryzen-7000-x3d-cpus/"
+  },
+  "ark-i3-13100t": {
+   "titulo": "Intel: ficha del Core i3-13100T",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230579/intel-core-i313100t-processor-12m-cache-up-to-4-20-ghz/specifications.html"
+  },
+  "ark-i5-14500t": {
+   "titulo": "Intel: ficha del Core i5-14500T",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/236780/specifications.html"
+  }
+ },
+ "plataformas": {
+  "AM4": {
+   "nombre": "AMD AM4",
+   "marca": "AMD",
+   "ram": [
+    "DDR4"
+   ],
+   "chipsets": {
+    "A320": {
+     "soporte": {
+      "bristol": "si",
+      "summit": "si",
+      "raven": "bios",
+      "pinnacle": "bios",
+      "picasso": "bios",
+      "matisse": "depende",
+      "renoir": "depende",
+      "vermeer": "depende",
+      "cezanne": "depende"
+     },
+     "cpu_oc": false,
+     "ram_oc": true,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 2,
+     "fuentes": [
+      "amd-am4",
+      "amd-2022-300",
+      "msi-300-zen3"
+     ],
+     "depende": {
+      "matisse": "AMD no lo prometió para A320, y solo algunos fabricantes lo añadieron en la BIOS de ciertas placas.",
+      "renoir": "en 2022 AMD permitió los Ryzen 5000 (y 4000) en placas 300 con BIOS beta, pero cada fabricante decidió qué modelos actualizaba.",
+      "vermeer": "en 2022 AMD permitió los Ryzen 5000 (y 4000) en placas 300 con BIOS beta, pero cada fabricante decidió qué modelos actualizaba.",
+      "cezanne": "en 2022 AMD permitió los Ryzen 5000 (y 4000) en placas 300 con BIOS beta, pero cada fabricante decidió qué modelos actualizaba."
+     },
+     "notas": {
+      "vermeer": "Ojo: la BIOS para los Ryzen nuevos puede quitar el soporte de los más antiguos.",
+      "cezanne": "Ojo: la BIOS para los Ryzen nuevos puede quitar el soporte de los más antiguos.",
+      "renoir": "Ojo: la BIOS para los Ryzen nuevos puede quitar el soporte de los más antiguos.",
+      "bristol": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "summit": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "raven": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "pinnacle": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "picasso": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa."
+     }
+    },
+    "B350": {
+     "soporte": {
+      "bristol": "si",
+      "summit": "si",
+      "raven": "bios",
+      "pinnacle": "bios",
+      "picasso": "bios",
+      "matisse": "depende",
+      "renoir": "depende",
+      "vermeer": "depende",
+      "cezanne": "depende"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 2,
+     "fuentes": [
+      "amd-am4",
+      "toms-x570-zen1",
+      "amd-2022-300",
+      "msi-300-zen3"
+     ],
+     "soporte_modelo": {
+      "athlon-200ge": "depende",
+      "athlon-220ge": "depende",
+      "athlon-240ge": "depende",
+      "athlon-3000g": "depende"
+     },
+     "depende_modelo": {
+      "athlon-200ge": "AMD no pone los Athlon con gráfica en su tabla de las placas 300, aunque muchas los aceptan con la BIOS al día.",
+      "athlon-220ge": "AMD no pone los Athlon con gráfica en su tabla de las placas 300, aunque muchas los aceptan con la BIOS al día.",
+      "athlon-240ge": "AMD no pone los Athlon con gráfica en su tabla de las placas 300, aunque muchas los aceptan con la BIOS al día.",
+      "athlon-3000g": "AMD no pone los Athlon con gráfica en su tabla de las placas 300, aunque muchas los aceptan con la BIOS al día."
+     },
+     "depende": {
+      "matisse": "AMD avisó de que no todas las placas 300 se actualizarían para los Ryzen 3000, así que depende del fabricante.",
+      "renoir": "en 2022 AMD permitió los Ryzen 5000 (y 4000) en placas 300 con BIOS beta, pero cada fabricante decidió qué modelos actualizaba.",
+      "vermeer": "en 2022 AMD permitió los Ryzen 5000 (y 4000) en placas 300 con BIOS beta, pero cada fabricante decidió qué modelos actualizaba.",
+      "cezanne": "en 2022 AMD permitió los Ryzen 5000 (y 4000) en placas 300 con BIOS beta, pero cada fabricante decidió qué modelos actualizaba."
+     },
+     "notas": {
+      "vermeer": "Ojo: la BIOS para los Ryzen nuevos puede quitar el soporte de los más antiguos.",
+      "cezanne": "Ojo: la BIOS para los Ryzen nuevos puede quitar el soporte de los más antiguos.",
+      "renoir": "Ojo: la BIOS para los Ryzen nuevos puede quitar el soporte de los más antiguos.",
+      "bristol": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "summit": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "raven": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "pinnacle": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "picasso": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa."
+     }
+    },
+    "X370": {
+     "soporte": {
+      "bristol": "si",
+      "summit": "si",
+      "raven": "bios",
+      "pinnacle": "bios",
+      "picasso": "bios",
+      "matisse": "depende",
+      "renoir": "depende",
+      "vermeer": "depende",
+      "cezanne": "depende"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 2,
+     "fuentes": [
+      "amd-am4",
+      "amd-2022-300",
+      "msi-300-zen3"
+     ],
+     "soporte_modelo": {
+      "athlon-200ge": "depende",
+      "athlon-220ge": "depende",
+      "athlon-240ge": "depende",
+      "athlon-3000g": "depende"
+     },
+     "depende_modelo": {
+      "athlon-200ge": "AMD no pone los Athlon con gráfica en su tabla de las placas 300, aunque muchas los aceptan con la BIOS al día.",
+      "athlon-220ge": "AMD no pone los Athlon con gráfica en su tabla de las placas 300, aunque muchas los aceptan con la BIOS al día.",
+      "athlon-240ge": "AMD no pone los Athlon con gráfica en su tabla de las placas 300, aunque muchas los aceptan con la BIOS al día.",
+      "athlon-3000g": "AMD no pone los Athlon con gráfica en su tabla de las placas 300, aunque muchas los aceptan con la BIOS al día."
+     },
+     "depende": {
+      "matisse": "AMD avisó de que no todas las placas 300 se actualizarían para los Ryzen 3000, así que depende del fabricante.",
+      "renoir": "en 2022 AMD permitió los Ryzen 5000 (y 4000) en placas 300 con BIOS beta, pero cada fabricante decidió qué modelos actualizaba.",
+      "vermeer": "en 2022 AMD permitió los Ryzen 5000 (y 4000) en placas 300 con BIOS beta, pero cada fabricante decidió qué modelos actualizaba.",
+      "cezanne": "en 2022 AMD permitió los Ryzen 5000 (y 4000) en placas 300 con BIOS beta, pero cada fabricante decidió qué modelos actualizaba."
+     },
+     "notas": {
+      "vermeer": "Ojo: la BIOS para los Ryzen nuevos puede quitar el soporte de los más antiguos.",
+      "cezanne": "Ojo: la BIOS para los Ryzen nuevos puede quitar el soporte de los más antiguos.",
+      "renoir": "Ojo: la BIOS para los Ryzen nuevos puede quitar el soporte de los más antiguos.",
+      "bristol": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "summit": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "raven": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "pinnacle": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "picasso": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa."
+     }
+    },
+    "B450": {
+     "soporte": {
+      "bristol": "si",
+      "summit": "depende",
+      "raven": "depende",
+      "pinnacle": "si",
+      "picasso": "bios",
+      "matisse": "bios",
+      "renoir": "bios",
+      "vermeer": "bios",
+      "cezanne": "bios"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 2,
+     "fuentes": [
+      "tpu-b450",
+      "tpu-zen3-400",
+      "amd-am4"
+     ],
+     "depende": {
+      "summit": "AMD no los pone en su tabla del B450 y el X470, aunque al presentarlos dijo que admitían todo lo de AM4 y casi todas las placas los aceptan.",
+      "raven": "AMD no los pone en su tabla del B450 y el X470, aunque al presentarlos dijo que admitían todo lo de AM4 y casi todas las placas los aceptan."
+     },
+     "notas": {
+      "vermeer": "Ojo: la BIOS para los Ryzen nuevos puede quitar el soporte de los más antiguos.",
+      "cezanne": "Ojo: la BIOS para los Ryzen nuevos puede quitar el soporte de los más antiguos.",
+      "bristol": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "summit": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "raven": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "pinnacle": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa."
+     }
+    },
+    "X470": {
+     "soporte": {
+      "bristol": "si",
+      "summit": "depende",
+      "raven": "depende",
+      "pinnacle": "si",
+      "picasso": "bios",
+      "matisse": "bios",
+      "renoir": "bios",
+      "vermeer": "bios",
+      "cezanne": "bios"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 2,
+     "fuentes": [
+      "tpu-zen3-400",
+      "tpu-x570",
+      "amd-am4"
+     ],
+     "depende": {
+      "summit": "AMD no los pone en su tabla del B450 y el X470, aunque al presentarlos dijo que admitían todo lo de AM4 y casi todas las placas los aceptan.",
+      "raven": "AMD no los pone en su tabla del B450 y el X470, aunque al presentarlos dijo que admitían todo lo de AM4 y casi todas las placas los aceptan."
+     },
+     "notas": {
+      "vermeer": "Ojo: la BIOS para los Ryzen nuevos puede quitar el soporte de los más antiguos.",
+      "cezanne": "Ojo: la BIOS para los Ryzen nuevos puede quitar el soporte de los más antiguos.",
+      "bristol": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "summit": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "raven": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
+      "pinnacle": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa."
+     }
+    },
+    "A520": {
+     "soporte": {
+      "bristol": "no",
+      "summit": "no",
+      "raven": "no",
+      "pinnacle": "no",
+      "picasso": "no",
+      "matisse": "si",
+      "renoir": "bios",
+      "vermeer": "bios",
+      "cezanne": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": true,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "tpu-a520",
+      "amd-am4"
+     ],
+     "motivo": {
+      "bristol": "Las placas 500 empiezan en los Ryzen 3000.",
+      "summit": "Las placas 500 empiezan en los Ryzen 3000.",
+      "raven": "Las placas 500 empiezan en los Ryzen 3000.",
+      "pinnacle": "Las placas 500 empiezan en los Ryzen 3000.",
+      "picasso": "Aunque se llamen 3000, el 3200G, el 3400G y el Athlon 3000G no son de la generación de los Ryzen 3000 normales, sino de antes: AMD no los admite en las placas 500."
+     },
+     "nota": "Sin PCIe 4.0, ni siquiera con un Ryzen 3000 o 5000."
+    },
+    "B550": {
+     "soporte": {
+      "bristol": "no",
+      "summit": "no",
+      "raven": "no",
+      "pinnacle": "no",
+      "picasso": "no",
+      "matisse": "si",
+      "renoir": "bios",
+      "vermeer": "bios",
+      "cezanne": "bios"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 4,
+     "pcie_cpu_max": 4,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "tpu-b550",
+      "amd-am4"
+     ],
+     "motivo": {
+      "bristol": "Las placas 500 empiezan en los Ryzen 3000.",
+      "summit": "Las placas 500 empiezan en los Ryzen 3000.",
+      "raven": "Las placas 500 empiezan en los Ryzen 3000.",
+      "pinnacle": "Las placas 500 empiezan en los Ryzen 3000.",
+      "picasso": "Aunque se llamen 3000, el 3200G, el 3400G y el Athlon 3000G no son de la generación de los Ryzen 3000 normales, sino de antes: AMD no los admite en las placas 500."
+     },
+     "nota": "PCIe 4.0 en la gráfica y en el M.2 de la CPU solo con los Ryzen 3000 y 5000 normales: los 4000G, 5000G, 4100, 4500, 5500 y 5700 van a PCIe 3.0."
+    },
+    "X570": {
+     "soporte": {
+      "bristol": "no",
+      "summit": "no",
+      "raven": "no",
+      "pinnacle": "si",
+      "picasso": "si",
+      "matisse": "si",
+      "renoir": "bios",
+      "vermeer": "bios",
+      "cezanne": "bios"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 4,
+     "pcie_cpu_max": 4,
+     "pcie_chipset": 4,
+     "fuentes": [
+      "toms-x570-zen1",
+      "tpu-x570",
+      "amd-am4"
+     ],
+     "soporte_modelo": {
+      "athlon-3000g": "no",
+      "ryzen-5-1600-af": "depende"
+     },
+     "motivo_modelo": {
+      "athlon-3000g": "AMD dejó fuera de X570 los Athlon con gráfica."
+     },
+     "depende_modelo": {
+      "ryzen-5-1600-af": "AMD no lo da por oficial en X570, aunque muchas placas lo aceptan según su fabricante."
+     },
+     "motivo": {
+      "bristol": "AMD dejó fuera de X570 los A-Series, los Ryzen 1000 y los 2000G.",
+      "summit": "AMD dejó fuera de X570 los A-Series, los Ryzen 1000 y los 2000G.",
+      "raven": "AMD dejó fuera de X570 los A-Series, los Ryzen 1000 y los 2000G.",
+      "picasso": "AMD dejó fuera de X570 los Athlon con gráfica."
+     }
+    }
+   }
+  },
+  "AM5": {
+   "nombre": "AMD AM5",
+   "marca": "AMD",
+   "ram": [
+    "DDR5"
+   ],
+   "chipsets": {
+    "A620": {
+     "soporte": {
+      "raphael": "si",
+      "phoenix": "bios",
+      "granite": "bios",
+      "gorgon": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": true,
+     "m2_max": 4,
+     "pcie_cpu_max": 4,
+     "fuentes": [
+      "amd-am5",
+      "hothardware-a620"
+     ],
+     "nota": "Las placas con este chipset están pensadas para procesadores de 65 W: los más potentes funcionan, pero pueden ir algo limitados y sin PBO.",
+     "tdp_max": 65,
+     "nota_tdp": "Este procesador pasa de 65 W: en una A620 funciona, pero puede ir algo limitado (y sin PBO)."
+    },
+    "A620A": {
+     "soporte": {
+      "raphael": "si",
+      "phoenix": "si",
+      "granite": "bios",
+      "gorgon": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": true,
+     "m2_max": 4,
+     "pcie_cpu_max": 4,
+     "fuentes": [
+      "amd-am5",
+      "toms-a620a",
+      "hothardware-a620"
+     ],
+     "nota": "Es el chipset de las B550 con otro nombre, así que lo que cuelga del chipset va a PCIe 3.0. Las placas con este chipset están pensadas para procesadores de 65 W: los más potentes funcionan, pero pueden ir algo limitados y sin PBO.",
+     "tdp_max": 65,
+     "nota_tdp": "Este procesador pasa de 65 W: en una A620A funciona, pero puede ir algo limitado (y sin PBO)."
+    },
+    "B650": {
+     "soporte": {
+      "raphael": "si",
+      "phoenix": "bios",
+      "granite": "bios",
+      "gorgon": "bios"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 5,
+     "pcie_cpu_max": 5,
+     "fuentes": [
+      "digitalcitizen-600",
+      "tpu-800",
+      "amd-am5"
+     ],
+     "soporte_modelo": {
+      "ryzen-7-7800x3d": "bios",
+      "ryzen-9-7900x3d": "bios",
+      "ryzen-9-7950x3d": "bios"
+     },
+     "bios_modelo": {
+      "ryzen-7-7800x3d": "AGESA 1.0.0.5c o posterior",
+      "ryzen-9-7900x3d": "AGESA 1.0.0.5c o posterior",
+      "ryzen-9-7950x3d": "AGESA 1.0.0.5c o posterior"
+     },
+     "fuentes_modelo": [
+      "wccftech-x3d-agesa"
+     ],
+     "nota": "La gráfica va a PCIe 4.0; el M.2 de la CPU, a 4.0 o 5.0 según la placa."
+    },
+    "B650E": {
+     "soporte": {
+      "raphael": "si",
+      "phoenix": "bios",
+      "granite": "bios",
+      "gorgon": "bios"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 5,
+     "pcie_cpu_max": 5,
+     "fuentes": [
+      "digitalcitizen-600",
+      "tpu-800",
+      "amd-am5"
+     ],
+     "soporte_modelo": {
+      "ryzen-7-7800x3d": "bios",
+      "ryzen-9-7900x3d": "bios",
+      "ryzen-9-7950x3d": "bios"
+     },
+     "bios_modelo": {
+      "ryzen-7-7800x3d": "AGESA 1.0.0.5c o posterior",
+      "ryzen-9-7900x3d": "AGESA 1.0.0.5c o posterior",
+      "ryzen-9-7950x3d": "AGESA 1.0.0.5c o posterior"
+     },
+     "fuentes_modelo": [
+      "wccftech-x3d-agesa"
+     ],
+     "nota": "Gráfica y M.2 de la CPU a PCIe 5.0."
+    },
+    "X670": {
+     "soporte": {
+      "raphael": "si",
+      "phoenix": "bios",
+      "granite": "bios",
+      "gorgon": "bios"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 5,
+     "pcie_cpu_max": 5,
+     "fuentes": [
+      "amd-am5"
+     ],
+     "soporte_modelo": {
+      "ryzen-7-7800x3d": "bios",
+      "ryzen-9-7900x3d": "bios",
+      "ryzen-9-7950x3d": "bios"
+     },
+     "bios_modelo": {
+      "ryzen-7-7800x3d": "AGESA 1.0.0.5c o posterior",
+      "ryzen-9-7900x3d": "AGESA 1.0.0.5c o posterior",
+      "ryzen-9-7950x3d": "AGESA 1.0.0.5c o posterior"
+     },
+     "fuentes_modelo": [
+      "wccftech-x3d-agesa"
+     ],
+     "nota": "M.2 de la CPU a PCIe 5.0; la gráfica, a 4.0."
+    },
+    "X670E": {
+     "soporte": {
+      "raphael": "si",
+      "phoenix": "bios",
+      "granite": "bios",
+      "gorgon": "bios"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 5,
+     "pcie_cpu_max": 5,
+     "fuentes": [
+      "amd-am5"
+     ],
+     "soporte_modelo": {
+      "ryzen-7-7800x3d": "bios",
+      "ryzen-9-7900x3d": "bios",
+      "ryzen-9-7950x3d": "bios"
+     },
+     "bios_modelo": {
+      "ryzen-7-7800x3d": "AGESA 1.0.0.5c o posterior",
+      "ryzen-9-7900x3d": "AGESA 1.0.0.5c o posterior",
+      "ryzen-9-7950x3d": "AGESA 1.0.0.5c o posterior"
+     },
+     "fuentes_modelo": [
+      "wccftech-x3d-agesa"
+     ],
+     "nota": "Gráfica y M.2 de la CPU a PCIe 5.0."
+    },
+    "B840": {
+     "soporte": {
+      "raphael": "si",
+      "phoenix": "si",
+      "granite": "si",
+      "gorgon": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": true,
+     "m2_max": 4,
+     "pcie_cpu_max": 4,
+     "fuentes": [
+      "amd-am5",
+      "msi-b840"
+     ],
+     "nota": "Sin overclock del procesador; gráfica y M.2 a PCIe 4.0."
+    },
+    "B850": {
+     "soporte": {
+      "raphael": "si",
+      "phoenix": "si",
+      "granite": "si",
+      "gorgon": "bios"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 5,
+     "pcie_cpu_max": 5,
+     "fuentes": [
+      "amd-am5",
+      "tpu-800"
+     ],
+     "nota": "M.2 de la CPU a PCIe 5.0 de serie; la gráfica, a 4.0 (5.0 en algunas placas)."
+    },
+    "X870": {
+     "soporte": {
+      "raphael": "si",
+      "phoenix": "si",
+      "granite": "si",
+      "gorgon": "bios"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 5,
+     "pcie_cpu_max": 5,
+     "fuentes": [
+      "amd-am5"
+     ],
+     "nota": "Gráfica y M.2 a PCIe 5.0, y USB4 de serie."
+    },
+    "X870E": {
+     "soporte": {
+      "raphael": "si",
+      "phoenix": "si",
+      "granite": "si",
+      "gorgon": "bios"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 5,
+     "pcie_cpu_max": 5,
+     "fuentes": [
+      "amd-am5"
+     ],
+     "nota": "Gráfica y M.2 a PCIe 5.0, y USB4 de serie."
+    }
+   },
+   "nota": "AMD ha dicho que AM5 tendrá soporte hasta 2029.",
+   "fuentes": [
+    "amd-am5-2029"
+   ],
+   "optimo": {
+    "DDR5": {
+     "velocidad": 6000,
+     "tipo": "solido",
+     "fuentes": [
+      "toms-am5-6000",
+      "toms-8000g-6000",
+      "tpu-zen5-ram"
+     ],
+     "nota": "Es el punto óptimo de AMD para los Ryzen 7000 y 8000G, y lo que mejor sale en las pruebas con los 9000."
+    }
+   }
+  },
+  "LGA 1151": {
+   "nombre": "Intel LGA 1151 (6.ª a 9.ª generación)",
+   "marca": "Intel",
+   "ram": [
+    "DDR4"
+   ],
+   "chipsets": {
+    "H110": {
+     "soporte": {
+      "skylake": "si",
+      "kaby": "bios",
+      "coffee": "no",
+      "coffee_r": "no"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 2,
+     "fuentes": [
+      "intel-7700k-compat",
+      "asus-100-kaby"
+     ],
+     "motivo": {
+      "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
+      "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "B150": {
+     "soporte": {
+      "skylake": "si",
+      "kaby": "bios",
+      "coffee": "no",
+      "coffee_r": "no"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-7700k-compat",
+      "asus-100-kaby"
+     ],
+     "motivo": {
+      "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
+      "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "Q150": {
+     "soporte": {
+      "skylake": "si",
+      "kaby": "bios",
+      "coffee": "no",
+      "coffee_r": "no"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-7700k-compat",
+      "asus-100-kaby"
+     ],
+     "motivo": {
+      "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
+      "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "H170": {
+     "soporte": {
+      "skylake": "si",
+      "kaby": "bios",
+      "coffee": "no",
+      "coffee_r": "no"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-7700k-compat",
+      "asus-100-kaby"
+     ],
+     "motivo": {
+      "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
+      "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "Q170": {
+     "soporte": {
+      "skylake": "si",
+      "kaby": "bios",
+      "coffee": "no",
+      "coffee_r": "no"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-7700k-compat",
+      "asus-100-kaby"
+     ],
+     "motivo": {
+      "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
+      "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "Z170": {
+     "soporte": {
+      "skylake": "si",
+      "kaby": "bios",
+      "coffee": "no",
+      "coffee_r": "no"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-7700k-compat",
+      "asus-100-kaby"
+     ],
+     "motivo": {
+      "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
+      "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "B250": {
+     "soporte": {
+      "skylake": "si",
+      "kaby": "si",
+      "coffee": "no",
+      "coffee_r": "no"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-b250-compat"
+     ],
+     "motivo": {
+      "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
+      "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "Q250": {
+     "soporte": {
+      "skylake": "si",
+      "kaby": "si",
+      "coffee": "no",
+      "coffee_r": "no"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-7700k-compat"
+     ],
+     "motivo": {
+      "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
+      "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "H270": {
+     "soporte": {
+      "skylake": "si",
+      "kaby": "si",
+      "coffee": "no",
+      "coffee_r": "no"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-7700k-compat"
+     ],
+     "motivo": {
+      "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
+      "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "Q270": {
+     "soporte": {
+      "skylake": "si",
+      "kaby": "si",
+      "coffee": "no",
+      "coffee_r": "no"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-7700k-compat"
+     ],
+     "motivo": {
+      "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
+      "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "Z270": {
+     "soporte": {
+      "skylake": "si",
+      "kaby": "si",
+      "coffee": "no",
+      "coffee_r": "no"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-z270",
+      "intel-7700k-compat"
+     ],
+     "motivo": {
+      "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
+      "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "H310": {
+     "soporte": {
+      "skylake": "no",
+      "kaby": "no",
+      "coffee": "si",
+      "coffee_r": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 2,
+     "fuentes": [
+      "intel-8700k-compat",
+      "intel-300-9",
+      "kitguru-300-9"
+     ],
+     "motivo": {
+      "skylake": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles).",
+      "kaby": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "B360": {
+     "soporte": {
+      "skylake": "no",
+      "kaby": "no",
+      "coffee": "si",
+      "coffee_r": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-8700k-compat",
+      "intel-300-9",
+      "kitguru-300-9"
+     ],
+     "motivo": {
+      "skylake": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles).",
+      "kaby": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "B365": {
+     "soporte": {
+      "skylake": "no",
+      "kaby": "no",
+      "coffee": "si",
+      "coffee_r": "si"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "toms-b365",
+      "intel-8700k-compat"
+     ],
+     "motivo": {
+      "skylake": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles).",
+      "kaby": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "H370": {
+     "soporte": {
+      "skylake": "no",
+      "kaby": "no",
+      "coffee": "si",
+      "coffee_r": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-8700k-compat",
+      "intel-300-9",
+      "kitguru-300-9"
+     ],
+     "motivo": {
+      "skylake": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles).",
+      "kaby": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "Q370": {
+     "soporte": {
+      "skylake": "no",
+      "kaby": "no",
+      "coffee": "si",
+      "coffee_r": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-8700k-compat",
+      "intel-300-9",
+      "kitguru-300-9"
+     ],
+     "motivo": {
+      "skylake": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles).",
+      "kaby": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "Z370": {
+     "soporte": {
+      "skylake": "no",
+      "kaby": "no",
+      "coffee": "si",
+      "coffee_r": "bios"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-8700k-compat",
+      "intel-300-9",
+      "kitguru-300-9"
+     ],
+     "motivo": {
+      "skylake": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles).",
+      "kaby": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles)."
+     }
+    },
+    "Z390": {
+     "soporte": {
+      "skylake": "no",
+      "kaby": "no",
+      "coffee": "si",
+      "coffee_r": "si"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-z390-compat",
+      "intel-8700k-compat"
+     ],
+     "motivo": {
+      "skylake": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles).",
+      "kaby": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles)."
+     }
+    }
+   },
+   "nota": "Mismo zócalo, dos mundos: las placas 100 y 200 son para la 6.ª y la 7.ª generación; las 300, para la 8.ª y la 9.ª."
+  },
+  "LGA 1200": {
+   "nombre": "Intel LGA 1200 (10.ª y 11.ª generación)",
+   "marca": "Intel",
+   "ram": [
+    "DDR4"
+   ],
+   "chipsets": {
+    "H410": {
+     "soporte": {
+      "comet": "si",
+      "rocket": "no"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 2,
+     "fuentes": [
+      "intel-h410",
+      "intel-400-11"
+     ],
+     "motivo": {
+      "rocket": "Intel dejó la 11.ª generación fuera de las H410 y B460."
+     }
+    },
+    "B460": {
+     "soporte": {
+      "comet": "si",
+      "rocket": "no"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-10400-compat",
+      "intel-400-11"
+     ],
+     "motivo": {
+      "rocket": "Intel dejó la 11.ª generación fuera de las H410 y B460."
+     }
+    },
+    "H470": {
+     "soporte": {
+      "comet": "si",
+      "rocket": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 4,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-400-11",
+      "intel-11700kf-compat"
+     ]
+    },
+    "Q470": {
+     "soporte": {
+      "comet": "si",
+      "rocket": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 4,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-400-11",
+      "intel-11700kf-compat"
+     ]
+    },
+    "Z490": {
+     "soporte": {
+      "comet": "si",
+      "rocket": "bios"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 4,
+     "pcie_cpu_max": 4,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-400-11",
+      "intel-11700kf-compat",
+      "hothardware-z490"
+     ],
+     "notas": {
+      "rocket": "PCIe 4.0 con la 11.ª generación solo en algunas placas (todas las MSI con BIOS nueva; en ASUS, pocas): mira la tuya."
+     }
+    },
+    "W480": {
+     "soporte": {
+      "comet": "si",
+      "rocket": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": true,
+     "m2_max": 4,
+     "pcie_cpu_max": 3,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-400-11",
+      "intel-11700kf-compat"
+     ]
+    },
+    "H510": {
+     "soporte": {
+      "comet": "si",
+      "rocket": "si"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 3,
+     "pcie_cpu_max": 4,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-500-10",
+      "intel-10400-compat"
+     ],
+     "nota": "No tiene M.2 conectado a la CPU: todos sus M.2 van por el chipset a PCIe 3.0."
+    },
+    "B560": {
+     "soporte": {
+      "comet": "si",
+      "rocket": "si"
+     },
+     "cpu_oc": false,
+     "ram_oc": true,
+     "m2_max": 4,
+     "pcie_cpu_max": 4,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-500-10",
+      "intel-10400-compat",
+      "toms-b560-oc",
+      "asus-b560m"
+     ],
+     "ram_oc_familia": {
+      "comet": false
+     },
+     "m2_cpu_apagado": [
+      "comet"
+     ],
+     "notas_m2": {
+      "comet": "Con un Core de 10.ª generación, el M.2 que va a la CPU (el PCIe 4.0) se queda apagado y la gráfica baja a PCIe 3.0. En algunas MSI B560 ese M.2 pasa al chipset a PCIe 3.0."
+     }
+    },
+    "H570": {
+     "soporte": {
+      "comet": "si",
+      "rocket": "si"
+     },
+     "cpu_oc": false,
+     "ram_oc": true,
+     "m2_max": 4,
+     "pcie_cpu_max": 4,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-500-10",
+      "intel-10400-compat",
+      "toms-b560-oc",
+      "asus-b560m"
+     ],
+     "ram_oc_familia": {
+      "comet": false
+     },
+     "m2_cpu_apagado": [
+      "comet"
+     ],
+     "notas_m2": {
+      "comet": "Con un Core de 10.ª generación, el M.2 que va a la CPU (el PCIe 4.0) se queda apagado y la gráfica baja a PCIe 3.0."
+     }
+    },
+    "Q570": {
+     "soporte": {
+      "comet": "si",
+      "rocket": "si"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 4,
+     "pcie_cpu_max": 4,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-500-10",
+      "intel-10400-compat"
+     ],
+     "m2_cpu_apagado": [
+      "comet"
+     ],
+     "notas_m2": {
+      "comet": "Con un Core de 10.ª generación, el M.2 que va a la CPU (el PCIe 4.0) se queda apagado y la gráfica baja a PCIe 3.0."
+     }
+    },
+    "Z590": {
+     "soporte": {
+      "comet": "si",
+      "rocket": "si"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 4,
+     "pcie_cpu_max": 4,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-500-10",
+      "intel-10400-compat"
+     ],
+     "m2_cpu_apagado": [
+      "comet"
+     ],
+     "notas_m2": {
+      "comet": "Con un Core de 10.ª generación, el M.2 que va a la CPU (el PCIe 4.0) se queda apagado y la gráfica baja a PCIe 3.0."
+     }
+    },
+    "W580": {
+     "soporte": {
+      "comet": "si",
+      "rocket": "si"
+     },
+     "cpu_oc": false,
+     "ram_oc": true,
+     "m2_max": 4,
+     "pcie_cpu_max": 4,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "intel-500-10",
+      "intel-10400-compat"
+     ]
+    }
+   }
+  },
+  "LGA 1700": {
+   "nombre": "Intel LGA 1700 (12.ª a 14.ª generación)",
+   "marca": "Intel",
+   "ram": [
+    "DDR4",
+    "DDR5"
+   ],
+   "chipsets": {
+    "H610": {
+     "soporte": {
+      "alder": "si",
+      "raptor": "bios",
+      "raptor_r": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 4,
+     "pcie_chipset": 3,
+     "fuentes": [
+      "ark-h610"
+     ],
+     "bios": {
+      "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
+      "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
+     },
+     "nota": "Solo dos ranuras de memoria y sin overclock de memoria."
+    },
+    "B660": {
+     "soporte": {
+      "alder": "si",
+      "raptor": "bios",
+      "raptor_r": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": true,
+     "m2_max": 4,
+     "pcie_chipset": 4,
+     "fuentes": [
+      "ark-b660"
+     ],
+     "bios": {
+      "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
+      "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
+     }
+    },
+    "H670": {
+     "soporte": {
+      "alder": "si",
+      "raptor": "bios",
+      "raptor_r": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": true,
+     "m2_max": 5,
+     "pcie_chipset": 4,
+     "fuentes": [
+      "ark-h670"
+     ],
+     "bios": {
+      "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
+      "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
+     }
+    },
+    "Q670": {
+     "soporte": {
+      "alder": "si",
+      "raptor": "bios",
+      "raptor_r": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 5,
+     "pcie_chipset": 4,
+     "fuentes": [
+      "ark-q670"
+     ],
+     "bios": {
+      "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
+      "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
+     }
+    },
+    "Z690": {
+     "soporte": {
+      "alder": "si",
+      "raptor": "bios",
+      "raptor_r": "bios"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 5,
+     "pcie_chipset": 4,
+     "fuentes": [
+      "ark-z690"
+     ],
+     "bios": {
+      "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
+      "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
+     }
+    },
+    "W680": {
+     "soporte": {
+      "alder": "si",
+      "raptor": "bios",
+      "raptor_r": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": true,
+     "m2_max": 5,
+     "pcie_chipset": 4,
+     "fuentes": [
+      "ark-w680"
+     ],
+     "bios": {
+      "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
+      "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
+     }
+    },
+    "B760": {
+     "soporte": {
+      "alder": "si",
+      "raptor": "si",
+      "raptor_r": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": true,
+     "m2_max": 4,
+     "pcie_chipset": 4,
+     "fuentes": [
+      "ark-b760",
+      "intel-700-resumen"
+     ],
+     "bios": {
+      "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
+      "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
+     }
+    },
+    "H770": {
+     "soporte": {
+      "alder": "si",
+      "raptor": "si",
+      "raptor_r": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": true,
+     "m2_max": 5,
+     "pcie_chipset": 4,
+     "fuentes": [
+      "ark-h770",
+      "intel-700-resumen"
+     ],
+     "bios": {
+      "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
+      "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
+     }
+    },
+    "Z790": {
+     "soporte": {
+      "alder": "si",
+      "raptor": "si",
+      "raptor_r": "bios"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 5,
+     "pcie_chipset": 4,
+     "fuentes": [
+      "ark-z790",
+      "intel-700-resumen"
+     ],
+     "bios": {
+      "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
+      "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
+     }
+    }
+   },
+   "nota": "Cada placa es DDR4 o DDR5, no las dos.",
+   "aviso_m2_gen5": {
+    "texto": "En LGA 1700, el M.2 PCIe 5.0 sale de la ranura de la gráfica: si lo usas, la gráfica pasa a x8.",
+    "fuentes": [
+     "ark-i5-12400",
+     "gigabyte-z790-aero",
+     "asus-z790-formula"
+    ]
+   }
+  },
+  "LGA 1851": {
+   "nombre": "Intel LGA 1851 (Core Ultra 200S)",
+   "marca": "Intel",
+   "ram": [
+    "DDR5"
+   ],
+   "chipsets": {
+    "H810": {
+     "soporte": {
+      "arrow": "si",
+      "arrow_r": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 4,
+     "pcie_chipset": 4,
+     "fuentes": [
+      "ark-h810",
+      "intel-800-resumen",
+      "kitguru-800-plus"
+     ],
+     "nota": "Solo dos ranuras de memoria, sin overclock de memoria y sin M.2 conectado a la CPU."
+    },
+    "B860": {
+     "soporte": {
+      "arrow": "si",
+      "arrow_r": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": true,
+     "m2_max": 5,
+     "pcie_chipset": 4,
+     "fuentes": [
+      "ark-b860",
+      "intel-800-resumen",
+      "kitguru-800-plus"
+     ],
+     "nota": "Un M.2 de la CPU a PCIe 5.0."
+    },
+    "Z890": {
+     "soporte": {
+      "arrow": "si",
+      "arrow_r": "bios"
+     },
+     "cpu_oc": true,
+     "ram_oc": true,
+     "m2_max": 5,
+     "pcie_chipset": 4,
+     "fuentes": [
+      "ark-z890",
+      "intel-800-resumen",
+      "kitguru-800-plus"
+     ],
+     "nota": "Dos M.2 de la CPU (PCIe 5.0 y 4.0)."
+    },
+    "Q870": {
+     "soporte": {
+      "arrow": "si",
+      "arrow_r": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": false,
+     "m2_max": 5,
+     "pcie_chipset": 4,
+     "fuentes": [
+      "ark-q870",
+      "kitguru-800-plus"
+     ]
+    },
+    "W880": {
+     "soporte": {
+      "arrow": "si",
+      "arrow_r": "bios"
+     },
+     "cpu_oc": false,
+     "ram_oc": true,
+     "m2_max": 5,
+     "pcie_chipset": 4,
+     "fuentes": [
+      "ark-w880",
+      "kitguru-800-plus"
+     ]
+    }
+   }
+  }
+ },
+ "familias": {
+  "bristol": {
+   "nombre": "A-Series 9000 y Athlon X4 (Bristol Ridge)",
+   "plataforma": "AM4",
+   "ram": {
+    "DDR4": {
+     "oficial": 2400,
+     "fuentes": [
+      "amd-a12-9800"
+     ]
+    }
+   },
+   "pcie": 3,
+   "pcie_texto": "la gráfica va a x8 y el M.2 de la CPU a x2",
+   "fuentes_pcie": [
+    "amd-am4"
+   ],
+   "igpu_nota": "los Athlon X4 no la traen",
+   "fuentes_igpu": [
+    "toms-bristol"
+   ],
+   "optimo": {}
+  },
+  "summit": {
+   "nombre": "Ryzen 1000 (Zen)",
+   "plataforma": "AM4",
+   "ram": {
+    "DDR4": {
+     "oficial": 2667,
+     "fuentes": [
+      "amd-1800x"
+     ]
+    }
+   },
+   "pcie": 3,
+   "fuentes_pcie": [
+    "amd-1800x"
+   ],
+   "igpu_nota": "en AM4 solo la traen los acabados en G y los A-Series",
+   "optimo": {}
+  },
+  "raven": {
+   "nombre": "Ryzen 2000G y Athlon 200GE (Raven Ridge)",
+   "plataforma": "AM4",
+   "ram": {
+    "DDR4": {
+     "oficial": 2933,
+     "por_gama": {
+      "athlon": 2667
+     },
+     "fuentes": [
+      "amd-2400g",
+      "amd-200ge"
+     ],
+     "nota": "Los Athlon, DDR4-2667 (comprobado en el 200GE; el 220GE y el 240GE son el mismo chip)."
+    }
+   },
+   "pcie": 3,
+   "pcie_texto": "con los Ryzen G, la gráfica va a x8",
+   "fuentes_pcie": [
+    "amd-2400g"
+   ],
+   "optimo": {}
+  },
+  "pinnacle": {
+   "nombre": "Ryzen 2000 (Zen+)",
+   "plataforma": "AM4",
+   "ram": {
+    "DDR4": {
+     "oficial": 2933,
+     "fuentes": [
+      "amd-2700x"
+     ]
+    }
+   },
+   "optimo": {
+    "DDR4": {
+     "velocidad": 3200,
+     "cl": 16,
+     "tipo": "solido",
+     "fuentes": [
+      "guru3d-2700x"
+     ],
+     "nota": "Lo que recomienda Guru3D; AMD no publicó un punto óptimo."
+    }
+   },
+   "pcie": 3,
+   "fuentes_pcie": [
+    "amd-2700x"
+   ],
+   "igpu_nota": "en AM4 solo la traen los acabados en G y los A-Series"
+  },
+  "picasso": {
+   "nombre": "Ryzen 3000G (Picasso) y Athlon 3000G",
+   "plataforma": "AM4",
+   "ram": {
+    "DDR4": {
+     "oficial": 2933,
+     "oficial_4": 2133,
+     "por_gama": {
+      "athlon": 2667
+     },
+     "fuentes": [
+      "amd-3400g",
+      "amd-3000g"
+     ],
+     "nota": "Con dos módulos de doble cara (2R), 2667."
+    }
+   },
+   "pcie": 3,
+   "pcie_texto": "con los Ryzen G, la gráfica va a x8",
+   "fuentes_pcie": [
+    "amd-3200g"
+   ],
+   "optimo": {}
+  },
+  "matisse": {
+   "nombre": "Ryzen 3000 (Zen 2)",
+   "plataforma": "AM4",
+   "ram": {
+    "DDR4": {
+     "oficial": 3200,
+     "fuentes": [
+      "amd-3700x"
+     ]
+    }
+   },
+   "optimo": {
+    "DDR4": {
+     "velocidad": 3600,
+     "cl": 16,
+     "tipo": "solido",
+     "fuentes": [
+      "pcgamesn-zen2"
+     ],
+     "nota": "Lo dijo AMD: DDR4-3600 con CL16 o menos.",
+     "techo": 3600,
+     "texto_techo": "Por encima de DDR4-3600 (3733 como mucho) la memoria deja de ir a la par que el Infinity Fabric del procesador: se gana poco o nada. No pagues de más."
+    }
+   },
+   "pcie": 4,
+   "pcie_texto": "solo en placas X570 y B550; en las demás va a PCIe 3.0",
+   "fuentes_pcie": [
+    "amd-3700x"
+   ],
+   "igpu_nota": "en AM4 solo la traen los acabados en G y los A-Series"
+  },
+  "renoir": {
+   "nombre": "Ryzen 4000G y Ryzen 4100/4500 (Renoir)",
+   "plataforma": "AM4",
+   "ram": {
+    "DDR4": {
+     "oficial": 3200,
+     "oficial_4": 2933,
+     "fuentes": [
+      "amd-4600g"
+     ],
+     "nota": "Con cuatro módulos de doble cara (2R), 2667."
+    }
+   },
+   "pcie": 3,
+   "fuentes_pcie": [
+    "amd-4600g"
+   ],
+   "igpu_nota": "el 4100 y el 4500 vienen sin ella, aunque sean del mismo chip que los G",
+   "optimo": {}
+  },
+  "vermeer": {
+   "nombre": "Ryzen 5000 (Zen 3)",
+   "plataforma": "AM4",
+   "ram": {
+    "DDR4": {
+     "oficial": 3200,
+     "oficial_4": 2933,
+     "fuentes": [
+      "amd-5700x3d"
+     ],
+     "nota": "Con cuatro módulos de doble cara (2R), 2667."
+    }
+   },
+   "optimo": {
+    "DDR4": {
+     "velocidad": 3600,
+     "cl": 16,
+     "tipo": "solido",
+     "fuentes": [
+      "computerbase-zen3"
+     ],
+     "nota": "AMD sigue poniendo DDR4-3600 como el punto óptimo.",
+     "techo": 3600,
+     "texto_techo": "Por encima de DDR4-3600 solo algunas unidades aguantan ir a la par con el Infinity Fabric (hasta 4000 con suerte): AMD sigue diciendo que 3600 es lo óptimo."
+    }
+   },
+   "pcie": 4,
+   "pcie_texto": "solo en placas X570 y B550; en las demás va a PCIe 3.0",
+   "fuentes_pcie": [
+    "amd-5800x"
+   ],
+   "igpu_nota": "en AM4 solo la traen los acabados en G y los A-Series"
+  },
+  "cezanne": {
+   "nombre": "Ryzen 5000G y Ryzen 5500/5700 (Cezanne)",
+   "plataforma": "AM4",
+   "ram": {
+    "DDR4": {
+     "oficial": 3200,
+     "oficial_4": 2933,
+     "fuentes": [
+      "amd-5600gt"
+     ],
+     "nota": "Con cuatro módulos de doble cara (2R), 2667."
+    }
+   },
+   "pcie": 3,
+   "pcie_texto": "también en placas X570 y B550",
+   "fuentes_pcie": [
+    "amd-5700"
+   ],
+   "igpu_nota": "el 5500 y el 5700 vienen sin ella, aunque sean del mismo chip que los G",
+   "fuentes_igpu": [
+    "amd-5700g"
+   ],
+   "optimo": {}
+  },
+  "raphael": {
+   "nombre": "Ryzen 7000 (Zen 4)",
+   "plataforma": "AM5",
+   "ram": {
+    "DDR5": {
+     "oficial": 5200,
+     "oficial_4": 3600,
+     "fuentes": [
+      "amd-7950x"
+     ]
+    }
+   },
+   "optimo": {
+    "DDR5": {
+     "velocidad": 6000,
+     "tipo": "solido",
+     "fuentes": [
+      "toms-am5-6000"
+     ],
+     "nota": "Lo dijo AMD: DDR5-6000 es el punto óptimo de los Ryzen 7000.",
+     "techo": 6000,
+     "texto_techo": "Por encima de DDR5-6000 el controlador de memoria suele dejar de ir a la par (1:1): se gana poco o nada. AMD pone 6000 como lo óptimo."
+    }
+   },
+   "pcie": 5,
+   "pcie_texto": "24 carriles, con x16 para la gráfica y dos M.2 (a PCIe 4.0 en placas A620 y B840)",
+   "fuentes_pcie": [
+    "amd-7950x"
+   ],
+   "igpu_modelo": "AMD Radeon Graphics (2 núcleos, la justa para tener imagen)",
+   "igpu_nota": "la F del nombre significa eso"
+  },
+  "phoenix": {
+   "nombre": "Ryzen 8000G (Zen 4 con gráfica)",
+   "plataforma": "AM5",
+   "ram": {
+    "DDR5": {
+     "oficial": 5200,
+     "oficial_4": 3600,
+     "fuentes": [
+      "amd-8500g"
+     ]
+    }
+   },
+   "optimo": {
+    "DDR5": {
+     "velocidad": 6000,
+     "tipo": "solido",
+     "fuentes": [
+      "toms-8000g-6000"
+     ],
+     "nota": "Lo dijo AMD: DDR5-6000 en dos módulos. Con la gráfica integrada, la memoria rápida se nota mucho."
+    }
+   },
+   "pcie": 4,
+   "pcie_texto": "con el 8700G, el 8600G, el 8700F y el 8400F, la gráfica va a x8 y hay dos M.2; con el 8500G y el 8300G, la gráfica va a x4 y solo un M.2 va a x4 (el segundo M.2 de la CPU, a x2 o nada)",
+   "fuentes_pcie": [
+    "tpu-8500g"
+   ],
+   "igpu_nota": "la F del nombre significa eso",
+   "fuentes_igpu": [
+    "amd-8000g"
+   ]
+  },
+  "granite": {
+   "nombre": "Ryzen 9000 (Zen 5)",
+   "plataforma": "AM5",
+   "ram": {
+    "DDR5": {
+     "oficial": 5600,
+     "oficial_4": 3600,
+     "fuentes": [
+      "amd-9950x"
+     ]
+    }
+   },
+   "optimo": {
+    "DDR5": {
+     "velocidad": 6000,
+     "tipo": "solido",
+     "fuentes": [
+      "tpu-zen5-ram"
+     ],
+     "nota": "AMD no ha dado una cifra para los 9000; en las pruebas, 6000 es el punto óptimo.",
+     "techo": 6000,
+     "texto_techo": "Por encima de DDR5-6000 se gana poco: 6400 a la par (1:1) es posible, pero no todas las unidades lo aguantan."
+    }
+   },
+   "pcie": 5,
+   "pcie_texto": "24 carriles, con x16 para la gráfica y dos M.2 (a PCIe 4.0 en placas A620 y B840)",
+   "fuentes_pcie": [
+    "amd-9950x3d2"
+   ],
+   "igpu_modelo": "AMD Radeon Graphics (2 núcleos, la justa para tener imagen)",
+   "igpu_nota": "la F del nombre significa eso",
+   "fuentes_igpu": [
+    "amd-9850x3d"
+   ]
+  },
+  "gorgon": {
+   "nombre": "Ryzen AI 400 de sobremesa",
+   "plataforma": "AM5",
+   "ram": {
+    "DDR5": {
+     "oficial": 5600,
+     "oficial_4": 3600,
+     "fuentes": [
+      "amd-ai-450g"
+     ]
+    }
+   },
+   "pcie": 4,
+   "pcie_texto": "la gráfica dedicada va como mucho a x8",
+   "fuentes_pcie": [
+    "wccftech-ai400"
+   ],
+   "fuentes_igpu": [
+    "amd-ai-435g"
+   ],
+   "optimo": {}
+  },
+  "skylake": {
+   "nombre": "Core de 6.ª generación (Skylake)",
+   "plataforma": "LGA 1151",
+   "ram": {
+    "DDR4": {
+     "oficial": 2133,
+     "fuentes": [
+      "ark-i5-6600k",
+      "ark-i7-6700k",
+      "ark-g4400"
+     ]
+    },
+    "DDR3": {
+     "oficial": 1600,
+     "fuentes": [
+      "ark-i5-6600k",
+      "ark-i7-6700k"
+     ],
+     "nota": "Solo DDR3L (1,35 V) y en placas DDR3: la DDR3 normal de 1,5 V no."
+    }
+   },
+   "optimo": {
+    "DDR4": {
+     "velocidad": 3000,
+     "tipo": "solido",
+     "fuentes": [
+      "techspot-skylake"
+     ],
+     "nota": "Lo que aconsejó TechSpot en sus pruebas. Solo se aprovecha en placas Z170 y Z270."
+    }
+   },
+   "pcie": 3,
+   "fuentes_pcie": [
+    "ark-i7-6700k"
+   ],
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica"
+  },
+  "kaby": {
+   "nombre": "Core de 7.ª generación (Kaby Lake)",
+   "plataforma": "LGA 1151",
+   "ram": {
+    "DDR4": {
+     "oficial": 2400,
+     "por_modelo": {
+      "celeron-g3930": 2133
+     },
+     "fuentes": [
+      "ark-i3-7100",
+      "ark-i7-7700k",
+      "ark-g3930"
+     ]
+    },
+    "DDR3": {
+     "oficial": 1600,
+     "fuentes": [
+      "ark-i7-7700k"
+     ],
+     "nota": "Solo DDR3L (1,35 V) y en placas DDR3: la DDR3 normal de 1,5 V no."
+    }
+   },
+   "optimo": {
+    "DDR4": {
+     "velocidad": 3000,
+     "tipo": "solido",
+     "fuentes": [
+      "techspot-skylake"
+     ],
+     "nota": "Es la misma arquitectura que la 6.ª: vale la prueba de TechSpot con Skylake. Solo se aprovecha en placas Z."
+    }
+   },
+   "pcie": 3,
+   "fuentes_pcie": [
+    "ark-i7-7700k"
+   ],
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica"
+  },
+  "coffee": {
+   "nombre": "Core de 8.ª generación (Coffee Lake)",
+   "plataforma": "LGA 1151",
+   "ram": {
+    "DDR4": {
+     "oficial": 2666,
+     "por_gama": {
+      "i3": 2400,
+      "pentium": 2400,
+      "celeron": 2400
+     },
+     "fuentes": [
+      "ark-i3-8100",
+      "ark-i5-8400",
+      "ark-i7-8700k"
+     ]
+    }
+   },
+   "optimo": {
+    "DDR4": {
+     "velocidad": 3200,
+     "cl": 14,
+     "tipo": "solido",
+     "fuentes": [
+      "tpu-8700k-ram"
+     ],
+     "nota": "Según las pruebas de TechPowerUp con el i7-8700K; un kit más rápido gana menos de un 1 %."
+    }
+   },
+   "pcie": 3,
+   "fuentes_pcie": [
+    "ark-i7-8700k"
+   ],
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica"
+  },
+  "coffee_r": {
+   "nombre": "Core de 9.ª generación (Coffee Lake Refresh)",
+   "plataforma": "LGA 1151",
+   "ram": {
+    "DDR4": {
+     "oficial": 2666,
+     "por_gama": {
+      "i3": 2400,
+      "pentium": 2400,
+      "celeron": 2400
+     },
+     "fuentes": [
+      "ark-i3-9100f",
+      "ark-i5-9400",
+      "ark-i9-9900k"
+     ]
+    }
+   },
+   "optimo": {
+    "DDR4": {
+     "velocidad": 3200,
+     "cl": 14,
+     "tipo": "solido",
+     "fuentes": [
+      "tpu-8700k-ram"
+     ],
+     "nota": "Misma arquitectura que la 8.ª: vale la prueba de TechPowerUp con el i7-8700K."
+    }
+   },
+   "pcie": 3,
+   "fuentes_pcie": [
+    "ark-i9-9900k"
+   ],
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica"
+  },
+  "comet": {
+   "nombre": "Core de 10.ª generación (Comet Lake)",
+   "plataforma": "LGA 1200",
+   "ram": {
+    "DDR4": {
+     "oficial": 2666,
+     "por_gama": {
+      "i7": 2933,
+      "i9": 2933
+     },
+     "fuentes": [
+      "ark-i5-10400",
+      "ark-i7-10700k",
+      "ark-i9-10900k"
+     ]
+    }
+   },
+   "optimo": {
+    "DDR4": {
+     "velocidad": 3200,
+     "tipo": "solido",
+     "fuentes": [
+      "pcgamer-gear"
+     ],
+     "nota": "Entre 3200 y 3600 está el punto dulce (PC Gamer). Con un Core de 10.ª solo se aprovecha en Z490, Z590, W480 y W580."
+    }
+   },
+   "pcie": 3,
+   "fuentes_pcie": [
+    "ark-i7-10700k"
+   ],
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica"
+  },
+  "rocket": {
+   "nombre": "Core de 11.ª generación (Rocket Lake)",
+   "plataforma": "LGA 1200",
+   "ram": {
+    "DDR4": {
+     "oficial": 3200,
+     "fuentes": [
+      "ark-i5-11400",
+      "ark-i9-11900k",
+      "intel-gear-11"
+     ],
+     "nota": "Intel solo garantiza DDR4-3200 en Gear 1 en el i9-11900K y el 11900KF; en los demás, 3200 va en Gear 2 (algo más de latencia) o 2933 en Gear 1."
+    }
+   },
+   "optimo": {
+    "DDR4": {
+     "velocidad": 3600,
+     "tipo": "solido",
+     "fuentes": [
+      "pcgamer-gear"
+     ],
+     "nota": "En Gear 1, si tu procesador lo aguanta (no todos llegan); si no, mejor 3200."
+    }
+   },
+   "pcie": 4,
+   "pcie_texto": "20 carriles, con x16 para la gráfica y x4 para un M.2",
+   "fuentes_pcie": [
+    "ark-i9-11900k"
+   ],
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica"
+  },
+  "alder": {
+   "nombre": "Core de 12.ª generación (Alder Lake)",
+   "plataforma": "LGA 1700",
+   "ram": {
+    "DDR5": {
+     "oficial": 4800,
+     "oficial_4": 4000,
+     "fuentes": [
+      "ark-i9-12900k",
+      "ark-g6900",
+      "intel-12-datasheet"
+     ]
+    },
+    "DDR4": {
+     "oficial": 3200,
+     "fuentes": [
+      "ark-i9-12900k",
+      "intel-12-datasheet"
+     ]
+    }
+   },
+   "pcie": 5,
+   "pcie_texto": "16 carriles PCIe 5.0 para la gráfica y 4 PCIe 4.0 para un M.2",
+   "fuentes_pcie": [
+    "ark-i3-12100f"
+   ],
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica",
+   "fuentes_igpu": [
+    "intel-gfx"
+   ],
+   "optimo": {}
+  },
+  "raptor": {
+   "nombre": "Core de 13.ª generación (Raptor Lake)",
+   "plataforma": "LGA 1700",
+   "ram": {
+    "DDR5": {
+     "oficial": 5600,
+     "oficial_4": 4000,
+     "por_modelo": {
+      "core-i3-13100": 4800,
+      "core-i3-13100f": 4800,
+      "core-i5-13400": 4800,
+      "core-i5-13400f": 4800,
+      "core-i5-13500": 4800,
+      "core-i5-13600": 4800
+     },
+     "fuentes": [
+      "ark-i5-13600k",
+      "ark-i5-13600",
+      "ark-i5-13500",
+      "ark-i9-13900k",
+      "ark-i3-13100t"
+     ],
+     "nota": "Con módulos de doble cara (2R), Intel lo baja a DDR5-5200.",
+     "nota_desde": 5600
+    },
+    "DDR4": {
+     "oficial": 3200,
+     "fuentes": [
+      "ark-i9-13900k"
+     ]
+    }
+   },
+   "pcie": 5,
+   "pcie_texto": "16 carriles PCIe 5.0 para la gráfica y 4 PCIe 4.0 para un M.2",
+   "fuentes_pcie": [
+    "ark-i5-13400f"
+   ],
+   "nota_placa": "Intel pide tener la BIOS al día con la 13.ª y la 14.ª generación (microcódigo 0x12F o posterior) por un fallo de inestabilidad: actualízala aunque la placa ya reconozca el procesador.",
+   "fuentes_nota_placa": [
+    "intel-vmin"
+   ],
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica",
+   "fuentes_igpu": [
+    "intel-gfx"
+   ],
+   "optimo": {}
+  },
+  "raptor_r": {
+   "nombre": "Core de 14.ª generación (Raptor Lake Refresh)",
+   "plataforma": "LGA 1700",
+   "ram": {
+    "DDR5": {
+     "oficial": 5600,
+     "oficial_4": 4000,
+     "por_modelo": {
+      "core-i3-14100": 4800,
+      "core-i3-14100f": 4800,
+      "core-i5-14400": 4800,
+      "core-i5-14400f": 4800,
+      "core-i5-14500": 4800
+     },
+     "fuentes": [
+      "intel-14-guia",
+      "ark-i5-14600",
+      "ark-i5-14500t"
+     ],
+     "nota": "Con módulos de doble cara (2R), Intel lo baja a DDR5-5200.",
+     "nota_desde": 5600
+    },
+    "DDR4": {
+     "oficial": 3200,
+     "fuentes": [
+      "intel-14-guia"
+     ]
+    }
+   },
+   "pcie": 5,
+   "pcie_texto": "16 carriles PCIe 5.0 para la gráfica y 4 PCIe 4.0 para un M.2",
+   "fuentes_pcie": [
+    "ark-i3-14100"
+   ],
+   "nota_placa": "Intel pide tener la BIOS al día con la 13.ª y la 14.ª generación (microcódigo 0x12F o posterior) por un fallo de inestabilidad: actualízala aunque la placa ya reconozca el procesador.",
+   "fuentes_nota_placa": [
+    "intel-vmin"
+   ],
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica",
+   "fuentes_igpu": [
+    "intel-gfx"
+   ],
+   "optimo": {}
+  },
+  "arrow": {
+   "nombre": "Core Ultra 200S (Arrow Lake)",
+   "plataforma": "LGA 1851",
+   "ram": {
+    "DDR5": {
+     "oficial": 5600,
+     "oficial_4": 4800,
+     "fuentes": [
+      "ark-u9-285k",
+      "toms-arrow-ram",
+      "intel-200s-boost"
+     ],
+     "nota": "Con módulos CUDIMM, Intel da hasta DDR5-6400. Con los K en placas Z890, el perfil 200S Boost cubre la garantía con memoria hasta DDR5-8000 (un módulo por canal), aunque no asegura que llegue."
+    }
+   },
+   "pcie": 5,
+   "pcie_texto": "x16 PCIe 5.0 para la gráfica, un M.2 a PCIe 5.0 y otro a 4.0 (según el chipset)",
+   "fuentes_pcie": [
+    "ark-u9-285k",
+    "intel-800-resumen"
+   ],
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica",
+   "fuentes_igpu": [
+    "intel-200s"
+   ],
+   "optimo": {}
+  },
+  "arrow_r": {
+   "nombre": "Core Ultra 200S Plus (Arrow Lake Refresh)",
+   "plataforma": "LGA 1851",
+   "ram": {
+    "DDR5": {
+     "oficial": 5600,
+     "oficial_4": 4800,
+     "fuentes": [
+      "ark-u7-270k-plus",
+      "intel-200s-plus-guia",
+      "toms-arrow-r-ram",
+      "intel-200s-plus",
+      "intel-200s-boost"
+     ],
+     "nota": "Con módulos CUDIMM, hasta DDR5-7200. En placas Z890, el perfil 200S Boost cubre la garantía con memoria hasta DDR5-8000 (un módulo por canal), aunque no asegura que llegue."
+    }
+   },
+   "pcie": 5,
+   "pcie_texto": "x16 PCIe 5.0 para la gráfica, un M.2 a PCIe 5.0 y otro a 4.0 (según el chipset)",
+   "fuentes_pcie": [
+    "ark-u7-270k-plus",
+    "intel-800-resumen"
+   ],
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica",
+   "optimo": {}
+  }
+ }
+}

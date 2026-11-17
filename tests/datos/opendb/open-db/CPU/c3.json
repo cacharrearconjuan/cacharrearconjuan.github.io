@@ -1,0 +1,29 @@
+{
+ "opendb_id": "11111111-0000-4000-8000-000000000003",
+ "socket": "LGA 1700",
+ "metadata": {
+  "name": "Intel Core i5-12400F",
+  "releaseYear": 2022
+ },
+ "cores": {
+  "total": 6,
+  "threads": 12
+ },
+ "clocks": {
+  "performance": {
+   "boost": 4.6
+  }
+ },
+ "specifications": {
+  "tdp": 65,
+  "integratedGraphics": {
+   "model": "None"
+  },
+  "memory": {
+   "types": [
+    "DDR5",
+    "DDR4"
+   ]
+  }
+ }
+}

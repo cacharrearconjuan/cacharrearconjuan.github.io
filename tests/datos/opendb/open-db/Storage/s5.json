@@ -1,0 +1,12 @@
+{
+ "opendb_id": "44444444-0000-4000-8000-000000000005",
+ "form_factor": "M.2-2230",
+ "interface": "M.2 PCIe 4.0 x4",
+ "nvme": true,
+ "capacity": 1000,
+ "storage_type": "SSD",
+ "metadata": {
+  "name": "WD Black SN770M 1TB M.2-2230 PCIe 4.0 X4 NVME",
+  "manufacturer": "WD"
+ }
+}

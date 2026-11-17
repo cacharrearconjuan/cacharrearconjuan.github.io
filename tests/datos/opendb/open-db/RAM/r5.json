@@ -1,0 +1,19 @@
+{
+ "opendb_id": "33333333-0000-4000-8000-000000000005",
+ "ram_type": "DDR4",
+ "speed": 3200,
+ "cas_latency": 22,
+ "modules": {
+  "quantity": 1,
+  "capacity_gb": 32
+ },
+ "capacity": 32,
+ "form_factor": "288-pin DIMM",
+ "profile_support": null,
+ "ecc": "ECC",
+ "registered": "Registered",
+ "metadata": {
+  "name": "Kingston Server Premier DDR4-3200 ECC 32GB",
+  "manufacturer": "Kingston"
+ }
+}

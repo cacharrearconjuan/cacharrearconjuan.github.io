@@ -1,0 +1,26 @@
+{
+ "opendb_id": "22222222-0000-4000-8000-000000000005",
+ "socket": "LGA 1151v2",
+ "chipset": "Intel B365",
+ "form_factor": "ATX",
+ "memory": {
+  "ram_type": "DDR3",
+  "slots": 4,
+  "max": 64
+ },
+ "m2_slots": null,
+ "metadata": {
+  "name": "ASRock B365M Pro4 DDR4",
+  "manufacturer": "ASRock",
+  "releaseYear": 2021
+ },
+ "bios_features": {
+  "flashback": true,
+  "clear_cmos": false
+ },
+ "back_panel_ports": [
+  "1 x HDMI port",
+  "1 x DisplayPort",
+  "2 x USB 3.2"
+ ]
+}
