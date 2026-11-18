@@ -33,7 +33,7 @@ function cpu(id, nombre, zocalo, familia, igpu, extra) {
 function placa(nombre, zocalo, chipset, ram, ranuras, max, m2, extra) {
   return Object.assign({id: nombre.toLowerCase().replace(/\W+/g, ''), nombre: nombre, zocalo: zocalo, chipset: chipset,
     formato: 'ATX', ram: ram, ranuras: ranuras, max_gb: max, m2: m2, m2_nota: m2 ? '' : 'plantilla',
-    video: [], flashback: null, revisada: '', anio: 2021}, extra || {});
+    video: null, flashback: null, revisada: '', anio: 2021}, extra || {});
 }
 
 function kit(tipo, velocidad, cl, modulos, gb, perfil) {
@@ -41,8 +41,8 @@ function kit(tipo, velocidad, cl, modulos, gb, perfil) {
     velocidad: velocidad, cl: cl, modulos: modulos, gb: gb, perfil: perfil || ''};
 }
 
-function ssd(nombre, largo, gen, carriles, protocolo) {
-  return {id: nombre, nombre: nombre, largo: largo, gen: gen, carriles: carriles, protocolo: protocolo, gb: 1000};
+function ssd(nombre, largo, gen, carriles, protocolo, extra) {
+  return Object.assign({id: nombre, nombre: nombre, largo: largo, gen: gen, carriles: carriles, protocolo: protocolo, gb: 1000, disipador: 0}, extra || {});
 }
 
 const r5600x = cpu('ryzen-5-5600x', 'AMD Ryzen 5 5600X', 'AM4', 'vermeer', false);
@@ -185,8 +185,17 @@ function pruebaCpuPlaca() {
   comprobar(e(r2400g, b350) === 'bios', 'Ryzen 2000G en B350: con BIOS (la excepción es solo de los Athlon)');
   comprobar(e(r1600af, x570) === 'depende' && /1600 AF|oficial/.test(t(r1600af, x570)), '1600 AF en X570: depende');
   comprobar(/Athlon con gráfica/.test(t(a3000g, x570)), 'Athlon 3000G en X570: dice por qué no');
-  comprobar(e(r3400g, b550) === 'no' && /se llamen 3000/.test(t(r3400g, b550)), '3400G en B550: no, y explica lo del nombre');
-  comprobar(e(a3000g, b550) === 'no' && /Athlon 3000G/.test(t(a3000g, b550)), 'Athlon 3000G en B550: no, y lo nombra');
+  // AMD no los da por oficiales, pero algunos fabricantes sí (MSI A520M-A PRO, Gigabyte B550 AORUS ELITE AX V2)
+  comprobar(e(r3400g, b550) === 'depende' && /se llamen 3000/.test(t(r3400g, b550)) && /A520M-A PRO/.test(t(r3400g, b550)),
+    '3400G en B550: depende, explica lo del nombre y da ejemplos');
+  comprobar(e(a3000g, b550) === 'depende' && /Athlon 3000G/.test(t(a3000g, b550)), 'Athlon 3000G en B550: depende, y lo nombra');
+  comprobar(PC.cpuEnPlaca(R, r3400g, b550).fuentes.indexOf('msi-a520m-a-pro') >= 0, '3400G en B550: con la ficha de la placa que lo admite');
+  // X570: los Ryzen 2000G según la placa; los Athlon con gráfica, no
+  comprobar(e(r2400g, x570) === 'depende' && /Strix X570-E/.test(t(r2400g, x570)), '2400G en X570: depende (algunas placas sí)');
+  comprobar(e(a200ge, x570) === 'no' && /Athlon/.test(t(a200ge, x570)), 'Athlon 200GE en X570: no');
+  comprobar(e(a3000g, x570) === 'no', 'Athlon 3000G en X570: no');
+  comprobar(e(a3000g, b450) === 'depende' && /tabla del B450/.test(t(a3000g, b450)), 'Athlon 3000G en B450: depende (no está en la tabla de AMD)');
+  comprobar(/GT/.test(PC.grafica(R, r5600x, null).texto), 'sin gráfica en AM4: nombra los GT');
   comprobar(e(r7800x3d, b650) === 'bios' && /AGESA 1\.0\.0\.5c/.test(t(r7800x3d, b650)), '7800X3D en B650: con BIOS (AGESA 1.0.0.5c)');
   comprobar(PC.cpuEnPlaca(R, r7800x3d, b650).fuentes.indexOf('wccftech-x3d-agesa') >= 0, '7800X3D en B650: con la fuente del AGESA');
   comprobar(e(r7800x3d, x870) === 'si', '7800X3D en X870: de serie');
@@ -275,7 +284,23 @@ function pruebaMemoria() {
   v = PC.velocidad(R, {cpu: i13600k, placa: z790, ram: kit('DDR5', 5600, 36, 2, 16)});
   comprobar(v.notas.some((n) => /doble cara/.test(n.texto)), 'i5-13600K (5600): nota de los módulos de doble cara');
   v = PC.velocidad(R, {cpu: i13400, placa: z790, ram: kit('DDR5', 4800, 40, 2, 16)});
-  comprobar(!v.notas.some((n) => /doble cara/.test(n.texto)), 'i5-13400 (4800): sin esa nota');
+  comprobar(!v.notas.some((n) => /lo baja a DDR5-5200/.test(n.texto)), 'i5-13400 (4800): sin esa nota');
+  // placas de cuatro ranuras: lo que garantiza la ficha técnica de Intel
+  comprobar(v.notas.some((n) => /DDR5-4400/.test(n.texto) && n.fuentes.indexOf('intel-13-14-datasheet') >= 0), 'Intel 13.ª en placa de cuatro ranuras: nota del 4400');
+  v = PC.velocidad(R, {cpu: i13400, placa: placa('Z790 ITX', 'LGA 1700', 'Z790', 'DDR5', 2, 96, null), ram: kit('DDR5', 4800, 40, 2, 16)});
+  comprobar(!v.notas.some((n) => /DDR5-4400/.test(n.texto)), 'Intel 13.ª en placa de dos ranuras: sin esa nota');
+  v = PC.velocidad(R, {cpu: i13400, ram: kit('DDR5', 4800, 40, 2, 16)});
+  comprobar(v.notas.some((n) => /DDR5-4400/.test(n.texto)), 'Intel 13.ª sin placa: la nota sale (casi todas son de cuatro)');
+  v = PC.velocidad(R, {cpu: u265k, placa: z890, ram: kit('DDR5', 6000, 30, 4, 16, 'XMP')});
+  comprobar(v.notas.some((n) => /DDR5-4400/.test(n.texto) && n.fuentes.indexOf('intel-200s-datasheet') >= 0), 'Core Ultra con cuatro módulos: 4400 con doble cara');
+  // un kit solo EXPO en placa Intel
+  v = PC.velocidad(R, {cpu: i13600k, placa: z790, ram: kit('DDR5', 6000, 30, 2, 16, 'EXPO')});
+  comprobar(v.notas.some((n) => /solo trae perfil EXPO/.test(n.texto)) && !v.notas.some((n) => /perfil XMP/.test(n.texto)), 'kit solo EXPO en Intel: lo avisa y no habla de XMP');
+  v = PC.velocidad(R, {cpu: r7800x3d, placa: b650, ram: kit('DDR5', 6000, 30, 2, 16, 'EXPO')});
+  comprobar(!v.notas.some((n) => /solo trae perfil EXPO/.test(n.texto)), 'kit solo EXPO en AMD: sin aviso');
+  // 11.ª generación en placa 400
+  comprobar(PC.cpuEnPlaca(R, i11700k, placa('MSI Z490-A PRO', 'LGA 1200', 'Z490', 'DDR4', 4, 128, null)).notas.some((n) => /DDR4-2933/.test(n)),
+    '11.ª en Z490: la memoria oficial es 2933');
   v = PC.velocidad(R, {cpu: r3400g, placa: b450, ram: kit('DDR4', 2933, 16, 2, 16)});
   comprobar(v.notas.some((n) => /doble cara/.test(n.texto)), '3400G: nota de los módulos de doble cara');
   v = PC.velocidad(R, {cpu: a3000g, placa: b450});
@@ -347,10 +372,73 @@ function pruebaSsd() {
   comprobar(r.estado === 'depende', '2230 en hueco 2280: depende (casi todas llevan la posición)');
   r = PC.ssdEnPlaca(R, s990, b560, i10400);
   comprobar(!r.notas.some((n) => /Ojo/.test(n.texto)), '10.ª en B560: sin la nota de velocidad del M.2 que no funciona');
+
+  // Samsung 990 EVO y 990 EVO Plus: PCIe 5.0 x2 o PCIe 4.0 x4, lo mismo de rápido
+  const evo = ssd('Samsung 990 EVO Plus', '2280', 5, 2, 'nvme');
+  r = PC.ssdEnPlaca(R, evo, placa('Hueco 4.0', 'AM4', 'B550', 'DDR4', 4, 128, [['2280', 4, 4, 'p']]), null);
+  comprobar(r.estado === 'si' && /toda su velocidad \(PCIe 4\.0 x4\)/.test(r.texto)
+    && r.notas.some((n) => n.fuentes.indexOf('samsung-990-evo-plus') >= 0), `990 EVO Plus en hueco 4.0 x4: a tope, y lo explica (${r.texto})`);
+  r = PC.ssdEnPlaca(R, evo, placa('Hueco 5.0', 'AM5', 'X670E', 'DDR5', 4, 192, [['2280', 5, 4, 'p']]), null);
+  comprobar(r.estado === 'si' && /PCIe 5\.0 x2/.test(r.texto), `990 EVO Plus en hueco 5.0: a tope (${r.texto})`);
+  r = PC.ssdEnPlaca(R, evo, placa('Hueco 3.0', 'AM4', 'B450', 'DDR4', 4, 64, [['2280', 3, 4, 'p']]), null);
+  comprobar(r.estado === 'depende' && /PCIe 3\.0 x4/.test(r.texto) && /doble/.test(r.texto), `990 EVO Plus en hueco 3.0: va a 3.0 x4 (${r.texto})`);
+  r = PC.ssdEnPlaca(R, evo, placa('Hueco 4.0 x2', 'AM5', 'B650', 'DDR5', 4, 192, [['2280', 4, 2, 'p']]), null);
+  comprobar(r.estado === 'depende' && /PCIe 4\.0 x2/.test(r.texto), `990 EVO Plus en hueco 4.0 x2: la mitad (${r.texto})`);
+  r = PC.ssdEnPlaca(R, s990, placa('Hueco x2', 'AM5', 'B650', 'DDR5', 4, 192, [['2280', 4, 2, 'p']]), null);
+  comprobar(r.estado === 'depende' && /x2/.test(r.texto), '4.0 x4 en hueco x2: no a tope');
+  r = PC.ssdEnPlaca(R, ssd('WD SN520', '2280', 3, 2, 'nvme'), placa('Hueco 4.0', 'AM4', 'B550', 'DDR4', 4, 128, [['2280', 4, 4, 'p']]), null);
+  comprobar(r.estado === 'si' && /PCIe 3\.0 x2/.test(r.texto), `SSD x2 en hueco x4: a tope, con sus dos carriles (${r.texto})`);
+  r = PC.ssdEnPlaca(R, ssd('Sin velocidad', '2280', 0, 0, 'nvme'), b550, null);
+  comprobar(r.estado === 'si' && /no dice su velocidad/.test(r.texto), 'NVMe sin velocidad en la ficha: lo dice');
+  comprobar(PC.ssdEnPlaca(R, ssd('Samsung 990 Pro w/Heatsink', '2280', 4, 4, 'nvme', {disipador: 1}), b550, null).notas.some((n) => /disipador/.test(n.texto)),
+    'SSD con disipador: avisa');
+  comprobar(!PC.ssdEnPlaca(R, s990, b550, null).notas.some((n) => /disipador/.test(n.texto)), 'SSD sin disipador: sin aviso');
+  comprobar(!PC.ssdEnPlaca(R, s990, b550, null).notas.some((n) => /PCIe 4\.0 x4 que en uno/.test(n.texto)), 'la nota de los 990 EVO, solo para ellos');
+  r = PC.ssdEnPlaca(R, t705, b650, null);
+  comprobar(r.notas.some((n) => /se calientan/.test(n.texto) && n.fuentes.indexOf('crucial-t700') >= 0), 'PCIe 5.0 sin disipador: que vaya bajo el de la placa');
+  r = PC.ssdEnPlaca(R, ssd('Crucial T705 w/Heatsink', '2280', 5, 4, 'nvme', {disipador: 1}), b650, null);
+  comprobar(r.notas.some((n) => /disipador propio/.test(n.texto)) && !r.notas.some((n) => /se calientan/.test(n.texto)), 'PCIe 5.0 con disipador: solo el aviso del disipador');
+  comprobar(!PC.ssdEnPlaca(R, evo, b650, null).notas.some((n) => /se calientan/.test(n.texto)), '990 EVO (5.0 x2): sin el aviso de calor');
+  // notas de la placa revisada a mano
+  const corregida = placa('MSI MAG B550 TOMAHAWK', 'AM4', 'B550', 'DDR4', 4, 128, [['2280', 4, 4, 'ps']],
+    {notas_m2: ['Con el M.2_2 ocupado, se apagan los SATA 5 y 6.'], fuente: 'https://www.msi.com/x'});
+  const nm = PC.notasM2(R, corregida, null);
+  comprobar(nm.some((n) => /SATA 5 y 6/.test(n.texto) && n.fuentes[0] === 'https://www.msi.com/x') && !nm.some((n) => /Algunos M\.2 comparten/.test(n.texto)),
+    'placa revisada: sus notas de M.2 con su ficha, sin la genérica');
+  comprobar(PC.notasM2(R, b550, null).some((n) => /Algunos M\.2 comparten/.test(n.texto)), 'placa sin revisar: la nota genérica');
   r = PC.ssdEnPlaca(R, s990, sinDatos, null);
   comprobar(r.estado === 'nose' && /no trae/.test(r.texto), 'placa sin huecos en la ficha: no lo sé');
   r = PC.ssdEnPlaca(R, s990, z270, null);
   comprobar(r.estado === 'nose' && /relleno/.test(r.texto), 'ficha de plantilla: no me fío');
+}
+
+// ------------------------------------------------------------ dónde comprarlo
+
+function pruebaCompra() {
+  console.log('Dónde comprarlo');
+  const q = (tipo, nombre, extra) => PC.textoBusqueda(tipo, Object.assign({nombre: nombre}, extra || {}));
+  comprobar(q('placas', 'Gigabyte B550 AORUS ELITE AX V2 DDR4 ATX', {zocalo: 'AM4', ram: 'DDR4'}) === 'Gigabyte B550 AORUS ELITE AX V2', 'placa: sin «DDR4 ATX»');
+  comprobar(q('placas', 'MSI PRO B760M-A WIFI LGA1700 DDR4 Micro-ATX', {zocalo: 'LGA 1700', ram: 'DDR4'}) === 'MSI PRO B760M-A WIFI DDR4', 'placa LGA 1700 DDR4: conserva el DDR4');
+  comprobar(q('placas', 'MSI PRO B760M-A WIFI LGA1700 DDR5 Micro-ATX', {zocalo: 'LGA 1700', ram: 'DDR5'}) === 'MSI PRO B760M-A WIFI', 'placa LGA 1700 DDR5: el nombre a secas');
+  comprobar(q('placas', 'ASUS PRIME B460M-A LGA 1200 Intel B460 SATA 6Gb/s Micro ATX Intel Motherboard', {zocalo: 'LGA 1200', ram: 'DDR4'}) === 'ASUS PRIME B460M-A', 'placa: corta en el zócalo');
+  comprobar(q('placas', 'MSI MAG B550 TOMAHAWK', {zocalo: 'AM4', ram: 'DDR4'}) === 'MSI MAG B550 TOMAHAWK', 'placa con nombre limpio: igual');
+  comprobar(q('ssd', 'Samsung 990 Pro w/Heatsink 1TB SSD M.2 PCIe 4.0 NVMe', {gb: 1000}) === 'Samsung 990 Pro Heatsink 1TB', 'SSD: sin «SSD M.2 PCIe…»');
+  comprobar(q('ssd', 'SAMSUNG 970 EVO PLUS M.2 2280 1TB PCIe Gen 3.0 x4', {gb: 1000}) === 'SAMSUNG 970 EVO PLUS 1TB', 'SSD: si el corte se lleva la capacidad, la vuelve a poner');
+  comprobar(q('ram', 'Corsair Vengeance RGB DDR5-6000 CL30 32GB (2x16GB)') === 'Corsair Vengeance RGB DDR5-6000 CL30 32GB 2x16GB', 'memoria: sin paréntesis');
+  comprobar(q('cpu', 'AMD Ryzen 5 5600') === 'AMD Ryzen 5 5600', 'procesador: el nombre');
+
+  let e = PC.enlacesCompra('cpu', {nombre: 'AMD Ryzen 5 5600', amazon: 'B09VCHR1VH'});
+  const amazon = e.tiendas.find((x) => x.tienda === 'Amazon');
+  comprobar(amazon.exacto && amazon.url === 'https://www.amazon.es/dp/B09VCHR1VH', 'Amazon: la ficha exacta si BuildCores da el código');
+  comprobar(e.comparadores.map((x) => x.tienda).join() === 'idealo,Google Shopping', 'comparadores: idealo y Google Shopping');
+  comprobar(e.tiendas.map((x) => x.tienda).join() === 'Amazon,PcComponentes,MediaMarkt,LDLC,Alternate,Neobyte', 'tiendas: grandes y de componentes');
+  comprobar(e.tiendas.find((x) => x.tienda === 'PcComponentes').url === 'https://www.pccomponentes.com/search/?query=AMD%20Ryzen%205%205600', 'PcComponentes: su buscador');
+  comprobar(e.tiendas.find((x) => x.tienda === 'LDLC').url === 'https://www.ldlc.com/es-es/buscar/AMD%20Ryzen%205%205600/', 'LDLC: la búsqueda va en la ruta');
+  e = PC.enlacesCompra('cpu', {nombre: 'AMD Ryzen 5 5600', amazon: ''});
+  comprobar(!e.tiendas[0].exacto && /amazon\.es\/s\?k=/.test(e.tiendas[0].url), 'Amazon sin código: su buscador');
+  comprobar(e.tiendas.concat(e.comparadores).every((x) => /^https:\/\//.test(x.url) && !/tag=|affid|ref=/.test(x.url)), 'todo https y sin afiliados');
+  e = PC.enlacesCompra('ram', {nombre: 'Kit "raro" & <b>', amazon: ''});
+  comprobar(e.tiendas.every((x) => !/[<>" ]/.test(x.url)), 'nombres raros: bien escapados en la dirección');
 }
 
 // ------------------------------------------------------------ gráfica, listas y búsqueda
@@ -361,10 +449,19 @@ function pruebaResto() {
   comprobar(PC.grafica(R, r5600x, null).estado === 'no' && /acabados en G/.test(PC.grafica(R, r5600x, null).texto), '5600X: sin gráfica, explica lo de la G');
   comprobar(PC.grafica(R, i12400f, null).estado === 'no' && /F/.test(PC.grafica(R, i12400f, null).texto), '12400F: sin gráfica, explica lo de la F');
   comprobar(/2 núcleos/.test(PC.grafica(R, r7800x3d, null).texto), 'Ryzen 7000: la gráfica justa');
+  // salidas de vídeo: las tiene, no las tiene (confirmado) o la ficha no dice ninguna
+  const sinSaber = placa('Placa sin salidas en la ficha', 'AM4', 'B550', 'DDR4', 4, 128, null, {video: null});
+  const sinSalidas = placa('Placa sin salidas', 'AM4', 'X570', 'DDR4', 4, 128, null, {video: []});
+  const gs = PC.grafica(R, r5600g, sinSaber);
+  comprobar(gs.estado === 'si' && /no dice ninguna/.test(gs.texto) && /antes de comprar/.test(gs.texto), '5600G con placa sin salidas en la ficha: avisa de mirarlo');
+  const gn = PC.grafica(R, r5600g, sinSalidas);
+  comprobar(gn.estado === 'depende' && /necesitas tarjeta gráfica/.test(gn.texto), '5600G con placa sin salidas: hace falta tarjeta');
+  comprobar(/si la placa tiene salidas/.test(PC.grafica(R, r5600g, null).texto), '5600G sin placa: depende de las salidas de la placa');
+  comprobar(PC.grafica(R, r5600x, sinSalidas).estado === 'no', '5600X: sin gráfica, con cualquier placa');
 
   const cpus = [r5600x, r3600, r1700, r5600g, r3400g, a3000g, r7800x3d, i12400];
   const grupos = PC.cpusParaPlaca(R, cpus, b550);
-  comprobar(grupos.map((g) => g.estado).join() === 'si,bios,no', `B550: grupos si, bios y no (${grupos.map((g) => g.estado)})`);
+  comprobar(grupos.map((g) => g.estado).join() === 'si,bios,depende,no', `B550: grupos si, bios, depende y no (${grupos.map((g) => g.estado)})`);
   comprobar(grupos[0].familias[0].cpus[0] === r3600, 'B550: el 3600 de serie');
   comprobar(grupos[1].familias[0].clave === 'cezanne', 'B550: lo más nuevo primero');
   const porChipset = PC.placasParaCpu(R, [b550, b450, a320, x570, b650], r5600x);
@@ -397,5 +494,6 @@ pruebaCpuPlaca();
 pruebaMemoria();
 pruebaSsd();
 pruebaResto();
+pruebaCompra();
 console.log(`\n${hechas - fallos.length} de ${hechas} comprobaciones bien.`);
 process.exit(fallos.length ? 1 : 0);

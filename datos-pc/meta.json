@@ -3,7 +3,7 @@
  "url": "https://github.com/buildcores/buildcores-open-db",
  "licencia": "CC BY-NC-SA 4.0",
  "licencia_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es",
- "cambios": "Adaptado: menos campos, nombres limpios, sin Xeon, EPYC, placas de servidor, SO-DIMM ni ECC, y sin los huecos M.2 de plantilla o imposibles.",
+ "cambios": "Adaptado: menos campos, nombres limpios, sin Xeon, EPYC, placas de servidor, SO-DIMM ni ECC, sin los huecos M.2 de plantilla o imposibles, y con algunas placas corregidas a mano con la ficha del fabricante.",
  "commit": "c9002fe308396c780d8a378cc93c10d85b215b8b",
  "fecha": "2026-11-17T18:33:08+00:00",
  "piezas": {
@@ -15,9 +15,12 @@
  "avisos": {
   "cpu: Xeon y EPYC fuera": 66,
   "placa: chipset de servidor fuera": 34,
+  "placa: corregida a mano con la ficha del fabricante": 30,
   "placa: el tipo de RAM del nombre manda sobre el de la ficha": 1,
   "placa: huecos M.2 de plantilla descartados": 1516,
   "placa: huecos M.2 imposibles para su chipset descartados": 34,
-  "ram: ECC o registrada fuera": 174
+  "placa: lista de M.2 repetida en la ficha, contada una vez": 42,
+  "ram: ECC o registrada fuera": 174,
+  "ssd: más de cuatro carriles (imposible en M.2), velocidad sin dato": 2
  }
 }

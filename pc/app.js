@@ -91,7 +91,7 @@
 
   function fuente(clave) {
     if (!clave) return null;
-    if (/^https?:\/\//.test(clave)) return {titulo: clave.replace(/^https?:\/\/(www\.)?/, '').split('/')[0], url: clave};
+    if (/^https?:\/\//.test(clave)) return {titulo: 'ficha del fabricante (' + clave.replace(/^https?:\/\/(www\.|us\.)?/, '').split('/')[0] + ')', url: clave};
     return (R.fuentes && R.fuentes[clave]) || null;
   }
 
@@ -294,12 +294,17 @@
     const mem = [p.ram, p.ranuras ? p.ranuras + ' ranuras' : null, p.max_gb ? 'hasta ' + p.max_gb + ' GB según la ficha' : null].filter(Boolean);
     if (mem.length) filas.push(`<li class="pc-nota-fila">${icono('info')}<div><h3>Memoria</h3><p>${esc(mem.join(', '))}.</p></div></li>`);
     let m2 = '';
-    if (p.m2) m2 = `<p>${p.m2.length === 1 ? 'Un hueco' : p.m2.length + ' huecos'} para SSD, según la ficha:</p>${htmlHuecos(p)}`;
+    if (p.m2) {
+      m2 = `<p>${p.m2.length === 1 ? 'Un hueco' : p.m2.length + ' huecos'} para SSD, según la ficha${p.fuente ? ' del fabricante' : ''}:</p>${htmlHuecos(p)}`
+        + (p.notas_m2 && p.notas_m2.length ? `<ul class="pc-subnotas">${p.notas_m2.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : '');
+    }
     else m2 = `<p>${esc(PC.textoSinHuecos(p))}</p>`;
     filas.push(`<li class="pc-nota-fila">${icono(p.m2 ? 'info' : 'nose')}<div><h3>SSD M.2</h3>${m2}</div></li>`);
     if (p.video && p.video.length) filas.push(`<li class="pc-nota-fila">${icono('info')}<div><h3>Salidas de vídeo</h3><p>${esc(p.video.join(', '))}. Solo dan imagen con un procesador con gráfica integrada.</p></div></li>`);
-    if (p.flashback === true) filas.push(`<li class="pc-nota-fila">${icono('ok')}<div><h3>BIOS Flashback</h3><p>Se puede actualizar la BIOS con un pendrive, sin procesador.</p></div></li>`);
-    const extra = p.revisada ? `<p class="pc-revisada">Ficha revisada a mano por BuildCores el ${esc(fechaTexto(p.revisada))}.</p>` : '';
+    else if (Array.isArray(p.video)) filas.push(`<li class="pc-nota-fila">${icono('aviso')}<div><h3>Salidas de vídeo</h3><p>No tiene para la gráfica integrada: con esta placa hace falta tarjeta gráfica.</p>${htmlFuentes([p.fuente])}</div></li>`);
+    if (p.flashback === true) filas.push(`<li class="pc-nota-fila">${icono('ok')}<div><h3>Actualizar la BIOS sin procesador</h3><p>Se puede, con un pendrive y el botón de la placa (BIOS Flashback, Flash BIOS o Q-Flash Plus, según la marca).</p></div></li>`);
+    const extra = (p.fuente ? `<p class="pc-revisada">Huecos M.2, salidas de vídeo y botón de BIOS comprobados a mano con la <a href="${esc(p.fuente)}" rel="noopener" target="_blank">ficha del fabricante</a>.</p>` : '')
+      + (p.revisada ? `<p class="pc-revisada">Ficha revisada a mano por BuildCores el ${esc(fechaTexto(p.revisada))}.</p>` : '');
     return bloque('placa', esc(p.nombre), `<ul class="pc-notas" role="list">${filas.join('')}</ul>${extra}`);
   }
 
@@ -420,10 +425,33 @@
 
   // ------------------------------------------------------------ pintar
 
+  // ------------------------------------------------------------ dónde comprarlo
+
+  const TABLA_DE = {placa: 'placas', cpu: 'cpu', ram: 'ram', ssd: 'ssd'};
+
+  function enlaceTienda(e) {
+    const etiqueta = e.exacto ? `${e.tienda} <span class="pc-compra-exacto">(ficha exacta)</span>` : esc(e.tienda);
+    return `<a class="pc-compra-enlace" href="${esc(e.url)}" target="_blank" rel="noopener noreferrer nofollow">${etiqueta}<span class="visual-oculto"> (se abre en otra pestaña)</span></a>`;
+  }
+
+  function htmlCompra() {
+    const piezas = TIPOS.filter((t) => elegido[t.clave]);
+    if (!piezas.length) return '';
+    const filas = piezas.map((t) => {
+      const e = PC.enlacesCompra(TABLA_DE[t.clave], elegido[t.clave]);
+      return `<li class="pc-compra-pieza"><h3><span class="pc-compra-tipo">${esc(t.titulo)}</span> ${esc(elegido[t.clave].nombre)}</h3>
+  <p class="pc-compra-fila"><span class="pc-compra-que">Comparar precios</span> ${e.comparadores.map(enlaceTienda).join(' ')}</p>
+  <p class="pc-compra-fila"><span class="pc-compra-que">Tiendas</span> ${e.tiendas.map(enlaceTienda).join(' ')}</p></li>`;
+    }).join('');
+    const entradilla = 'Los precios cambian cada día: los comparadores ordenan las tiendas de más barata a más cara en el momento. '
+      + 'Antes de pagar, mira que sea el modelo exacto (capacidad, versión DDR4 o DDR5…). Sin enlaces de afiliado: esta web no gana nada con tu compra.';
+    return bloque('compra', 'Dónde comprarlo', `<ul class="pc-compra" role="list">${filas}</ul>`, entradilla);
+  }
+
   function pintar() {
     const hay = TIPOS.filter((t) => elegido[t.clave]).length;
     const resultado = hay
-      ? [hay >= 2 ? htmlVeredicto() : '', htmlPlaca(), htmlCpu(), htmlListas(), htmlMemoria(), htmlSsd()].join('')
+      ? [hay >= 2 ? htmlVeredicto() : '', htmlPlaca(), htmlCpu(), htmlListas(), htmlMemoria(), htmlSsd(), htmlCompra()].join('')
       : htmlIntro();
     app.innerHTML = `<div class="pc-equipo" role="group" aria-label="Tu equipo">${TIPOS.map(htmlPieza).join('')}</div>
 <p class="pc-aviso" id="pc-perdidas" hidden></p>

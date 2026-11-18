@@ -1,5 +1,5 @@
 {
- "version": "2026-11-17",
+ "version": "2026-11-18",
  "nota": "Reglas sacadas a mano de las fichas de AMD e Intel (y de pruebas publicadas cuando el fabricante no da la cifra). Cada dato lleva su fuente.",
  "fuentes": {
   "amd-am4": {
@@ -525,6 +525,46 @@
   "ark-i5-14500t": {
    "titulo": "Intel: ficha del Core i5-14500T",
    "url": "https://www.intel.com/content/www/us/en/products/sku/236780/specifications.html"
+  },
+  "intel-13-14-datasheet": {
+   "titulo": "Intel: ficha técnica de la 13.ª y la 14.ª generación (volumen 1)",
+   "url": "https://cdrdv2-public.intel.com/743844/743844-015.pdf"
+  },
+  "intel-11-datasheet": {
+   "titulo": "Intel: ficha técnica de la 11.ª generación (volumen 1)",
+   "url": "https://cdrdv2-public.intel.com/634648/634648-004.pdf"
+  },
+  "intel-200s-datasheet": {
+   "titulo": "Intel: ficha técnica de los Core Ultra 200S (volumen 1)",
+   "url": "https://cdrdv2-public.intel.com/832586/832586-006.pdf"
+  },
+  "msi-a520m-a-pro": {
+   "titulo": "MSI: ficha de la A520M-A PRO",
+   "url": "https://www.msi.com/Motherboard/A520M-A-PRO/Specification"
+  },
+  "gigabyte-b550-elite-ax-v2": {
+   "titulo": "Gigabyte: ficha de la B550 AORUS ELITE AX V2",
+   "url": "https://www.gigabyte.com/Motherboard/B550-AORUS-ELITE-AX-V2-rev-16/sp"
+  },
+  "asus-strix-x570-e": {
+   "titulo": "ASUS: ficha de la ROG Strix X570-E Gaming",
+   "url": "https://rog.asus.com/motherboards/rog-strix/rog-strix-x570-e-gaming-model/spec/"
+  },
+  "asus-crosshair-viii-hero": {
+   "titulo": "ASUS: ficha de la ROG Crosshair VIII Hero",
+   "url": "https://rog.asus.com/motherboards/rog-crosshair/rog-crosshair-viii-hero-model/spec/"
+  },
+  "gigabyte-x570-aorus-elite": {
+   "titulo": "Gigabyte: ficha de la X570 AORUS ELITE",
+   "url": "https://www.gigabyte.com/Motherboard/X570-AORUS-ELITE-rev-10/sp"
+  },
+  "crucial-t700": {
+   "titulo": "Crucial: ficha técnica del T700 (copia de un distribuidor)",
+   "url": "https://simms.co.uk/PDFS/Products/SSD/Crucial-T700-Datasheet.pdf"
+  },
+  "samsung-990-evo-plus": {
+   "titulo": "Samsung: el 990 EVO Plus, PCIe 4.0 x4 o 5.0 x2",
+   "url": "https://news.samsung.com/global/samsung-launches-990-evo-plus-ssd-with-best-in-class-performance-speeds-supported-by-pcie-4-0"
   }
  },
  "plataformas": {
@@ -699,6 +739,12 @@
       "tpu-zen3-400",
       "amd-am4"
      ],
+     "soporte_modelo": {
+      "athlon-3000g": "depende"
+     },
+     "depende_modelo": {
+      "athlon-3000g": "AMD no lo pone en su tabla del B450, aunque muchas placas lo aceptan con la BIOS al día."
+     },
      "depende": {
       "summit": "AMD no los pone en su tabla del B450 y el X470, aunque al presentarlos dijo que admitían todo lo de AM4 y casi todas las placas los aceptan.",
       "raven": "AMD no los pone en su tabla del B450 y el X470, aunque al presentarlos dijo que admitían todo lo de AM4 y casi todas las placas los aceptan."
@@ -753,7 +799,7 @@
       "summit": "no",
       "raven": "no",
       "pinnacle": "no",
-      "picasso": "no",
+      "picasso": "depende",
       "matisse": "si",
       "renoir": "bios",
       "vermeer": "bios",
@@ -766,14 +812,18 @@
      "pcie_chipset": 3,
      "fuentes": [
       "tpu-a520",
-      "amd-am4"
+      "amd-am4",
+      "msi-a520m-a-pro",
+      "gigabyte-b550-elite-ax-v2"
      ],
      "motivo": {
       "bristol": "Las placas 500 empiezan en los Ryzen 3000.",
       "summit": "Las placas 500 empiezan en los Ryzen 3000.",
       "raven": "Las placas 500 empiezan en los Ryzen 3000.",
-      "pinnacle": "Las placas 500 empiezan en los Ryzen 3000.",
-      "picasso": "Aunque se llamen 3000, el 3200G, el 3400G y el Athlon 3000G no son de la generación de los Ryzen 3000 normales, sino de antes: AMD no los admite en las placas 500."
+      "pinnacle": "Las placas 500 empiezan en los Ryzen 3000."
+     },
+     "depende": {
+      "picasso": "AMD no los pone en su tabla de las placas 500 (aunque se llamen 3000, el 3200G, el 3400G y el Athlon 3000G son de antes), pero algunos fabricantes sí los admiten en ciertas placas, como la MSI A520M-A PRO o la Gigabyte B550 AORUS ELITE AX V2."
      },
      "nota": "Sin PCIe 4.0, ni siquiera con un Ryzen 3000 o 5000."
     },
@@ -783,7 +833,7 @@
       "summit": "no",
       "raven": "no",
       "pinnacle": "no",
-      "picasso": "no",
+      "picasso": "depende",
       "matisse": "si",
       "renoir": "bios",
       "vermeer": "bios",
@@ -796,14 +846,18 @@
      "pcie_chipset": 3,
      "fuentes": [
       "tpu-b550",
-      "amd-am4"
+      "amd-am4",
+      "msi-a520m-a-pro",
+      "gigabyte-b550-elite-ax-v2"
      ],
      "motivo": {
       "bristol": "Las placas 500 empiezan en los Ryzen 3000.",
       "summit": "Las placas 500 empiezan en los Ryzen 3000.",
       "raven": "Las placas 500 empiezan en los Ryzen 3000.",
-      "pinnacle": "Las placas 500 empiezan en los Ryzen 3000.",
-      "picasso": "Aunque se llamen 3000, el 3200G, el 3400G y el Athlon 3000G no son de la generación de los Ryzen 3000 normales, sino de antes: AMD no los admite en las placas 500."
+      "pinnacle": "Las placas 500 empiezan en los Ryzen 3000."
+     },
+     "depende": {
+      "picasso": "AMD no los pone en su tabla de las placas 500 (aunque se llamen 3000, el 3200G, el 3400G y el Athlon 3000G son de antes), pero algunos fabricantes sí los admiten en ciertas placas, como la MSI A520M-A PRO o la Gigabyte B550 AORUS ELITE AX V2."
      },
      "nota": "PCIe 4.0 en la gráfica y en el M.2 de la CPU solo con los Ryzen 3000 y 5000 normales: los 4000G, 5000G, 4100, 4500, 5500 y 5700 van a PCIe 3.0."
     },
@@ -811,7 +865,7 @@
      "soporte": {
       "bristol": "no",
       "summit": "no",
-      "raven": "no",
+      "raven": "depende",
       "pinnacle": "si",
       "picasso": "si",
       "matisse": "si",
@@ -827,22 +881,33 @@
      "fuentes": [
       "toms-x570-zen1",
       "tpu-x570",
-      "amd-am4"
+      "amd-am4",
+      "asus-strix-x570-e",
+      "asus-crosshair-viii-hero",
+      "gigabyte-x570-aorus-elite"
      ],
      "soporte_modelo": {
+      "athlon-200ge": "no",
+      "athlon-220ge": "no",
+      "athlon-240ge": "no",
       "athlon-3000g": "no",
       "ryzen-5-1600-af": "depende"
      },
      "motivo_modelo": {
+      "athlon-200ge": "AMD dejó fuera de X570 los Athlon con gráfica.",
+      "athlon-220ge": "AMD dejó fuera de X570 los Athlon con gráfica.",
+      "athlon-240ge": "AMD dejó fuera de X570 los Athlon con gráfica.",
       "athlon-3000g": "AMD dejó fuera de X570 los Athlon con gráfica."
+     },
+     "depende": {
+      "raven": "AMD no los pone en su tabla del X570, pero algunos fabricantes sí los admiten en ciertas placas, como la ASUS ROG Strix X570-E, la Crosshair VIII Hero o la Gigabyte X570 AORUS ELITE."
      },
      "depende_modelo": {
       "ryzen-5-1600-af": "AMD no lo da por oficial en X570, aunque muchas placas lo aceptan según su fabricante."
      },
      "motivo": {
-      "bristol": "AMD dejó fuera de X570 los A-Series, los Ryzen 1000 y los 2000G.",
-      "summit": "AMD dejó fuera de X570 los A-Series, los Ryzen 1000 y los 2000G.",
-      "raven": "AMD dejó fuera de X570 los A-Series, los Ryzen 1000 y los 2000G.",
+      "bristol": "AMD dejó fuera de X570 los A-Series y los Ryzen 1000.",
+      "summit": "AMD dejó fuera de X570 los A-Series y los Ryzen 1000.",
       "picasso": "AMD dejó fuera de X570 los Athlon con gráfica."
      }
     }
@@ -1542,8 +1607,12 @@
      "pcie_chipset": 3,
      "fuentes": [
       "intel-400-11",
-      "intel-11700kf-compat"
-     ]
+      "intel-11700kf-compat",
+      "intel-11-datasheet"
+     ],
+     "notas": {
+      "rocket": "Con un Core de 11.ª en una placa 400, la memoria oficial es DDR4-2933: Intel solo da DDR4-3200 en placas 500."
+     }
     },
     "Q470": {
      "soporte": {
@@ -1557,8 +1626,12 @@
      "pcie_chipset": 3,
      "fuentes": [
       "intel-400-11",
-      "intel-11700kf-compat"
-     ]
+      "intel-11700kf-compat",
+      "intel-11-datasheet"
+     ],
+     "notas": {
+      "rocket": "Con un Core de 11.ª en una placa 400, la memoria oficial es DDR4-2933: Intel solo da DDR4-3200 en placas 500."
+     }
     },
     "Z490": {
      "soporte": {
@@ -1573,10 +1646,11 @@
      "fuentes": [
       "intel-400-11",
       "intel-11700kf-compat",
-      "hothardware-z490"
+      "hothardware-z490",
+      "intel-11-datasheet"
      ],
      "notas": {
-      "rocket": "PCIe 4.0 con la 11.ª generación solo en algunas placas (todas las MSI con BIOS nueva; en ASUS, pocas): mira la tuya."
+      "rocket": "PCIe 4.0 con la 11.ª generación solo en algunas placas (todas las MSI con BIOS nueva; en ASUS, pocas): mira la tuya. Con un Core de 11.ª en una placa 400, la memoria oficial es DDR4-2933: Intel solo da DDR4-3200 en placas 500."
      }
     },
     "W480": {
@@ -1591,8 +1665,12 @@
      "pcie_chipset": 3,
      "fuentes": [
       "intel-400-11",
-      "intel-11700kf-compat"
-     ]
+      "intel-11700kf-compat",
+      "intel-11-datasheet"
+     ],
+     "notas": {
+      "rocket": "Con un Core de 11.ª en una placa 400, la memoria oficial es DDR4-2933: Intel solo da DDR4-3200 en placas 500."
+     }
     },
     "H510": {
      "soporte": {
@@ -2030,7 +2108,7 @@
    "fuentes_pcie": [
     "amd-1800x"
    ],
-   "igpu_nota": "en AM4 solo la traen los acabados en G y los A-Series",
+   "igpu_nota": "en AM4 solo la traen los acabados en G (también GT y GE) y los A-Series",
    "optimo": {}
   },
   "raven": {
@@ -2082,7 +2160,7 @@
    "fuentes_pcie": [
     "amd-2700x"
    ],
-   "igpu_nota": "en AM4 solo la traen los acabados en G y los A-Series"
+   "igpu_nota": "en AM4 solo la traen los acabados en G (también GT y GE) y los A-Series"
   },
   "picasso": {
    "nombre": "Ryzen 3000G (Picasso) y Athlon 3000G",
@@ -2098,7 +2176,7 @@
       "amd-3400g",
       "amd-3000g"
      ],
-     "nota": "Con dos módulos de doble cara (2R), 2667."
+     "nota": "Con dos módulos de doble cara (2R), 2667; con cuatro de doble cara, 1866."
     }
    },
    "pcie": 3,
@@ -2137,7 +2215,7 @@
    "fuentes_pcie": [
     "amd-3700x"
    ],
-   "igpu_nota": "en AM4 solo la traen los acabados en G y los A-Series"
+   "igpu_nota": "en AM4 solo la traen los acabados en G (también GT y GE) y los A-Series"
   },
   "renoir": {
    "nombre": "Ryzen 4000G y Ryzen 4100/4500 (Renoir)",
@@ -2190,7 +2268,7 @@
    "fuentes_pcie": [
     "amd-5800x"
    ],
-   "igpu_nota": "en AM4 solo la traen los acabados en G y los A-Series"
+   "igpu_nota": "en AM4 solo la traen los acabados en G (también GT y GE) y los A-Series"
   },
   "cezanne": {
    "nombre": "Ryzen 5000G y Ryzen 5500/5700 (Cezanne)",
@@ -2267,7 +2345,7 @@
      "fuentes": [
       "toms-8000g-6000"
      ],
-     "nota": "Lo dijo AMD: DDR5-6000 en dos módulos. Con la gráfica integrada, la memoria rápida se nota mucho."
+     "nota": "Lo dijo AMD: DDR5-6000 en dos módulos. En los G, si usas su gráfica integrada, la memoria rápida se nota mucho."
     }
    },
    "pcie": 4,
@@ -2558,6 +2636,10 @@
       "ark-i9-12900k",
       "ark-g6900",
       "intel-12-datasheet"
+     ],
+     "nota_4ranuras": "En placas de cuatro ranuras, la ficha técnica de Intel solo garantiza DDR5-4400 con dos módulos (y DDR5-3600 con cuatro de doble cara). Casi todas las placas van más rápido, pero eso ya no es lo oficial.",
+     "fuentes_4ranuras": [
+      "intel-12-datasheet"
      ]
     },
     "DDR4": {
@@ -2602,7 +2684,11 @@
       "ark-i3-13100t"
      ],
      "nota": "Con módulos de doble cara (2R), Intel lo baja a DDR5-5200.",
-     "nota_desde": 5600
+     "nota_desde": 5600,
+     "nota_4ranuras": "En placas de cuatro ranuras, la ficha técnica de Intel solo garantiza DDR5-4400 con dos módulos (y DDR5-3600 con cuatro de doble cara). Casi todas las placas van más rápido, pero eso ya no es lo oficial.",
+     "fuentes_4ranuras": [
+      "intel-13-14-datasheet"
+     ]
     },
     "DDR4": {
      "oficial": 3200,
@@ -2646,7 +2732,11 @@
       "ark-i5-14500t"
      ],
      "nota": "Con módulos de doble cara (2R), Intel lo baja a DDR5-5200.",
-     "nota_desde": 5600
+     "nota_desde": 5600,
+     "nota_4ranuras": "En placas de cuatro ranuras, la ficha técnica de Intel solo garantiza DDR5-4400 con dos módulos (y DDR5-3600 con cuatro de doble cara). Casi todas las placas van más rápido, pero eso ya no es lo oficial.",
+     "fuentes_4ranuras": [
+      "intel-13-14-datasheet"
+     ]
     },
     "DDR4": {
      "oficial": 3200,
@@ -2680,9 +2770,14 @@
      "fuentes": [
       "ark-u9-285k",
       "toms-arrow-ram",
-      "intel-200s-boost"
+      "intel-200s-boost",
+      "intel-200s-datasheet"
      ],
-     "nota": "Con módulos CUDIMM, Intel da hasta DDR5-6400. Con los K en placas Z890, el perfil 200S Boost cubre la garantía con memoria hasta DDR5-8000 (un módulo por canal), aunque no asegura que llegue."
+     "nota": "Con módulos CUDIMM, Intel da hasta DDR5-6400 en placas de dos ranuras (en las de cuatro, 5600). Con los K en placas Z890, el perfil 200S Boost cubre la garantía con memoria hasta DDR5-8000 (un módulo por canal), aunque no asegura que llegue.",
+     "nota_4ranuras": "Con cuatro módulos de doble cara (2R), Intel lo baja a DDR5-4400.",
+     "fuentes_4ranuras": [
+      "intel-200s-datasheet"
+     ]
     }
    },
    "pcie": 5,
@@ -2722,6 +2817,24 @@
    ],
    "igpu_nota": "los que llevan F en el nombre vienen sin gráfica",
    "optimo": {}
+  }
+ },
+ "ssd": {
+  "gen5_calor": {
+   "texto": "Los SSD PCIe 5.0 se calientan mucho: ponlo bajo el disipador de la placa (o uno aparte), porque sin él puede bajar de velocidad.",
+   "fuentes": [
+    "crucial-t700"
+   ]
+  },
+  "disipador": {
+   "texto": "Ojo: este SSD trae disipador propio y es más alto de lo normal. En ese hueco no le cabe encima el disipador de la placa, y conviene mirar que no choque con la tarjeta gráfica si va justo debajo.",
+   "fuentes": []
+  },
+  "doble_modo": {
+   "texto": "Este SSD va igual de rápido en un hueco PCIe 4.0 x4 que en uno PCIe 5.0: usa cuatro carriles a 4.0 o dos a 5.0.",
+   "fuentes": [
+    "samsung-990-evo-plus"
+   ]
   }
  }
 }

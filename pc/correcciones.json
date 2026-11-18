@@ -1,0 +1,500 @@
+{
+ "nota": "Placas revisadas a mano con la ficha del fabricante (18-11-2026). Estos datos mandan sobre los de BuildCores. Si BuildCores cambia el nombre de una placa, el conversor avisa de que la corrección ya no casa con ninguna.",
+ "placas": [
+  {
+   "nombre": "Gigabyte Z890 AORUS ELITE WIFI7 DDR5 ATX",
+   "fuente": "https://www.gigabyte.com/Motherboard/Z890-AORUS-ELITE-WIFI7/sp",
+   "m2": [
+    [
+     "2280,22110",
+     5,
+     4,
+     "p"
+    ],
+    [
+     "2280,22110",
+     4,
+     4,
+     "p"
+    ],
+    [
+     "2280,22110",
+     4,
+     4,
+     "p"
+    ],
+    [
+     "2280,22110",
+     4,
+     4,
+     "ps"
+    ]
+   ],
+   "video": [
+    "DisplayPort",
+    "Thunderbolt"
+   ],
+   "flashback": true
+  },
+  {
+   "nombre": "Gigabyte B760M GAMING X AX DDR4 Micro ATX",
+   "fuente": "https://www.gigabyte.com/Motherboard/B760M-GAMING-X-AX-DDR4/sp",
+   "m2": [
+    [
+     "2280",
+     4,
+     4,
+     "p"
+    ],
+    [
+     "2280,22110",
+     4,
+     4,
+     "p"
+    ]
+   ],
+   "video": [
+    "HDMI",
+    "DisplayPort"
+   ],
+   "flashback": true
+  },
+  {
+   "nombre": "MSI MAG Z790 TOMAHAWK WIFI DDR5 ATX",
+   "fuente": "https://www.msi.com/Motherboard/MAG-Z790-TOMAHAWK-WIFI/Specification",
+   "m2": [
+    [
+     "2260,2280,22110",
+     4,
+     4,
+     "p"
+    ],
+    [
+     "2260,2280",
+     4,
+     4,
+     "p"
+    ],
+    [
+     "2242,2260,2280",
+     4,
+     4,
+     "ps"
+    ],
+    [
+     "2242,2260,2280",
+     4,
+     4,
+     "p"
+    ]
+   ]
+  },
+  {
+   "nombre": "Gigabyte B365M DS3H",
+   "fuente": "https://www.gigabyte.com/Motherboard/B365M-DS3H-rev-10/sp",
+   "m2": [
+    [
+     "2242,2260,2280",
+     3,
+     4,
+     "ps"
+    ]
+   ]
+  },
+  {
+   "nombre": "ASUS PRIME B760M-A D4",
+   "fuente": "https://www.asus.com/motherboards-components/motherboards/prime/prime-b760m-a-d4/techspec/",
+   "m2": [
+    [
+     "2242,2260,2280",
+     4,
+     4,
+     "p"
+    ],
+    [
+     "2242,2260,2280",
+     4,
+     4,
+     "p"
+    ]
+   ],
+   "video": [
+    "DisplayPort",
+    "HDMI"
+   ]
+  },
+  {
+   "nombre": "MSI H610 PRO-H610M-E LGA1700 DDR4 Micro ATX",
+   "fuente": "https://www.msi.com/Motherboard/PRO-H610M-E-DDR4/Specification",
+   "m2": [
+    [
+     "2242,2260,2280",
+     3,
+     4,
+     "ps"
+    ]
+   ],
+   "video": [
+    "HDMI",
+    "VGA"
+   ]
+  },
+  {
+   "nombre": "Asus Z690 TUF GAMING Z690-PLUS WIFI D4 DDR4 ATX",
+   "fuente": "https://www.asus.com/motherboards-components/motherboards/tuf-gaming/tuf-gaming-z690-plus-wifi-d4/techspec/",
+   "m2": [
+    [
+     "2242,2260,2280,22110",
+     4,
+     4,
+     "p"
+    ],
+    [
+     "2242,2260,2280",
+     4,
+     4,
+     "ps"
+    ],
+    [
+     "2242,2260,2280,22110",
+     4,
+     4,
+     "p"
+    ],
+    [
+     "2242,2260,2280",
+     4,
+     4,
+     "p"
+    ]
+   ],
+   "video": [
+    "DisplayPort",
+    "HDMI"
+   ]
+  },
+  {
+   "nombre": "MSI MAG B560 TOMAHAWK WIFI DDR4 ATX",
+   "fuente": "https://www.msi.com/Motherboard/MAG-B560-TOMAHAWK-WIFI/Specification",
+   "m2": [
+    [
+     "2242,2260,2280,22110",
+     4,
+     4,
+     "p"
+    ],
+    [
+     "2242,2260,2280",
+     3,
+     4,
+     "ps"
+    ],
+    [
+     "2242,2260,2280",
+     3,
+     4,
+     "p"
+    ]
+   ],
+   "video": [
+    "HDMI",
+    "DisplayPort"
+   ],
+   "notas_m2": [
+    "Un M.2 SATA en el M2_2 apaga el puerto SATA2, y usar el M2_3 apaga la ranura PCI_E2."
+   ]
+  },
+  {
+   "nombre": "MSI Z390-A PRO DDR4 ATX",
+   "fuente": "https://msi.com/Motherboard/Z390-A-PRO/Specification",
+   "m2": [
+    [
+     "2242,2260,2280,22110",
+     3,
+     4,
+     "ps"
+    ]
+   ],
+   "video": [
+    "DisplayPort",
+    "DVI",
+    "VGA"
+   ],
+   "notas_m2": [
+    "Un M.2 SATA apaga el puerto SATA2."
+   ]
+  },
+  {
+   "nombre": "MSI PRO B760M-A WIFI LGA1700 DDR4 Micro-ATX",
+   "fuente": "https://www.msi.com/Motherboard/PRO-B760M-A-WIFI-DDR4/Specification",
+   "notas_m2": [
+    "Un M.2 SATA en el M2_2 apaga el puerto SATA8."
+   ]
+  },
+  {
+   "nombre": "Asus ROG STRIX Z790-E GAMING WIFI II DDR5 ATX",
+   "fuente": "https://rog.asus.com/jp/motherboards/rog-strix/rog-strix-z790-e-gaming-wifi-ii/spec/",
+   "notas_m2": [
+    "Con el M.2_1 ocupado, la ranura de la gráfica (PCIEX16) va a x8."
+   ]
+  },
+  {
+   "nombre": "Asus ROG STRIX Z890-E GAMING WIFI DDR5 ATX",
+   "fuente": "https://rog.asus.com/motherboards/rog-strix/rog-strix-z890-e-gaming-wifi/spec/",
+   "notas_m2": [
+    "Con el M.2_3 y el M.2_4 ocupados, la ranura de la gráfica (PCIEX16) va a x8."
+   ]
+  },
+  {
+   "nombre": "ASUS PRIME B460M-A LGA 1200 Intel B460 SATA 6Gb/s Micro ATX Intel Motherboard",
+   "fuente": "https://asus.com/motherboards-components/motherboards/prime/prime-b460m-a/techspec",
+   "notas_m2": [
+    "Usar el M.2_1 apaga el puerto SATA6G_1."
+   ]
+  },
+  {
+   "nombre": "MSI MAG B550 TOMAHAWK",
+   "fuente": "https://www.msi.com/Motherboard/MAG-B550-TOMAHAWK/Specification",
+   "m2": [
+    [
+     "2242,2260,2280,22110",
+     4,
+     4,
+     "ps"
+    ],
+    [
+     "2242,2260,2280",
+     3,
+     4,
+     "p"
+    ]
+   ],
+   "notas_m2": [
+    "Si usas a la vez el M2_2 y las ranuras PCI_E2 y PCI_E3, el M2_2 baja a x2 y la PCI_E3 se apaga."
+   ]
+  },
+  {
+   "nombre": "ASUS TUF GAMING B550-PLUS",
+   "fuente": "https://www.asus.com/us/motherboards-components/motherboards/all-series/tuf-gaming-b550-plus/techspec/",
+   "m2": [
+    [
+     "2242,2260,2280,22110",
+     4,
+     4,
+     "ps"
+    ],
+    [
+     "2242,2260,2280,22110",
+     3,
+     4,
+     "ps"
+    ]
+   ],
+   "notas_m2": [
+    "Con el M.2_2 ocupado, se apagan los puertos SATA 5 y 6."
+   ]
+  },
+  {
+   "nombre": "Gigabyte B550 AORUS ELITE AX V2 DDR4 ATX",
+   "fuente": "https://www.gigabyte.com/Motherboard/B550-AORUS-ELITE-AX-V2-rev-16/sp",
+   "m2": [
+    [
+     "2242,2260,2280,22110",
+     4,
+     4,
+     "ps"
+    ],
+    [
+     "2242,2260,2280,22110",
+     3,
+     4,
+     "ps"
+    ]
+   ],
+   "video": [
+    "DisplayPort",
+    "HDMI"
+   ],
+   "flashback": true
+  },
+  {
+   "nombre": "MSI B450 TOMAHAWK MAX",
+   "fuente": "https://www.msi.com/Motherboard/B450-TOMAHAWK-MAX/Specification",
+   "flashback": true,
+   "notas_m2": [
+    "Con el M.2 ocupado, se apagan los puertos SATA 5 y 6.",
+    "Con un Athlon con gráfica, el M.2 va a PCIe 3.0 x2."
+   ]
+  },
+  {
+   "nombre": "ASUS ROG Strix X570-E Gaming AM4 DDR4 ATX",
+   "fuente": "https://rog.asus.com/motherboards/rog-strix/rog-strix-x570-e-gaming-model/spec/",
+   "m2": [
+    [
+     "2242,2260,2280,22110",
+     4,
+     4,
+     "ps"
+    ],
+    [
+     "2242,2260,2280,22110",
+     4,
+     4,
+     "ps"
+    ]
+   ]
+  },
+  {
+   "nombre": "Gigabyte X570 AORUS ELITE AM4 DDR4 ATX",
+   "fuente": "https://www.gigabyte.com/Motherboard/X570-AORUS-ELITE-rev-10/sp",
+   "m2": [
+    [
+     "2242,2260,2280,22110",
+     4,
+     4,
+     "ps"
+    ],
+    [
+     "2242,2260,2280,22110",
+     4,
+     4,
+     "ps"
+    ]
+   ],
+   "video": [
+    "HDMI"
+   ],
+   "flashback": true
+  },
+  {
+   "nombre": "Asus X570 ROG Crosshair VIII Hero DDR4 ATX",
+   "fuente": "https://rog.asus.com/motherboards/rog-crosshair/rog-crosshair-viii-hero-model/spec/",
+   "video": []
+  },
+  {
+   "nombre": "MSI B650 GAMING PLUS AM5 DDR5 ATX",
+   "fuente": "https://us.msi.com/Motherboard/B650-GAMING-PLUS/Specification",
+   "m2": [
+    [
+     "2280,22110",
+     4,
+     4,
+     "p"
+    ],
+    [
+     "2260,2280",
+     4,
+     4,
+     "p"
+    ]
+   ],
+   "video": [
+    "HDMI",
+    "DisplayPort"
+   ],
+   "flashback": true,
+   "notas_m2": [
+    "Con un Ryzen 8500G u 8300G, el M2_2 va a PCIe 4.0 x2."
+   ]
+  },
+  {
+   "nombre": "Gigabyte A620M GAMING X DDR5 Micro ATX AM5",
+   "fuente": "https://www.gigabyte.com/Motherboard/A620M-GAMING-X-rev-10/sp",
+   "max_gb": 256,
+   "video": [
+    "DisplayPort",
+    "HDMI"
+   ],
+   "flashback": true
+  },
+  {
+   "nombre": "MSI MAG X870E TOMAHAWK MAX WiFi",
+   "fuente": "https://www.msi.com/Motherboard/MAG-X870E-TOMAHAWK-MAX-WIFI/Specification",
+   "m2": [
+    [
+     "2280,22110",
+     5,
+     4,
+     "p"
+    ],
+    [
+     "2260,2280",
+     5,
+     2,
+     "p"
+    ],
+    [
+     "2260,2280",
+     4,
+     4,
+     "p"
+    ],
+    [
+     "2260,2280",
+     4,
+     4,
+     "p"
+    ]
+   ],
+   "video": [
+    "HDMI",
+    "USB-C"
+   ],
+   "notas_m2": [
+    "El M2_2 comparte carriles con los USB-C de 40 Gb/s: en cuanto lo usas, los dos van a PCIe 5.0 x2 (en la BIOS se puede poner a x4, pero entonces se apagan esos USB).",
+    "Con un Ryzen 8500G u 8300G, el M2_2 no funciona."
+   ]
+  },
+  {
+   "nombre": "ASUS ROG STRIX X670E-E GAMING WIFI AM5 DDR5 ATX",
+   "fuente": "https://rog.asus.com/motherboards/rog-strix/rog-strix-x670e-e-gaming-wifi-model/spec/",
+   "notas_m2": [
+    "Usar el M.2_3 baja la ranura de la gráfica (PCIEX16_1) a x8 y la PCIEX16_2 a x4."
+   ]
+  },
+  {
+   "nombre": "Asus TUF GAMING B650-PLUS WIFI",
+   "fuente": "https://www.asus.com/motherboards-components/motherboards/tuf-gaming/tuf-gaming-b650-plus-wifi/techspec/",
+   "notas_m2": [
+    "Usar el M.2_3 apaga la ranura PCIEX16_2.",
+    "Con un Ryzen 8000, el M.2_2 va a x4 o a x2 según el modelo."
+   ]
+  },
+  {
+   "nombre": "ASUS TUF GAMING B850-PLUS WIFI",
+   "fuente": "https://www.asus.com/motherboards-components/motherboards/tuf-gaming/tuf-gaming-b850-plus-wifi/techspec/",
+   "notas_m2": [
+    "Usar el M.2_3 apaga la ranura PCIEX16(G4).",
+    "Con un Ryzen 8000, el M.2_2 va a x4 o a x2 según el modelo."
+   ]
+  },
+  {
+   "nombre": "GIGABYTE B650 AORUS ELITE AX AM5 DDR5 ATX",
+   "fuente": "https://www.gigabyte.com/Motherboard/B650-AORUS-ELITE-AX-rev-10-11/sp",
+   "notas_m2": [
+    "Con un Ryzen 8500G u 8300G, el M2B_CPU va a x2."
+   ]
+  },
+  {
+   "nombre": "Gigabyte B850 AORUS ELITE WIFI7 AM5 DDR5 ATX",
+   "fuente": "https://www.gigabyte.com/Motherboard/B850-AORUS-ELITE-WIFI7-rev-1x/sp",
+   "notas_m2": [
+    "Con un Ryzen 8500G u 8300G, el M2B_CPU va a x2."
+   ]
+  },
+  {
+   "nombre": "MSI A520M-A PRO Micro ATX AM4",
+   "fuente": "https://www.msi.com/Motherboard/A520M-A-PRO/Specification",
+   "notas_m2": [
+    "Con un Athlon con gráfica, este M.2 solo admite SATA (un SSD NVMe no funciona ahí)."
+   ]
+  },
+  {
+   "nombre": "MSI A520M-A PRO DDR4 Micro ATX",
+   "fuente": "https://www.msi.com/Motherboard/A520M-A-PRO/Specification",
+   "notas_m2": [
+    "Con un Athlon con gráfica, este M.2 solo admite SATA (un SSD NVMe no funciona ahí)."
+   ]
+  }
+ ]
+}

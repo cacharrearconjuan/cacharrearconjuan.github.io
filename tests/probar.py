@@ -471,7 +471,7 @@ def prueba_datos_pc():
         salida = os.path.join(t, "datos")
         reglas = os.path.join(RAIZ, "pc", "reglas.json")
         with contextlib.redirect_stdout(io.StringIO()):
-            codigo = dpc.main(["--opendb", OPENDB, "--salida", salida, "--reglas", reglas])
+            codigo = dpc.main(["--opendb", OPENDB, "--salida", salida, "--reglas", reglas, "--correcciones", ""])
         comprobar(codigo == 0, "convierte la copia de prueba")
         cpus = leer_tabla(os.path.join(salida, "cpu.json"))
         comprobar(set(cpus) == {"ryzen-5-7500f", "core-i5-12400f", "core-i5-12400", "ryzen-5-5600g", "ryzen-7-5700",
@@ -524,10 +524,75 @@ def prueba_datos_pc():
         comprobar(meta["licencia"] == "CC BY-NC-SA 4.0" and meta["piezas"] == {"cpu": 10, "placas": 6, "ram": 3, "ssd": 4},
                   f"meta: licencia y cuentas ({meta['piezas']})")
 
+        # salidas de vídeo: las que hay, ninguna (solo si BuildCores lo confirma) o no se sabe
+        comprobar(dpc.salidas_video({"back_panel_ports": ["1x HDMI port", "1x Display port", "2x USB 2.0"]}) == ["HDMI", "DisplayPort"],
+                  "vídeo: salidas leídas de los puertos")
+        lista_sin_video = ["2 x USB 10Gbps ports", "2 x USB 5Gbps ports", "4 x USB 2.0 ports", "1 x Wi-Fi Module",
+                           "1 x Realtek 2.5Gb Ethernet port", "3 x Audio jacks"]
+        comprobar(dpc.salidas_video({"back_panel_ports": lista_sin_video}) is None,
+                  "vídeo: si la lista no trae ninguna, no se sabe (la B650M-AYW WIFI sí tiene HDMI)")
+        comprobar(dpc.salidas_video({"display_outputs": [{"connector": "usb_c", "video_signal": "displayport", "graphics_route": "discrete"}],
+                                     "back_panel_ports": ["2 x Thunderbolt 4 USB Type-C port(s)"]}) == [],
+                  "vídeo: el USB-C que saca la imagen de la tarjeta no vale para la integrada")
+        comprobar(dpc.salidas_video({"display_outputs": [{"connector": "hdmi", "graphics_route": "integrated"},
+                                                         {"connector": "usb_c", "video_signal": "displayport", "graphics_route": "integrated"}]})
+                  == ["HDMI", "USB-C"], "vídeo: mandan las salidas confirmadas")
+        # Amazon.es: solo el código que BuildCores da por comprobado
+        anuncios = {"identifiers": {"retailer_listings": [
+            {"source": "amazon", "channel": "us", "source_product_id": "B000000US1", "verified": True},
+            {"source": "amazon", "channel": "es", "source_product_id": "B09VCHR1VH", "verified": True}]}}
+        comprobar(dpc.asin_es(anuncios) == "B09VCHR1VH", "amazon: el código de España")
+        anuncios["identifiers"]["retailer_listings"][1]["verified"] = False
+        comprobar(dpc.asin_es(anuncios) == "", "amazon: sin comprobar, nada")
+        comprobar(dpc.asin_es({}) == "", "amazon: sin anuncios, nada")
+
+        # listas de M.2 repetidas: con cuatro o más, son la mitad; con dos iguales, se quedan
+        with open(os.path.join(OPENDB, "open-db", "Motherboard", "p1.json"), encoding="utf-8") as f:
+            base = json.load(f)
+        a = {"size": "2280", "key": "M", "interface": "PCIe 4.0 x4"}
+        b = {"size": "22110", "key": "M", "interface": "PCIe 3.0 x4"}
+        repetida = dict(base, opendb_id="r1", metadata=dict(base["metadata"], name="Prueba Repetida"), m2_slots=[a, b, a, b])
+        doble = dict(base, opendb_id="r2", metadata=dict(base["metadata"], name="Prueba Doble"), m2_slots=[a, a])
+        av = dpc.Avisos()
+        hechas = {x["nombre"]: x for x in dpc.preparar_placas([repetida, doble], json.load(open(reglas, encoding="utf-8"))["plataformas"], av)}
+        rep = next((x for n, x in hechas.items() if n.endswith("Repetida")), {})
+        dob = next((x for n, x in hechas.items() if n.endswith("Doble")), {})
+        comprobar(len(rep.get("m2") or []) == 2 and len(dob.get("m2") or []) == 2, f"M.2 repetidos: 4 → 2, y 2 iguales se quedan ({rep.get('m2')}, {dob.get('m2')})")
+
+        # placas revisadas a mano: mandan sobre BuildCores, y avisa si una ya no está
+        corr = os.path.join(t, "correcciones.json")
+        with open(corr, "w", encoding="utf-8") as f:
+            json.dump({"placas": [
+                {"nombre": "MSI MAG B550 TOMAHAWK", "fuente": "https://www.msi.com/x", "m2": [["2280", 4, 4, "ps"]],
+                 "video": [], "flashback": True, "notas_m2": ["Nota de prueba."]},
+                {"nombre": "Placa que ya no existe", "fuente": "https://example.com", "flashback": True}]}, f)
+        salida2 = os.path.join(t, "datos2")
+        with contextlib.redirect_stdout(io.StringIO()):
+            dpc.main(["--opendb", OPENDB, "--salida", salida2, "--reglas", reglas, "--correcciones", corr])
+        placas2 = {p["nombre"]: p for p in leer_tabla(os.path.join(salida2, "placas.json")).values()}
+        b5 = placas2.get("MSI MAG B550 TOMAHAWK", {})
+        comprobar(b5.get("m2") == [["2280", 4, 4, "ps"]] and b5.get("video") == [] and b5.get("notas_m2") == ["Nota de prueba."]
+                  and b5.get("fuente") == "https://www.msi.com/x" and b5.get("m2_nota") == "", "correcciones: mandan sobre la ficha")
+        with open(os.path.join(salida2, "meta.json"), encoding="utf-8") as f:
+            avisos2 = json.load(f)["avisos"]
+        comprobar(avisos2.get("placa: corregida a mano con la ficha del fabricante") == 1
+                  and any("ya no está" in k for k in avisos2), f"correcciones: cuenta las hechas y avisa de las que no casan ({avisos2})")
+
+        av = dpc.Avisos()
+        raros = {x["nombre"]: x for x in dpc.preparar_ssd([
+            {"opendb_id": "a", "form_factor": "M.2-2280", "interface": "M.2 PCIe 4.0 x8", "capacity": 1000,
+             "metadata": {"name": "Raro 1TB SSD", "manufacturer": "Raro"}},
+            {"opendb_id": "b", "form_factor": "M.2-2280", "interface": "M.2 PCIe 4.0 x4", "capacity": 1000,
+             "metadata": {"name": "Samsung 990 Pro w/Heatsink 1TB", "manufacturer": "Samsung"}}], av)}
+        comprobar(raros.get("Raro 1TB SSD", {}).get("gen") == 0 and raros["Raro 1TB SSD"]["carriles"] == 0,
+                  "ssd: x8 es imposible en M.2, así que velocidad sin dato")
+        comprobar(raros.get("Samsung 990 Pro w/Heatsink 1TB", {}).get("disipador") == 1 and raros["Raro 1TB SSD"]["disipador"] == 0,
+                  "ssd: el disipador sale del nombre")
+
         # misma entrada, mismos archivos
         antes = {f: open(os.path.join(salida, f), "rb").read() for f in os.listdir(salida)}
         with contextlib.redirect_stdout(io.StringIO()):
-            dpc.main(["--opendb", OPENDB, "--salida", salida, "--reglas", reglas])
+            dpc.main(["--opendb", OPENDB, "--salida", salida, "--reglas", reglas, "--correcciones", ""])
         comprobar(antes == {f: open(os.path.join(salida, f), "rb").read() for f in os.listdir(salida)}, "misma entrada, mismos datos")
 
         # si de repente salen muchas menos piezas, no se toca nada
@@ -554,6 +619,8 @@ def prueba_datos_pc():
     with open(os.path.join(RAIZ, "datos-pc", "placas.json"), encoding="utf-8") as f:
         campos = json.load(f)["campos"]
     comprobar(campos == dpc.CAMPOS["placas"], "datos-pc/: mismo formato que el conversor")
+    with open(os.path.join(RAIZ, "datos-pc", "ssd.json"), encoding="utf-8") as f:
+        comprobar(json.load(f)["campos"] == dpc.CAMPOS["ssd"], "datos-pc/: SSD con el formato del conversor")
 
 
 def prueba_logica_pc():

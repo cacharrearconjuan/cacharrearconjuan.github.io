@@ -143,7 +143,7 @@
       const cual = de(ch.bios_modelo, cpu.id) || de(ch.bios, cpu.familia);
       r.texto = `Sí, con la BIOS actualizada${cual ? ' (' + cual + ')' : ''}: el chipset ${placa.chipset} admite ${quien}, pero una placa con la BIOS de fábrica antigua no ${porModelo ? 'lo' : 'los'} reconoce.`;
       r.notas.push(placa.flashback === true
-        ? 'Esta placa tiene BIOS Flashback: se actualiza con un pendrive, sin procesador.'
+        ? 'Esta placa se puede actualizar con un pendrive y sin procesador (BIOS Flashback, Flash BIOS o Q-Flash Plus, según la marca).'
         : 'Si la BIOS es antigua, actualízala antes de cambiar el procesador (con el procesador viejo puesto). Algunas placas se actualizan sin procesador (BIOS Flashback): mira el manual.');
     } else if (s === 'depende') {
       r.estado = 'depende';
@@ -213,7 +213,7 @@
   }
 
   function nombrePerfil(kit, P) {
-    if (P && P.marca === 'Intel') return 'XMP';  // las placas Intel solo leen XMP
+    if (P && P.marca === 'Intel') return kit && kit.perfil === 'EXPO' ? 'EXPO (si tu placa lo lee)' : 'XMP';  // las placas Intel leen XMP
     if (kit && kit.tipo === 'DDR4') return 'XMP';  // EXPO solo existe en DDR5
     if (kit && kit.perfil) return kit.perfil.replace('+', ' o ');
     return 'EXPO o XMP';
@@ -255,6 +255,9 @@
       r.fuentesOficial = fr.fuentes || [];
     }
     const notaFr = fr && fr.nota && cpu && (!fr.nota_desde || (r.oficial && r.oficial >= fr.nota_desde)) ? fr.nota : '';
+    // lo que Intel da en placas de cuatro ranuras (si la placa tiene dos, no aplica)
+    const nota4 = fr && fr.nota_4ranuras && cpu && (!placa || !placa.ranuras || placa.ranuras >= 4)
+      ? nota('info', fr.nota_4ranuras, fr.fuentes_4ranuras || []) : null;
     r.optimo = (F && F.optimo && F.optimo[tipo]) || (P && P.optimo && P.optimo[tipo]) || null;
     const ramOc = ramOcDe(ch, cpu);
     // «con el chipset B460» o, si depende del procesador, «con este procesador en una placa B560»
@@ -266,6 +269,7 @@
       if (!cpu) r.notas.push(nota('info', 'Lo oficial depende del procesador: elígelo arriba y te digo la cifra exacta.', []));
       if (r.oficial) {
         r.notas.push(nota('info', `Lo oficial de este procesador: ${ddr(tipo, r.oficial)} con dos módulos${r.oficial4 ? ' y ' + ddr(tipo, r.oficial4) + ' con cuatro' : ''}.${notaFr ? ' ' + notaFr : ''}`, r.fuentesOficial));
+        if (nota4) r.notas.push(nota4);
       }
       if (ramOc === false && r.oficial) {
         r.notas.push(nota('aviso', `${mayuscula(enPlaca)}, la memoria no pasa de lo oficial del procesador: memoria más rápida que ${ddr(tipo, r.oficial)} no sirve de nada aquí.`, fuentesCh));
@@ -283,6 +287,9 @@
     const oficial = N > 2 && r.oficial4 ? r.oficial4 : r.oficial;
     const perfil = nombrePerfil(kit, P);
     const o = r.optimo;
+    if (P && P.marca === 'Intel' && kit.perfil === 'EXPO') {
+      r.notas.push(nota('aviso', 'Este kit solo trae perfil EXPO, que es el de AMD: muchas placas Intel no lo leen, y entonces hay que poner la velocidad y las latencias a mano en la BIOS.', []));
+    }
     if (oficial && ramOc === false && S > oficial) {
       r.ira = oficial;
       r.notas.push(nota('mal', `Irá a ${ddr(tipo, oficial)}, no a ${S}: ${enPlaca}, la memoria no puede pasar de lo oficial del procesador. Pagar por más velocidad aquí no sirve.`, fuentesCh.concat(r.fuentesOficial)));
@@ -306,6 +313,7 @@
       r.notas.push(nota('aviso', 'Con cuatro módulos el controlador va más cargado y casi siempre hay que bajar algo la velocidad. Si buscas velocidad, mejor dos módulos más grandes.', []));
     }
     if (notaFr) r.notas.push(nota('info', notaFr, r.fuentesOficial));
+    if (nota4 && oficial) r.notas.push(nota4);
     if (o && o.velocidad && ramOc !== false) {
       if (o.techo && S > o.techo) {
         r.notas.push(nota('info', o.texto_techo || `Por encima de ${ddr(tipo, o.techo)} se gana poco o nada en esta plataforma: no pagues de más por memoria más rápida.`, o.fuentes_techo || o.fuentes));
@@ -359,6 +367,23 @@
     return cosas.length > 1 ? cosas.slice(0, -1).join(', ') + ' o ' + cosas[cosas.length - 1] : cosas.join('');
   }
 
+  // Ancho de banda de un enlace PCIe, en «PCIe 3.0 x1» (PCIe 4.0 x4 = 8, igual que PCIe 5.0 x2).
+  function banda(gen, carriles) {
+    return gen ? Math.pow(2, gen - 3) * carriles : 0;
+  }
+
+  // Modos en que puede ir un SSD. Los PCIe 5.0 x2 (Samsung 990 EVO y 990 EVO Plus) también van como PCIe 4.0 x4.
+  function modosSsd(ssd) {
+    const x = ssd.carriles || 4;
+    const modos = [[ssd.gen, x]];
+    if (ssd.gen === 5 && x === 2) modos.push([4, 4]);
+    return modos;
+  }
+
+  function enlaceTexto(gen, carriles) {
+    return genTexto(gen) + (carriles ? ' x' + carriles : '');
+  }
+
   function ssdEnPlaca(R, ssd, placa, cpu) {
     const r = {estado: 'nose', texto: '', huecos: [], notas: [], mejor: null};
     if (!placa.m2) {
@@ -392,7 +417,7 @@
         }
       } else if (ssd.protocolo === 'nvme' && e.modo === 's') {
         e.cabe = false;
-        e.motivo = 'solo es SATA: un M.2 NVMe no funciona ahí';
+        e.motivo = 'solo admite SATA (un SSD NVMe no funciona ahí)';
       }
       if (e.cabe) {
         if (!longs.length) e.dudas.push('tamaño');
@@ -405,7 +430,17 @@
           }
           if (techo && g > techo) g = techo;
           if (dudaCpu && g > deCpu) e.dudas.push('cpu');
-          e.real = g;
+          // el mejor enlace entre los modos del SSD y lo que da el hueco
+          const tope = e.gen ? g : (g || ssd.gen);
+          let mejor = [g, Math.min(ssd.carriles || 4, e.carriles || 4)];
+          if (ssd.gen) {
+            for (const [mg, mx] of modosSsd(ssd)) {
+              const cand = [Math.min(mg, tope || mg), Math.min(mx, e.carriles || 4)];
+              if (banda(cand[0], cand[1]) > banda(mejor[0], mejor[1])) mejor = cand;
+            }
+          }
+          e.real = mejor[0];
+          e.enlace = mejor;
         }
       }
       r.huecos.push(e);
@@ -433,19 +468,35 @@
         : `Sí: en el M.2 ${m.n}, que admite SATA. Irá a velocidad SATA (unos 550 MB/s), como cualquier SSD SATA.`;
       return r;
     }
-    const lleno = !ssd.gen || (m.real >= ssd.gen && (!m.carriles || !ssd.carriles || m.carriles >= ssd.carriles));
+    const maximo = ssd.gen ? Math.max.apply(null, modosSsd(ssd).map(([g, x]) => banda(g, x))) : 0;
+    const enlace = m.enlace || [m.real, m.carriles];
+    const lleno = !ssd.gen || banda(enlace[0], enlace[1]) >= maximo;
     if (m.dudas.length) {
       r.estado = 'depende';
       r.texto = `Seguramente sí (M.2 ${m.n}${m.real && m.dudas.indexOf('generación') < 0 ? ', a ' + genTexto(m.real) : ''}), pero ${porQue}. Míralo en el manual.`;
+    } else if (!ssd.gen) {
+      r.estado = 'si';
+      r.texto = `Sí: en el M.2 ${m.n}, que va a ${enlaceTexto(m.real, m.carriles)}. La ficha del SSD no dice su velocidad, así que no sé si lo aprovecha entero.`;
     } else if (lleno) {
       r.estado = 'si';
-      r.texto = `Sí: en el M.2 ${m.n} va a toda su velocidad (${genTexto(m.real)}${m.carriles ? ' x' + m.carriles : ''}).`;
+      r.texto = `Sí: en el M.2 ${m.n} va a toda su velocidad (${enlaceTexto(enlace[0], enlace[1])}).`;
     } else {
       r.estado = 'depende';
-      const motivo = m.real < ssd.gen
-        ? `irá a ${genTexto(m.real)} y el SSD es ${genTexto(ssd.gen)}`
-        : `el hueco es x${m.carriles} y el SSD x${ssd.carriles}`;
+      const motivo = modosSsd(ssd).length > 1
+        ? `irá a ${enlaceTexto(enlace[0], enlace[1])} y el SSD da para el doble (${enlaceTexto(ssd.gen, ssd.carriles)} o ${enlaceTexto(4, 4)})`
+        : m.real < ssd.gen
+          ? `irá a ${genTexto(m.real)} y el SSD es ${genTexto(ssd.gen)}`
+          : `el hueco es x${enlace[1]} y el SSD x${ssd.carriles}`;
       r.texto = `Funciona, pero no a tope: en el mejor hueco (M.2 ${m.n}) ${motivo}. Pierdes velocidad máxima; en el día a día casi no se nota.`;
+    }
+    const S = R.ssd || {};
+    if (ssd.protocolo === 'nvme' && modosSsd(ssd).length > 1 && S.doble_modo) {
+      r.notas.push(nota('info', S.doble_modo.texto, S.doble_modo.fuentes));
+    }
+    if (ssd.disipador && S.disipador) {
+      r.notas.push(nota('aviso', S.disipador.texto, S.disipador.fuentes));
+    } else if (ssd.protocolo === 'nvme' && ssd.gen >= 5 && (ssd.carriles || 4) >= 4 && S.gen5_calor) {
+      r.notas.push(nota('info', S.gen5_calor.texto, S.gen5_calor.fuentes));
     }
     if (!apagado && deCpu && r.huecos.some((e) => e.gen > deCpu && e.gen > deChipset)) {
       const motivo = deCpu < F.pcie ? `con el chipset ${placa.chipset}, el procesador va a ${genTexto(deCpu)}` : `el procesador es ${genTexto(F.pcie)}`;
@@ -465,7 +516,9 @@
     if (cpu && ch && ch.notas_m2 && ch.notas_m2[cpu.familia]) {
       notas.push(nota('aviso', ch.notas_m2[cpu.familia], ch.fuentes));
     }
-    if (placa.m2 && placa.m2.length) {
+    if (placa.notas_m2 && placa.notas_m2.length) {
+      for (const t of placa.notas_m2) notas.push(nota('aviso', t, placa.fuente ? [placa.fuente] : []));
+    } else if (placa.m2 && placa.m2.length) {
       notas.push(nota('info', 'Algunos M.2 comparten carriles con puertos SATA o ranuras PCIe: al usarlos, puede apagarse algo. El manual de la placa lo dice en la página de los M.2.', []));
     }
     return notas;
@@ -476,13 +529,18 @@
   function grafica(R, cpu, placa) {
     const F = familia(R, cpu.familia);
     if (cpu.igpu === true) {
-      let t = `Sí: ${(F && F.igpu_modelo) || cpu.igpu_modelo || 'gráfica integrada'}. Puedes tener imagen sin tarjeta gráfica`;
+      const modelo = (F && F.igpu_modelo) || cpu.igpu_modelo || 'gráfica integrada';
+      if (placa && Array.isArray(placa.video) && !placa.video.length) {
+        // BuildCores confirma que la placa no tiene salidas para la gráfica integrada
+        return {estado: 'depende', texto: `Sí: ${modelo}. Pero esta placa no tiene salidas de vídeo para ella, así que con esta placa necesitas tarjeta gráfica.`};
+      }
+      let t = `Sí: ${modelo}. Puedes tener imagen sin tarjeta gráfica`;
       if (placa) {
         t += placa.video && placa.video.length
           ? `, conectando el monitor a la placa (${placa.video.join(', ')}).`
-          : '. Conecta el monitor a las salidas de vídeo de la placa (la ficha no dice cuáles tiene: mira la parte de atrás).';
+          : ' si la placa tiene salidas de vídeo (HDMI o DisplayPort detrás). Su ficha no dice ninguna: algunas placas no traen, así que míralo antes de comprar sin tarjeta.';
       } else {
-        t += ', conectando el monitor a la placa.';
+        t += ' si la placa tiene salidas de vídeo (HDMI o DisplayPort detrás).';
       }
       return {estado: 'si', texto: t};
     }
@@ -490,6 +548,55 @@
       return {estado: 'no', texto: `No tiene gráfica integrada${F && F.igpu_nota ? ' (' + F.igpu_nota + ')' : ''}: sin tarjeta gráfica no hay imagen, y las salidas de vídeo de la placa no funcionan con este procesador.`};
     }
     return {estado: 'nose', texto: 'No sé seguro si tiene gráfica integrada: mira su ficha en la web del fabricante.'};
+  }
+
+  // ------------------------------------------------------------ dónde comprarlo
+
+  // Direcciones de búsqueda comprobadas una a una en el navegador (18-11-2026). Sin afiliados: la web no
+  // gana nada con la compra. Los comparadores ordenan las tiendas por precio en el momento.
+  const COMPARADORES = [
+    {tienda: 'idealo', url: (q) => 'https://www.idealo.es/resultados.html?q=' + encodeURIComponent(q)},
+    {tienda: 'Google Shopping', url: (q) => 'https://www.google.es/search?udm=28&q=' + encodeURIComponent(q)},
+  ];
+  const TIENDAS = [
+    {tienda: 'Amazon', url: (q) => 'https://www.amazon.es/s?k=' + encodeURIComponent(q), ficha: (c) => 'https://www.amazon.es/dp/' + c},
+    {tienda: 'PcComponentes', url: (q) => 'https://www.pccomponentes.com/search/?query=' + encodeURIComponent(q)},
+    {tienda: 'MediaMarkt', url: (q) => 'https://www.mediamarkt.es/es/search.html?query=' + encodeURIComponent(q)},
+    {tienda: 'LDLC', url: (q) => 'https://www.ldlc.com/es-es/buscar/' + encodeURIComponent(q) + '/'},
+    {tienda: 'Alternate', url: (q) => 'https://www.alternate.es/listing.xhtml?q=' + encodeURIComponent(q)},
+    {tienda: 'Neobyte', url: (q) => 'https://www.neobyte.es/busqueda?controller=search&s=' + encodeURIComponent(q)},
+  ];
+
+  // Lo que se escribe en el buscador de una tienda: el modelo, sin el relleno de la ficha.
+  function textoBusqueda(tipo, pieza) {
+    let t = String(pieza.nombre || '');
+    if (tipo === 'placas') {
+      // se corta en el zócalo, el formato o el relleno («AM4 DDR4 ATX», «LGA1700 DDR4 Micro-ATX», «Motherboard»)
+      const corte = t.search(/\s(AM[45]|LGA\s?\d{4}|s?TRX?\d|DDR[345]|E-?ATX|ATX|Micro[- ]?ATX|mATX|Mini[- ]?(ITX|DTX)|EEB|Motherboard|AMD Ryzen|Intel Core)\b/i);
+      if (corte > 0) t = t.slice(0, corte);
+      // en LGA 1700 hay versión DDR4 y DDR5 con casi el mismo nombre: la DDR4 lo lleva en el nombre
+      if (pieza.zocalo === 'LGA 1700' && pieza.ram === 'DDR4' && !/\b(DDR4|D4)\b/i.test(t)) t += ' DDR4';
+    } else if (tipo === 'ssd') {
+      const corte = t.search(/\s(SSD|M\.2|PCIe|NVMe|SATA|Solid State|Internal)\b/i);
+      if (corte > 0) t = t.slice(0, corte);
+      t = t.replace(/\bw\/\s*/i, '');
+      if (pieza.gb && !/\d\s?[GT]B\b/i.test(t)) t += ' ' + (pieza.gb >= 1000 ? (pieza.gb / 1000) + 'TB' : pieza.gb + 'GB');
+    } else if (tipo === 'ram') {
+      t = t.replace(/[()]/g, '');
+    }
+    return t.replace(/\s+/g, ' ').trim();
+  }
+
+  // Enlaces para comprar una pieza: comparadores de precio y tiendas (en Amazon, la ficha exacta si BuildCores la da).
+  function enlacesCompra(tipo, pieza) {
+    const q = textoBusqueda(tipo, pieza);
+    return {
+      busqueda: q,
+      comparadores: COMPARADORES.map((t) => ({tienda: t.tienda, url: t.url(q), exacto: false})),
+      tiendas: TIENDAS.map((t) => (t.ficha && pieza.amazon
+        ? {tienda: t.tienda, url: t.ficha(pieza.amazon), exacto: true}
+        : {tienda: t.tienda, url: t.url(q), exacto: false})),
+    };
   }
 
   // ------------------------------------------------------------ listas
@@ -600,6 +707,8 @@
     placasParaRam: placasParaRam,
     placasParaSsd: placasParaSsd,
     comprobar: comprobar,
+    textoBusqueda: textoBusqueda,
+    enlacesCompra: enlacesCompra,
   };
 
   if (typeof module === 'object' && module.exports) module.exports = PC;

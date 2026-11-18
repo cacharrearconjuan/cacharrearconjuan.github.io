@@ -562,6 +562,23 @@ a:hover { text-decoration-thickness: 2px; }
 }
 
 .pc-revisada { font-size: 0.9rem; color: var(--tinta-suave); margin: 10px 0 0; }
+.pc-revisada a { color: inherit; }
+
+/* dónde comprarlo: pads dorados, como los de descarga */
+.pc-compra { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+.pc-compra-pieza h3 {
+  font-family: "Bricolage", system-ui, sans-serif; font-weight: 700; font-stretch: 92%;
+  font-size: 1.05rem; line-height: 1.3; margin: 0 0 8px; overflow-wrap: anywhere;
+}
+.pc-compra-tipo { display: block; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-suave); }
+.pc-compra-fila { margin: 6px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.pc-compra-que { font-size: 0.88rem; color: var(--tinta-suave); min-width: 9.5em; }
+.pc-compra-enlace {
+  display: inline-block; font-size: 0.9rem; font-weight: 700; line-height: 1.2; text-decoration: none;
+  background: var(--oro); color: var(--oro-tinta); border-radius: 6px; padding: 7px 12px;
+}
+.pc-compra-enlace:hover { filter: brightness(1.08); }
+.pc-compra-exacto { font-weight: 600; }
 .pc-cargando { color: var(--tinta-suave); }
 .pc-error { border-left: 4px solid var(--mal); padding-left: 12px; }
 .pc-intro p { max-width: 70ch; }
