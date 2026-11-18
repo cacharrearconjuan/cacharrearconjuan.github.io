@@ -937,6 +937,9 @@ def chip_proyecto(p, pre):
         estado = f'{esc(rel["tag"])}{" (beta)" if rel["beta"] else ""}, {esc(fecha_texto(rel["fecha"]))}'
     elif p["catalogo"]:
         estado = f'{len(p["catalogo"]["payloads"])} payloads'
+        # la fecha en que cambió la lista por última vez, como «Actualizado el …» de los demás
+        if p["catalogo"].get("actualizado"):
+            estado += f'<span class="chip-descargas">Actualizados el {esc(fecha_texto(p["catalogo"]["actualizado"]))}</span>'
     else:
         estado = f'Actualizado el {esc(fecha_texto(p["actualizado"]))}'
     nuevo = '<span class="sello">Nuevo</span>' if p["nuevo"] else ""
@@ -1028,6 +1031,8 @@ def caja_descarga(p):
     if not rel and not p["extra_descargas"]:
         if p["catalogo"]:
             filas.append(f'<p class="caja-version">{len(p["catalogo"]["payloads"])} payloads</p>')
+            if fechas_catalogo(p["catalogo"]):
+                filas.append(f'<p class="caja-fecha">{esc(fechas_catalogo(p["catalogo"]))}</p>')
             filas.append('<p class="caja-fecha">La lista completa está más abajo.</p>')
         else:
             filas.append('<p class="caja-fecha">Todavía no tiene versiones publicadas.</p>')
