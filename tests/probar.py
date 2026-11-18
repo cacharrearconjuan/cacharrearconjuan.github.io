@@ -232,9 +232,14 @@ def prueba_web():
         comprobar(pay.count("https://cacharrearconjuan.github.io/mis-payloads-ps5/payloads.json") == 1, "payloads: dirección una sola vez")
         comprobar("Manage Sources" in pay, "payloads: texto de la nota")
         comprobar("17 payloads" in pay, "payloads: caja")
+        comprobar(pay.count('class="payload-fecha"') == 17 and 'Actualizado el <time datetime="2026-10-19">19 de octubre de 2026</time>' in pay,
+                  "payloads: la fecha de cada uno")
+        fechas = "Actualizados el 29 de octubre de 2026 · analizados por última vez el 18 de noviembre de 2026, a las 9:02."
+        comprobar(f'<p class="catalogo-fechas">{fechas}</p>' in pay, "payloads: cuándo se actualizó la lista y cuándo se analizó (hora de Madrid)")
 
         desc = leer(salida, "descargas/index.html")
         comprobar(desc.count('class="descarga"') == 4, "descargas: 4 proyectos")
+        comprobar(f"17 payloads para Payload Manager. {fechas}" in desc, "descargas: los payloads con sus dos fechas")
         comprobar("cosa con espacios.zip" in desc and "5,1 MB" in desc, "descargas: archivo de la beta")
 
         nf = leer(salida, "404.html")

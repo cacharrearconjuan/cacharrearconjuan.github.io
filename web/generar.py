@@ -155,6 +155,28 @@ def fecha_texto(iso):
     return f"{d.day} de {MESES[d.month - 1]} de {d.year}"
 
 
+def fecha_hora_texto(iso):
+    """«18 de noviembre de 2026, a las 9:02» (hora de Madrid)."""
+    d = fecha_local(iso)
+    if not d:
+        return ""
+    return f"{d.day} de {MESES[d.month - 1]} de {d.year}, a las {d.hour}:{d.minute:02d}"
+
+
+def fecha_segura(texto):
+    """Fechas que vienen de fuera (catálogos): «2026-11-16 04:33:15» (UTC) o «2026-10-19». Si no se entiende, nada."""
+    texto = str(texto or "").strip()
+    if not re.match(r"^\d{4}-\d{2}-\d{2}", texto):
+        return None
+    try:
+        d = dt.datetime.fromisoformat(texto.replace("Z", "+00:00").replace(" ", "T", 1))
+    except ValueError:
+        return None
+    if d.tzinfo is None:
+        d = d.replace(tzinfo=dt.timezone.utc)
+    return d.isoformat()
+
+
 def fecha_corta(iso):
     d = fecha_local(iso)
     return d.strftime("%Y-%m-%d") if d else ""
@@ -473,9 +495,24 @@ def leer_catalogo(api, url):
     salida = []
     for p in lista:
         if isinstance(p, dict) and p.get("url"):
-            salida.append({k: p.get(k) for k in ("name", "author", "version", "category",
-                                                   "description", "url", "source", "last_update")})
-    return {"nombre": datos.get("name") if isinstance(datos, dict) else None, "payloads": salida}
+            x = {k: p.get(k) for k in ("name", "author", "version", "category", "description", "url", "source")}
+            x["last_update"] = fecha_segura(p.get("last_update"))
+            salida.append(x)
+    return {"nombre": datos.get("name") if isinstance(datos, dict) else None, "payloads": salida,
+            # cuándo cambió la lista por última vez (lo escribe el actualizador del catálogo, en UTC)
+            "actualizado": fecha_segura(datos.get("last_updated")) if isinstance(datos, dict) else None,
+            "analizado": None}
+
+
+def ultimo_analisis(api, usuario, nombre):
+    """Cuándo terminó bien la última pasada programada del repo del catálogo (la que busca versiones nuevas)."""
+    try:
+        r = api.api(f"/repos/{usuario}/{nombre}/actions/runs?event=schedule&status=success&per_page=1")
+    except ErrorWeb as e:  # es un extra: si falla, la web sale sin esa fecha
+        print(f"Aviso: no se ha podido leer el último análisis de {nombre}: {e}", file=sys.stderr)
+        return None
+    runs = (r or {}).get("workflow_runs") or []
+    return fecha_segura(runs[0].get("updated_at")) if runs else None
 
 
 def preparar_proyectos(api, sitio, carpeta_notas, ahora):
@@ -526,6 +563,8 @@ def preparar_proyectos(api, sitio, carpeta_notas, ahora):
             }
         url_catalogo = nota.get("catalogo") or (sitio.get("catalogos") or {}).get(nombre)
         catalogo = leer_catalogo(api, url_catalogo) if url_catalogo else None
+        if catalogo:
+            catalogo["analizado"] = ultimo_analisis(api, usuario, nombre)
         creado = repo.get("created_at")
         dias = (ahora - fecha_local(creado)).days if creado else 999
         proyectos.append({
@@ -1001,6 +1040,18 @@ def caja_descarga(p):
     return '<aside class="caja chip-caja" id="descarga" aria-label="Descarga">\n<h2 class="caja-titulo">Descarga</h2>\n' + "\n".join(filas) + "\n</aside>"
 
 
+def fechas_catalogo(cat):
+    partes = []
+    if cat.get("actualizado"):
+        partes.append(f"actualizados el {fecha_texto(cat['actualizado'])}")
+    if cat.get("analizado"):
+        partes.append(f"analizados por última vez el {fecha_hora_texto(cat['analizado'])}")
+    if not partes:
+        return ""
+    texto = " · ".join(partes)
+    return texto[0].upper() + texto[1:] + "."
+
+
 def tabla_catalogo(p):
     cat = p["catalogo"]
     if cat is None:
@@ -1023,14 +1074,18 @@ Lo añades una vez y tienes la lista de abajo para descargar e instalar desde la
 </ol>
 <pre><code>{esc(p["catalogo_url"])}</code></pre>""")
     partes.append('<section class="catalogo"><h2 id="lista">Lista de payloads</h2>')
+    if fechas_catalogo(cat):
+        partes.append(f'<p class="catalogo-fechas">{esc(fechas_catalogo(cat))}</p>')
     for grupo in sorted(grupos, key=str.lower):
         partes.append(f"<h3>{esc(grupo)}</h3><ul class=\"payloads\" role=\"list\">")
         for x in sorted(grupos[grupo], key=lambda x: (x.get("name") or "").lower()):
             ver = f' <span class="payload-version">{esc(x.get("version"))}</span>' if x.get("version") else ""
             autor = f'<span class="payload-autor">de {esc(x.get("author"))}</span>' if x.get("author") else ""
             origen = f' <a href="{esc(x["source"])}" rel="noopener">Proyecto original</a>' if x.get("source") else ""
+            fecha = (f'<p class="payload-fecha">Actualizado el <time datetime="{esc(fecha_corta(x["last_update"]))}">'
+                     f'{esc(fecha_texto(x["last_update"]))}</time></p>') if x.get("last_update") else ""
             partes.append(
-                f'<li class="payload"><p class="payload-nombre">{esc(x.get("name"))}{ver} {autor}</p>'
+                f'<li class="payload"><p class="payload-nombre">{esc(x.get("name"))}{ver} {autor}</p>{fecha}'
                 f'<p class="payload-desc">{esc(x.get("description") or "")}</p>'
                 f'<p class="payload-enlaces"><a class="pad pad-peque" href="{esc(x["url"])}"><span class="pad-nombre">Descargar .elf</span></a>{origen}</p></li>')
         partes.append("</ul>")
@@ -1075,6 +1130,8 @@ def pagina_descargas(sitio, proyectos):
             pads = "".join(boton_archivo(a) for a in rel["archivos"])
         elif p["catalogo"]:
             detalle = f'{len(p["catalogo"]["payloads"])} payloads para Payload Manager'
+            if fechas_catalogo(p["catalogo"]):
+                detalle += f'. {esc(fechas_catalogo(p["catalogo"]))}'
             pads = f'<a class="pad" href="{enlace}#lista"><span class="pad-nombre">Ver la lista</span></a>'
         elif p["extra_descargas"]:
             detalle = ""

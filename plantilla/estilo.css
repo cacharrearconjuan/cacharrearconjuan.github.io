@@ -297,6 +297,8 @@ a:hover { text-decoration-thickness: 2px; }
 .payload-version { font-weight: 400; color: var(--tinta-suave); }
 .payload-autor { display: block; font-weight: 400; font-size: 0.9rem; color: var(--tinta-suave); }
 .payload-desc { font-size: 0.95rem; margin: 8px 0 12px !important; flex: 1; }
+.payload-fecha { font-size: 0.88rem; color: var(--tinta-suave); margin: 4px 0 0 !important; }
+.catalogo-fechas { color: var(--tinta-suave); margin: 0 0 18px; }
 .payload-enlaces { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; font-size: 0.92rem; }
 
 /* página de descargas */
