@@ -569,7 +569,10 @@
 
   function chipGrafica(R, gpu) {
     const c = reglasGraficas(R).chips;
-    return (gpu && gpu.chip && c && c[gpu.chip]) || null;
+    const ch = (gpu && gpu.chip && c && c[gpu.chip]) || null;
+    // algunas versiones de más memoria gastan más (la RTX 2060 de 12 GB)
+    const v = ch && ch.por_memoria && gpu.gb && ch.por_memoria[gpu.gb];
+    return v ? Object.assign({}, ch, v) : ch;
   }
 
   // Interfaz de la gráfica: la del chip (ficha del fabricante) o, si no hay regla, la de su ficha si dice versión y carriles.
@@ -637,7 +640,7 @@
     return 'el procesador';
   }
 
-  function graficaEnPlaca(R, gpu, placa, cpu) {
+  function graficaEnPlacaSinFicha(R, gpu, placa, cpu) {
     const r = {estado: 'si', texto: '', notas: [], fuentes: []};
     const G = reglasGraficas(R);
     if (placa.x16 === 0) {
@@ -761,7 +764,7 @@
     return ch && ch.marca ? ch.marca : gpu.marca || 'el fabricante';
   }
 
-  function graficaConFuente(R, gpu, psu, cpu) {
+  function graficaConFuenteSinFicha(R, gpu, psu, cpu) {
     const r = {estado: 'si', texto: '', notas: [], fuentes: []};
     const ch = chipGrafica(R, gpu);
     const G = reglasGraficas(R);
@@ -900,7 +903,7 @@
     return Math.ceil(ancho - 0.1);
   }
 
-  function graficaEnCaja(R, gpu, caja) {
+  function graficaEnCajaSinFicha(R, gpu, caja) {
     const r = {estado: 'si', texto: '', notas: [], fuentes: []};
     const partes = [];
     let eLargo = 'nose';
@@ -937,14 +940,14 @@
     return formato === 'Thin Mini-ITX' ? 'Mini-ITX' : formato;
   }
 
-  function placaEnCaja(R, placa, caja) {
+  function placaEnCajaSinFicha(R, placa, caja) {
     const f = formatoPlaca(placa.formato);
     if (!f) return {estado: 'nose', texto: `La ficha de la placa no dice su formato: la caja admite ${listaY(caja.placas)}.`, notas: [], fuentes: []};
     if (caja.placas.indexOf(f) >= 0) return {estado: 'si', texto: `Sí: la placa es ${placa.formato} y la caja la admite.`, notas: [], fuentes: []};
     return {estado: 'no', texto: `No: la placa es ${placa.formato} y la caja solo admite ${listaY(caja.placas)}.`, notas: [], fuentes: []};
   }
 
-  function fuenteEnCaja(R, psu, caja) {
+  function fuenteEnCajaSinFicha(R, psu, caja) {
     const r = {estado: 'si', texto: '', notas: [], fuentes: []};
     const C = R.cajas || {};
     if (!psu.formato) {
@@ -992,7 +995,7 @@
     return vale;
   }
 
-  function disipadorEnZocalo(R, dis, zocalo) {
+  function disipadorEnZocaloSinFicha(R, dis, zocalo) {
     const r = {estado: 'si', texto: '', notas: [], fuentes: []};
     const D = R.disipadores || {};
     const vale = zocalosDisipador(R, dis);
@@ -1029,7 +1032,7 @@
     return disipadorEnZocalo(R, dis, cpu.zocalo);
   }
 
-  function disipadorEnCaja(R, dis, caja) {
+  function disipadorEnCajaSinFicha(R, dis, caja) {
     const r = {estado: 'si', texto: '', notas: [], fuentes: []};
     if (dis.liquida) {
       r.estado = 'nose';
@@ -1050,6 +1053,41 @@
     return r;
   }
 
+  // ------------------------------------------------------------ fichas comprobadas a mano
+
+  // si los datos de una pieza se comprobaron a mano con su ficha, esa ficha va con las fuentes
+  function conFicha(r, piezas) {
+    for (const p of piezas) if (p && p.fuente && r.fuentes.indexOf(p.fuente) < 0) r.fuentes.push(p.fuente);
+    return r;
+  }
+
+  function graficaEnPlaca(R, gpu, placa, cpu) {
+    return conFicha(graficaEnPlacaSinFicha(R, gpu, placa, cpu), [gpu]);
+  }
+
+  function graficaConFuente(R, gpu, psu, cpu) {
+    return conFicha(graficaConFuenteSinFicha(R, gpu, psu, cpu), [gpu, psu]);
+  }
+
+  function graficaEnCaja(R, gpu, caja) {
+    return conFicha(graficaEnCajaSinFicha(R, gpu, caja), [gpu, caja]);
+  }
+
+  function placaEnCaja(R, placa, caja) {
+    return conFicha(placaEnCajaSinFicha(R, placa, caja), [placa, caja]);
+  }
+
+  function fuenteEnCaja(R, psu, caja) {
+    return conFicha(fuenteEnCajaSinFicha(R, psu, caja), [psu, caja]);
+  }
+
+  function disipadorEnZocalo(R, dis, zocalo) {
+    return conFicha(disipadorEnZocaloSinFicha(R, dis, zocalo), [dis]);
+  }
+
+  function disipadorEnCaja(R, dis, caja) {
+    return conFicha(disipadorEnCajaSinFicha(R, dis, caja), [dis, caja]);
+  }
   // ------------------------------------------------------------ dónde comprarlo
 
   // Direcciones de búsqueda comprobadas una a una en el navegador (18-11-2026). Sin afiliados: la web no

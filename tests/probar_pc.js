@@ -716,6 +716,10 @@ function pruebaPiezasNuevas() {
   comprobar(['Gráfica y placa', 'Gráfica y fuente', 'Gráfica y caja', 'Placa y caja', 'Fuente y caja', 'Disipador y procesador', 'Disipador y caja']
     .every((q) => filas.some((f) => f.que === q)), 'veredicto: las siete comprobaciones nuevas');
   comprobar(PC.peor(['si', 'depende', 'si']) === 'depende' && PC.peor(['si', 'no', 'nose']) === 'no', 'peor de varios estados');
+  const comprobada = Object.assign({}, g4060, {fuente: 'https://www.asus.com/ficha'});
+  comprobar(PC.graficaEnCaja(RG, comprobada, caja('Caja')).fuentes.indexOf('https://www.asus.com/ficha') >= 0
+    && PC.graficaConFuente(RG, comprobada, psu('650', 650, [2, 0]), r5600x).fuentes.indexOf('https://www.asus.com/ficha') >= 0
+    && PC.graficaEnCaja(RG, g4060, caja('Caja')).fuentes.indexOf('https://www.asus.com/ficha') < 0, 'piezas comprobadas a mano: su ficha va en las fuentes');
 
   // --- dónde comprarlo
   const busca = (t, nombre, extra) => PC.textoBusqueda(t, Object.assign({nombre: nombre}, extra || {}));
@@ -744,7 +748,11 @@ function pruebaReglasGraficas() {
       && (!c.psu || (c.psu >= 200 && c.psu <= 1600 && (!c.consumo || c.psu > c.consumo)))
       && (!c.psu || (c.fuentes_psu && c.fuentes_psu.length && c.fuentes_psu.every((f) => R.fuentes[f])))
       && (!c.ref || (c.ref.length === 3 && c.ref.every((x) => Number.isInteger(x) && x >= 0 && x <= 4)))
-      && (!c.adaptador || (c.ref && c.ref[2] > 0 && c.adaptador >= 1 && c.adaptador <= 4));
+      && (!c.adaptador || (c.adaptador >= 1 && c.adaptador <= 4))
+      && (!c.por_memoria || Object.keys(c.por_memoria).every((gb) => {
+        const v = c.por_memoria[gb];
+        return (v.consumo || c.consumo) > 0 && (!v.psu || v.psu > (v.consumo || c.consumo));
+      }));
     comprobar(bien, `chip ${n}: datos posibles y con fuente`);
   }
   const es = (n, campo, v) => comprobar(JSON.stringify((chips[n] || {})[campo]) === JSON.stringify(v), `${n}: ${campo} = ${JSON.stringify(v)}`);
@@ -759,6 +767,10 @@ function pruebaReglasGraficas() {
   es('Radeon RX 9070 XT', 'pcie', [5, 16]);
   es('Arc B580', 'rebar', true);
   es('Arc B580', 'pcie', [4, 8]);
+  es('GeForce RTX 4060 Ti', 'consumo', 165);
+  comprobar(PC.consumoGrafica(R, gpu('2060 de 12', 'GeForce RTX 2060', {gb: 12})).w === 185
+    && PC.chipGrafica(R, gpu('2060 de 12', 'GeForce RTX 2060', {gb: 12})).psu === 550
+    && PC.consumoGrafica(R, gpu('2060 de 6', 'GeForce RTX 2060', {gb: 6})).w === 160, 'RTX 2060: la de 12 GB gasta más');
 
   // ranura de la gráfica y carriles del procesador (AMD, Intel y las placas)
   const ranura = (z, c) => R.plataformas[z].chipsets[c].grafica;

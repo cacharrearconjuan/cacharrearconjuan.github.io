@@ -17,12 +17,16 @@
   "disipadores": 2364
  },
  "avisos": {
+  "caja: corregida a mano con la ficha del fabricante": 13,
   "caja: sin formatos de placa, fuera": 1,
   "cpu: Xeon y EPYC fuera": 66,
+  "disipador: corregida a mano con la ficha del fabricante": 7,
   "disipador: solo zócalos que no cubre la herramienta, fuera": 51,
   "fuente: conectores PCIe sin dato": 849,
+  "fuente: corregida a mano con la ficha del fabricante": 16,
   "fuente: sin potencia creíble, fuera": 5,
   "gráfica: conectores sin dato": 1005,
+  "gráfica: corregida a mano con la ficha del fabricante": 12,
   "gráfica: largo imposible, sin dato": 175,
   "placa: chipset de servidor fuera": 34,
   "placa: corregida a mano con la ficha del fabricante": 30,

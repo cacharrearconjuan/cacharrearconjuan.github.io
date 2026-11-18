@@ -1,5 +1,5 @@
 {
- "nota": "Placas revisadas a mano con la ficha del fabricante (18-11-2026). Estos datos mandan sobre los de BuildCores. Si BuildCores cambia el nombre de una placa, el conversor avisa de que la corrección ya no casa con ninguna.",
+ "nota": "Piezas revisadas a mano con la ficha del fabricante o, si no se deja leer, con un análisis serio o una tienda grande (18-11-2026). Estos datos mandan sobre los de BuildCores. Si BuildCores cambia el nombre de una pieza, el conversor avisa de que la corrección ya no casa con ninguna.",
  "placas": [
   {
    "nombre": "Gigabyte Z890 AORUS ELITE WIFI7 DDR5 ATX",
@@ -494,6 +494,444 @@
    "fuente": "https://www.msi.com/Motherboard/A520M-A-PRO/Specification",
    "notas_m2": [
     "Con un Athlon con gráfica, este M.2 solo admite SATA (un SSD NVMe no funciona ahí)."
+   ]
+  }
+ ],
+ "graficas": [
+  {
+   "nombre": "Asus DUAL GeForce RTX 4060 8GB GDDR6 Black",
+   "fuente": "https://www.asus.com/my/motherboards-components/graphics-cards/dual/dual-rtx4060-8g/techspec/",
+   "ranuras": 2.5,
+   "pcie": [
+    4,
+    8
+   ]
+  },
+  {
+   "nombre": "GIGABYTE GeForce RTX 4070 SUPER WINDFORCE OC 12G Graphics Card",
+   "fuente": "https://www.gigabyte.com/se/Graphics-Card/GV-N407SWF3-12GD/sp",
+   "ranuras": 2.5,
+   "tdp": 220,
+   "conectores": [
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "nombre": "Asus TUF GAMING OC GeForce RTX 4070 Ti SUPER 16GB GDDR6X",
+   "fuente": "https://www.asus.com/ph/motherboards-components/graphics-cards/tuf-gaming/tuf-rtx4070tis-o16g-gaming/techspec/",
+   "ranuras": 3.25,
+   "pcie": [
+    4,
+    16
+   ]
+  },
+  {
+   "nombre": "Asus ROG Strix Gaming GeForce RTX 4090 24GB GDDR6X Black",
+   "fuente": "https://rog.asus.com/us/graphics-cards/graphics-cards/rog-strix/rog-strix-rtx4090-o24g-gaming-model/spec/",
+   "ranuras": 3.5,
+   "conectores": [
+    0,
+    0,
+    1
+   ],
+   "pcie": [
+    4,
+    16
+   ]
+  },
+  {
+   "nombre": "Gigabyte WINDFORCE SFF GeForce RTX 5070 Ti 16 GB",
+   "fuente": "https://www.gigabyte.com/Graphics-Card/GV-N507TWF3-16GD/sp",
+   "ranuras": 2.5
+  },
+  {
+   "nombre": "Asus DUAL GeForce RTX 3060 12GB 12 GB",
+   "fuente": "https://asus.com/fr/motherboards-components/graphics-cards/dual/dual-rtx3060-12g/techspec",
+   "pcie": [
+    4,
+    16
+   ]
+  },
+  {
+   "nombre": "Sapphire PULSE AMD Radeon RX 7600 XT 16GB GDDR6",
+   "fuente": "https://www.sapphiretech.com/en/consumer/pulse-radeon-rx-7600-xt-16g-gddr6",
+   "tdp": 192
+  },
+  {
+   "nombre": "Sapphire PULSE Radeon RX 7800 XT 16 GB",
+   "fuente": "https://www.sapphiretech.com/fr-fr/consumer/pulse-radeon-rx-7800-xt-16g-gddr6",
+   "ranuras": 2.5,
+   "conectores": [
+    0,
+    2,
+    0
+   ],
+   "pcie": [
+    4,
+    16
+   ]
+  },
+  {
+   "nombre": "XFX Mercury Magnetic Air Radeon RX 7900 XTX 24GB GDDR6 Black",
+   "fuente": "https://xfxforce.com/shop/xfx-mercury-amd-radeon-rx-7900-xtx-magneticair",
+   "ranuras": 3.5,
+   "conectores": [
+    0,
+    3,
+    0
+   ],
+   "pcie": [
+    4,
+    16
+   ]
+  },
+  {
+   "nombre": "Sapphire PULSE Radeon RX 9060 XT 8GB GDDR6",
+   "fuente": "https://www.sapphiretech.com/fr-fr/consumer/pulse-radeon-rx-9060-xt-8g-gddr6",
+   "largo": 244,
+   "ranuras": 2.3
+  },
+  {
+   "nombre": "Asus DUAL GeForce RTX 3050 6GB GDDR6 Black",
+   "fuente": "https://asus.com/motherboards-components/graphics-cards/dual/dual-rtx3050-6g/techspec",
+   "conectores": [
+    0,
+    0,
+    0
+   ],
+   "pcie": [
+    4,
+    8
+   ]
+  },
+  {
+   "nombre": "Gigabyte EAGLE Radeon RX 6700 XT 12 GB",
+   "fuente": "https://www.gigabyte.com/Graphics-Card/GV-R67XTEAGLE-12GD/sp",
+   "conectores": [
+    1,
+    1,
+    0
+   ],
+   "pcie": [
+    4,
+    16
+   ]
+  }
+ ],
+ "fuentes": [
+  {
+   "nombre": "Corsair RM850e White 850W Fully Modular",
+   "fuente": "https://www.bestbuy.com/product/corsair-rme-series-rm850e-80-plus-gold-fully-modular-low-noise-atx-3-1-and-pcie-5-1-power-supply-white/J39QHTCVPR",
+   "pcie": [
+    3,
+    1
+   ]
+  },
+  {
+   "nombre": "Corsair RM850x Black 850W Fully Modular 80+ Gold",
+   "fuente": "https://www.tomshardware.com/reviews/corsair-rm850x-2021-power-supply-review",
+   "pcie": [
+    4,
+    0
+   ]
+  },
+  {
+   "nombre": "Corsair RM1000x (2024) Black ATX 1000W Fully Modular",
+   "fuente": "https://www.corsair.com/us/en/p/psu/cp-9020271-na/rmx-series-rm1000x-fully-modular-power-supply-cp-9020271-na",
+   "pcie": [
+    4,
+    1
+   ]
+  },
+  {
+   "nombre": "Corsair SF750 (2018) SFX 750W Fully Modular 80+ Platinum Certified",
+   "fuente": "https://www.kitguru.net/components/power-supplies/zardon/corsair-sf750-sfx-platinum-power-supply-review/all/1",
+   "pcie": [
+    4,
+    0
+   ]
+  },
+  {
+   "nombre": "Corsair CX650M 650W 80+ Bronze Semi-Modular",
+   "fuente": "https://www.tomshardware.com/reviews/corsair-cx650m-psu,4770.html",
+   "pcie": [
+    4,
+    0
+   ]
+  },
+  {
+   "nombre": "be quiet! Pure Power 12 Black 750W Non-Modular 80+ Gold",
+   "fuente": "https://www.bequiet.com/en/powersupply/5252",
+   "pcie": [
+    3,
+    1
+   ]
+  },
+  {
+   "nombre": "SeaSonic FOCUS GX-850 ATX 3.0 850W Fully Modular 80+ Gold Certified",
+   "fuente": "https://www.cybenetics.com/evaluations/psus/2331/pdf/",
+   "pcie": [
+    3,
+    1
+   ]
+  },
+  {
+   "nombre": "Cooler Master MWE GOLD 750 V2 FULL MODULAR",
+   "fuente": "https://www.coolermaster.com/en-global/products/mwe-gold-750-v2-full-modular/",
+   "largo": 160
+  },
+  {
+   "nombre": "NZXT C850 (2026) SFX Gold",
+   "fuente": "https://nzxt.com/products/c850-sfx-gold?market=us",
+   "largo": 100,
+   "pcie": [
+    3,
+    1
+   ]
+  },
+  {
+   "nombre": "Thermaltake Toughpower GF3 TT Premium Black 850W Fully Modular 80+ Gold Certified",
+   "fuente": "https://thermaltake.com/catalog/product/view/id/2189",
+   "pcie": [
+    4,
+    1
+   ]
+  },
+  {
+   "nombre": "Lian Li SP750 SFX 750W Fully Modular 80+ Gold Certified",
+   "fuente": "https://lian-li.com/product/sp750/",
+   "pcie": [
+    3,
+    0
+   ]
+  },
+  {
+   "nombre": "Gigabyte UD850GM 850W Fully Modular 80+ Gold Certified",
+   "fuente": "https://www.gigabyte.com/Power-Supply/GP-UD850GM/sp",
+   "pcie": [
+    4,
+    0
+   ]
+  },
+  {
+   "nombre": "EVGA SuperNOVA 850 G6 850W Fully Modular 80+ Gold Certified",
+   "fuente": "https://www.tomshardware.com/reviews/evga-supernova-850-g6",
+   "pcie": [
+    6,
+    0
+   ]
+  },
+  {
+   "nombre": "be quiet! System Power 10 Black 650W Non-Modular 80+ Bronze Certified",
+   "fuente": "https://ldlc.com/en/product/PB00524846.html",
+   "pcie": [
+    2,
+    0
+   ]
+  },
+  {
+   "nombre": "Silverstone SX700-PT Black SFX 700W Fully Modular 80+ Platinum Certified",
+   "fuente": "https://cdn.iceshop.nl/objects/mmo_75766949_1616425594_6613_28727.pdf",
+   "pcie": [
+    4,
+    0
+   ]
+  },
+  {
+   "nombre": "Seasonic VERTEX GX-1000 Black / Silver ATX 1000W Fully Modular 80+ Gold",
+   "fuente": "https://www.cybenetics.com/evaluations/psus/2111/pdf/",
+   "pcie": [
+    3,
+    1
+   ]
+  }
+ ],
+ "cajas": [
+  {
+   "nombre": "Lian Li LANCOOL 216 RGB EATX Mid Tower White Tempered Glass",
+   "fuente": "https://lian-li.com/product/lancool-216/",
+   "disipador_max": 180
+  },
+  {
+   "nombre": "NZXT - H510 Flow ATX Mid Tower Case",
+   "fuente": "https://www.bhphotovideo.com/c/product/1676230-REG/nzxt_ca_h52fw_01_h510_flow_compact_mid_tower.html",
+   "psu": [
+    "ATX"
+   ]
+  },
+  {
+   "nombre": "NZXT H9 Flow ATX Mid Tower Black Tempered Glass Side Panel",
+   "fuente": "https://memoryexpress.com/Products/MX00125506",
+   "placas": [
+    "Mini-ITX",
+    "Micro ATX",
+    "ATX"
+   ]
+  },
+  {
+   "nombre": "Fractal Design North Mid-Tower Case (Chalk White, Clear Window)",
+   "fuente": "https://support.fractal-design.com/support/solutions/articles/4000189451-north-psu-compatibility",
+   "psu_max": 155
+  },
+  {
+   "nombre": "Fractal Design Pop Air RGB ATX Mid Tower",
+   "fuente": "https://www.fractal-design.com/products/cases/pop/pop-air/rgb-white-tg-clear/",
+   "psu": [
+    "ATX"
+   ],
+   "disipador_max": 170,
+   "psu_max": 170
+  },
+  {
+   "nombre": "Fractal Design Meshify 2 Dark Tint Black",
+   "fuente": "https://www.fractal-design.com/products/cases/meshify/meshify-2/black-tg-dark-tint",
+   "placas": [
+    "Mini-ITX",
+    "Micro ATX",
+    "ATX",
+    "EATX"
+   ],
+   "psu": [
+    "ATX"
+   ],
+   "gpu_max": 445,
+   "disipador_max": 185,
+   "psu_max": 250,
+   "ranuras": 7
+  },
+  {
+   "nombre": "Fractal Design Define 7 ATX Mid Tower",
+   "fuente": "https://www.fractal-design.com/products/cases/define/define-7/black-tg-dark-tint/",
+   "placas": [
+    "Mini-ITX",
+    "Micro ATX",
+    "ATX",
+    "EATX"
+   ],
+   "psu": [
+    "ATX"
+   ],
+   "gpu_max": 445,
+   "psu_max": 250
+  },
+  {
+   "nombre": "Fractal Design Terra Mini ITX Desktop",
+   "fuente": "https://www.fractal-design.com/products/cases/terra/terra/terra-jade/",
+   "psu_max": 130
+  },
+  {
+   "nombre": "Fractal Design Torrent ATX Mid Tower Black Solid",
+   "fuente": "https://www.fractal-design.com/products/cases/torrent/torrent/black-solid/",
+   "gpu_max": 423
+  },
+  {
+   "nombre": "be quiet! Pure Base 500DX ATX Mid Tower Black with Tempered Glass Side Panel and USB 3.2 Gen 2 Type-C, USB 3.2 Gen 1 Type-A",
+   "fuente": "https://www.bequiet.com/en/case/1989",
+   "psu": [
+    "ATX"
+   ],
+   "disipador_max": 190,
+   "psu_max": 225
+  },
+  {
+   "nombre": "MONTECH KING 95 3D Black",
+   "fuente": "https://www.scan.co.uk/products/montech-king-95-3d-chassis-white-mid-tower-dual-chamber-curved-panel-argb-back-connect-atx-matx-mitx",
+   "psu_max": 220,
+   "ranuras": 7
+  },
+  {
+   "nombre": "HYTE Y70 ATX Mid Tower Blue Tempered Glass Side Panel",
+   "fuente": "https://hyte.com/store/y70/cs-hyte-y70-tm",
+   "psu": [
+    "ATX"
+   ],
+   "psu_max": 235,
+   "ranuras": 4
+  },
+  {
+   "nombre": "Jonsbo D31 STD Micro ATX Mini Tower Black Tempered Glass",
+   "fuente": "https://manuals.plus/m/ed6e19693375876dea3b534b70f8fa15c58a6abac9e273402479a3c3780fba96",
+   "psu": [
+    "ATX",
+    "SFX"
+   ],
+   "psu_max": 220
+  }
+ ],
+ "disipadores": [
+  {
+   "nombre": "Noctua NH-L9i Air 37mm Brown",
+   "fuente": "https://www.noctua.at/en/products/nh-l9i/specifications",
+   "zocalos": [
+    "LGA 1200",
+    "LGA 1151",
+    "LGA 115x"
+   ]
+  },
+  {
+   "nombre": "Noctua NH-L9a Air 37mm 33.84 CFM",
+   "fuente": "https://noctua.at/en/products/discontinued-products/nh-l9a/specification",
+   "zocalos": []
+  },
+  {
+   "nombre": "ARCTIC Freezer 13 36.4 CFM Air 130mm",
+   "fuente": "https://arctic.de/media/fe/5f/d1/1584104671/spec_sheet_Freezer_13_180302_r6_EN.pdf",
+   "zocalos": [
+    "AM4",
+    "LGA 1200",
+    "LGA 1151",
+    "LGA 115x"
+   ]
+  },
+  {
+   "nombre": "Deepcool AK400 G2 Cooler Black",
+   "fuente": "https://www.deepcool.com/products/Cooling/cpuaircoolers/AK400-G2-Wood-Grain-Top-Cover-CPU-Cooler/2025/21908.shtml",
+   "zocalos": [
+    "AM5",
+    "AM4",
+    "LGA 1851",
+    "LGA 1700",
+    "LGA 1200",
+    "LGA 1151",
+    "LGA 115x"
+   ]
+  },
+  {
+   "nombre": "Deepcool AK620 ZERO DARK",
+   "fuente": "https://global.deepcool.com/products/Cooling/cpuaircoolers/AK620-ZERO-DARK-High-Performance-CPU-Cooler-1851-1700-AM5/2024/16124.shtml",
+   "zocalos": [
+    "AM5",
+    "AM4",
+    "LGA 1851",
+    "LGA 1700",
+    "LGA 1200",
+    "LGA 1151",
+    "LGA 115x"
+   ],
+   "alto": 160
+  },
+  {
+   "nombre": "Cooler Master Hyper 212X Air 158mm",
+   "fuente": "https://www.coolermaster.com/en-global/products/hyper-212x/",
+   "zocalos": [
+    "LGA 1200",
+    "LGA 1151",
+    "LGA 115x"
+   ]
+  },
+  {
+   "nombre": "Lian Li Galahad II LCD Water 280mm Black",
+   "fuente": "https://lian-li.com/product/galahad-ii-lcd/",
+   "zocalos": [
+    "AM5",
+    "AM4",
+    "LGA 1851",
+    "LGA 1700",
+    "LGA 1200",
+    "LGA 1151",
+    "LGA 115x"
    ]
   }
  ]

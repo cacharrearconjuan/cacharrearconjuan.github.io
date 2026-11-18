@@ -127,10 +127,21 @@
     return `<span class="pc-icono pc-icono-${CLASE_ICONO[estado] || 'info'}" aria-hidden="true">${i[0]}</span><span class="visual-oculto">${i[1]}: </span>`;
   }
 
+  // webs de fabricantes: lo demás (análisis, tiendas) se rotula como «comprobado en …»
+  const FABRICANTES = /(^|\.)(asus|msi|gigabyte|asrock|evga|zotac|pny|sapphiretech|xfxforce|powercolor|intel|amd|nvidia|corsair|bequiet|seasonic|coolermaster|nzxt|thermaltake|lian-li|lianli|fractal-design|phanteks|noctua|thermalright|arctic|deepcool|montech|silverstonetek|silverstone|hyte|jonsbo|scythe-eu|scythe|id-cooling|antec|inno3d|palit|gainward|galax|sparkle|acer|biostar)\.[a-z.]+$/i;
+
   function fuente(clave) {
     if (!clave) return null;
-    if (/^https?:\/\//.test(clave)) return {titulo: 'ficha del fabricante (' + clave.replace(/^https?:\/\/(www\.|us\.)?/, '').split('/')[0] + ')', url: clave};
+    if (/^https?:\/\//.test(clave)) {
+      const sitio = clave.replace(/^https?:\/\/(www\.|us\.)?/, '').split('/')[0];
+      return {titulo: FABRICANTES.test(sitio) ? 'ficha del fabricante (' + sitio + ')' : 'comprobado en ' + sitio, url: clave};
+    }
     return (R.fuentes && R.fuentes[clave]) || null;
+  }
+
+  // fila de «datos comprobados a mano» para las piezas corregidas
+  function filaComprobada(p) {
+    return p.fuente ? fila('ok', 'Comprobada a mano', 'Sus datos están comprobados con su ficha, no solo con la base de datos.', [p.fuente]) : '';
   }
 
   function htmlFuentes(claves) {
@@ -547,6 +558,7 @@
     }
     const rb = PC.notaRebar(R, g, cpu);
     if (rb) filas.push(fila(rb.tipo, 'Resizable BAR', rb.texto, rb.fuentes));
+    filas.push(filaComprobada(g));
     let html = bloque('gpu', `Gráfica: ${esc(g.nombre)}`, `<ul class="pc-notas" role="list">${filas.join('')}</ul>`);
     if (!caja && g.largo) {
       const grupos = PC.cajasParaGrafica(R, datos.caja, g);
@@ -574,6 +586,7 @@
     filas.push(p.formato
       ? fila('info', 'Formato', `${p.formato}${p.largo ? ', ' + p.largo + ' mm de largo' : ''}.`)
       : fila('nose', 'Formato', 'Su ficha no dice si es ATX, SFX…: míralo antes de comprar la caja.'));
+    filas.push(filaComprobada(p));
     let html = bloque('psu', `Fuente: ${esc(p.nombre)}`, `<ul class="pc-notas" role="list">${filas.join('')}</ul>`);
     if (!elegido.gpu) {
       const grupos = PC.graficasParaFuente(R, datos.gpu, p, elegido.cpu);
@@ -598,6 +611,7 @@
       ? fila('info', 'Fuente', `${listaY(c.psu)}${c.psu_max ? ', de hasta ' + c.psu_max + ' mm' : ''}.`)
       : fila('nose', 'Fuente', 'Su ficha no dice qué fuentes admite.'));
     if (c.incluida) filas.push(fila('info', 'Trae fuente', `Viene con una fuente de ${c.incluida} W.`));
+    filas.push(filaComprobada(c));
     let html = bloque('caja', `Caja: ${esc(c.nombre)}`, `<ul class="pc-notas" role="list">${filas.join('')}</ul>`);
     if (!elegido.gpu && c.gpu_max) {
       const grupos = PC.graficasParaCaja(R, datos.gpu, c);
@@ -625,6 +639,7 @@
     const extra = Object.keys(vale).filter((z) => !vale[z].directo);
     const fuentesExtra = [].concat(...extra.map((z) => vale[z].grupo.fuentes || []));
     filas.push(fila('info', 'Zócalos', `Trae anclaje para ${zocalosTexto(d.zocalos)}.${extra.length ? ` Por anclaje, también vale en ${listaY(extra)}.` : ''}`, fuentesExtra));
+    filas.push(filaComprobada(d));
     let html = bloque('disipador', `Disipador: ${esc(d.nombre)}`, `<ul class="pc-notas" role="list">${filas.join('')}</ul>`);
     if (!elegido.caja && !d.liquida && d.alto) {
       const grupos = PC.cajasParaDisipador(R, datos.caja, d);

@@ -1921,6 +1921,14 @@
   "gn-5090": {
    "titulo": "Gamers Nexus (13-2-2025): RTX 5090 en PCIe 5.0, 4.0 y 3.0 x16",
    "url": "https://gamersnexus.net/index%2Ephp/gpus/nvidia-rtx-5090-pcie-50-vs-40-vs-30-x16-scaling-benchmarks"
+  },
+  "intel-a50-hoja": {
+   "titulo": "Intel: Arc Pro A50, especificaciones («Gen 4.0 x16 (x8 Electrical)»)",
+   "url": "https://www.intel.cn/content/dam/www/central-libraries/us/en/documents/2022-07/arc-a50-graphics-specifications.pdf"
+  },
+  "toms-arc-a60": {
+   "titulo": "Tom's Hardware: Intel Arc A60 Pro (las Pro anteriores, con el chip de la A380, tenían 8 carriles)",
+   "url": "https://www.tomshardware.com/news/intel-arc-a60-pro-single-slot-gpu"
   }
  },
  "plataformas": {
@@ -5195,7 +5203,7 @@
      4,
      8
     ],
-    "consumo": 160,
+    "consumo": 165,
     "psu": 550,
     "fuentes_psu": [
      "nv-4060fam",
@@ -5237,7 +5245,8 @@
      "kg-4060",
      "ts-5060",
      "th-4060"
-    ]
+    ],
+    "adaptador": 1
    },
    "GeForce RTX 3090 Ti": {
     "marca": "NVIDIA",
@@ -5759,7 +5768,13 @@
      "nv_compare",
      "wp_20",
      "nv_2060"
-    ]
+    ],
+    "por_memoria": {
+     "12": {
+      "consumo": 185,
+      "psu": 550
+     }
+    }
    },
    "GeForce GTX 1660 Ti": {
     "marca": "NVIDIA",
@@ -6708,7 +6723,12 @@
      "amd-guia-rx6000",
      "toms-6500xt",
      "amd-pr-6500xt-6400"
-    ]
+    ],
+    "por_memoria": {
+     "4": {
+      "consumo": 107
+     }
+    }
    },
    "Radeon RX 6400": {
     "marca": "AMD",
@@ -7114,6 +7134,15 @@
      "intel-b570",
      "intel-guia-escritorio",
      "intel-lanzamiento-serie-b"
+    ],
+    "psu": 600,
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes_psu": [
+     "intel-guia-escritorio"
     ]
    },
    "Arc A770": {
@@ -7276,8 +7305,10 @@
     "fuentes": [
      "intel-pro-b70",
      "intel-datasheet-pro-b70",
-     "storagereview-pro-b70"
-    ]
+     "storagereview-pro-b70",
+     "intel-guia-pro"
+    ],
+    "rebar": true
    },
    "Arc Pro A60": {
     "marca": "Intel",
@@ -7305,7 +7336,7 @@
     "marca": "Intel",
     "pcie": [
      4,
-     16
+     8
     ],
     "consumo": 75,
     "psu": 350,
@@ -7320,14 +7351,16 @@
     "rebar": true,
     "fuentes": [
      "intel-pro-a50",
-     "intel-guia-pro"
+     "intel-guia-pro",
+     "intel-a50-hoja",
+     "toms-arc-a60"
     ]
    },
    "Arc Pro A40": {
     "marca": "Intel",
     "pcie": [
      4,
-     16
+     8
     ],
     "consumo": 50,
     "psu": 350,
@@ -7342,7 +7375,9 @@
     "rebar": true,
     "fuentes": [
      "intel-pro-a40",
-     "intel-guia-pro"
+     "intel-guia-pro",
+     "intel-a50-hoja",
+     "toms-arc-a60"
     ]
    }
   },
