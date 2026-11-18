@@ -1,0 +1,23 @@
+{
+ "opendb_id": "d1",
+ "metadata": {
+  "name": "Peerless Assassin 120 SE 66.17 CFM CPU Cooler",
+  "manufacturer": "Thermalright"
+ },
+ "identifiers": {
+  "version": 1,
+  "identifiers": []
+ },
+ "height": 155,
+ "water_cooled": false,
+ "cpu_sockets": [
+  "AM4",
+  "AM5",
+  "LGA 1700",
+  "LGA 1851",
+  "LGA 1200",
+  "LGA 1151",
+  "LGA 1150",
+  "LGA 2011"
+ ]
+}

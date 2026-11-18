@@ -1,0 +1,20 @@
+{
+ "opendb_id": "f2",
+ "metadata": {
+  "name": "APX 750W Non-Modular",
+  "manufacturer": "Montech"
+ },
+ "identifiers": {
+  "version": 1,
+  "identifiers": []
+ },
+ "wattage": 750,
+ "form_factor": "Mini-ITX",
+ "length": 0,
+ "modular": "Non-Modular",
+ "efficiency_rating": "None",
+ "connectors": {
+  "pcie_12vhpwr": 0,
+  "pcie_6_plus_2_pin": 0
+ }
+}

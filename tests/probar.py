@@ -526,8 +526,60 @@ def prueba_datos_pc():
                   and ssd.get("WD Black SN770M 1TB M.2-2230 PCIe 4.0 X4 NVME", {}).get("largo") == "2230", "ssd: SATA, PCIe 5.0 y 2230")
         with open(os.path.join(salida, "meta.json"), encoding="utf-8") as f:
             meta = json.load(f)
-        comprobar(meta["licencia"] == "CC BY-NC-SA 4.0" and meta["piezas"] == {"cpu": 10, "placas": 6, "ram": 3, "ssd": 4},
+        comprobar(meta["licencia"] == "CC BY-NC-SA 4.0" and meta["piezas"] == {"cpu": 10, "placas": 6, "ram": 3, "ssd": 4, "graficas": 3,
+                                                                                "fuentes": 2, "cajas": 2, "disipadores": 3},
                   f"meta: licencia y cuentas ({meta['piezas']})")
+
+        # gráficas: la ficha más completa de cada nombre, sin medidas imposibles ni «conectores a cero»
+        gpus = {x["nombre"]: x for x in leer_tabla(os.path.join(salida, "graficas.json")).values()}
+        comprobar(set(gpus) == {"Asus DUAL GeForce RTX 4060 8GB", "Gigabyte AORUS MASTER GeForce RTX 4090 24GB GDDR6X",
+                                "Sapphire PULSE Radeon RX 6500 XT 4GB"}, f"gráficas: sin la que no tiene chip ({sorted(gpus)})")
+        g4060 = gpus.get("Asus DUAL GeForce RTX 4060 8GB", {})
+        comprobar(g4060.get("largo") == 227 and g4060.get("ranuras") == 2.5 and g4060.get("conectores") == [0, 1, 0]
+                  and g4060.get("amazon") == "B0C7W1HNNX" and g4060.get("pcie") is None,
+                  f"gráficas: de dos fichas iguales, la completa (con el código de Amazon de la otra) ({g4060})")
+        g4090 = gpus.get("Gigabyte AORUS MASTER GeForce RTX 4090 24GB GDDR6X", {})
+        comprobar(g4090.get("conectores") == [0, 0, 1] and g4090.get("pcie") == [4, 16] and g4090.get("chip") == "GeForce RTX 4090",
+                  "gráficas: 16 pines e interfaz con versión y carriles")
+        g6500 = gpus.get("Sapphire PULSE Radeon RX 6500 XT 4GB", {})
+        comprobar(g6500.get("conectores") is None and g6500.get("largo") is None and g6500.get("pcie") == [4, 4],
+                  "gráficas: conectores a cero y largo 0, sin dato")
+        fuentes = {x["nombre"]: x for x in leer_tabla(os.path.join(salida, "fuentes.json")).values()}
+        comprobar(set(fuentes) == {"Corsair RM750e 750W 80+ Gold Fully Modular ATX", "Montech APX 750W Non-Modular"},
+                  f"fuentes: sin la de 0 W ({sorted(fuentes)})")
+        rm = fuentes.get("Corsair RM750e 750W 80+ Gold Fully Modular ATX", {})
+        comprobar(rm.get("vatios") == 750 and rm.get("pcie") == [3, 1] and rm.get("formato") == "ATX" and rm.get("modular") == "total"
+                  and rm.get("eficiencia") == "80+ Gold" and rm.get("amazon") == "B0CGXRYNDK", f"fuentes: bien leída ({rm})")
+        apx = fuentes.get("Montech APX 750W Non-Modular", {})
+        comprobar(apx.get("pcie") is None and apx.get("formato") is None and apx.get("largo") is None and apx.get("eficiencia") is None,
+                  "fuentes: conectores a cero, formato «Mini-ITX» y largo 0, sin dato")
+        cajas = {x["nombre"]: x for x in leer_tabla(os.path.join(salida, "cajas.json")).values()}
+        comprobar(set(cajas) == {"Lian Li LANCOOL 216 ATX Mid Tower Black", "Genérica Caja Micro con fuente"}, f"cajas: sin la que no tiene formatos ({sorted(cajas)})")
+        lc = cajas.get("Lian Li LANCOOL 216 ATX Mid Tower Black", {})
+        comprobar(lc.get("placas") == ["Mini-ITX", "Micro ATX", "ATX", "EATX"] and lc.get("psu") == ["ATX"] and lc.get("gpu_max") == 392
+                  and lc.get("disipador_max") == 180 and lc.get("psu_max") is None and lc.get("ranuras") == 7 and lc.get("incluida") is None,
+                  f"cajas: bien leída, largo de fuente 0 sin dato ({lc})")
+        mc = cajas.get("Genérica Caja Micro con fuente", {})
+        comprobar(mc.get("incluida") == 500 and mc.get("gpu_max") is None and mc.get("ranuras") is None and mc.get("psu") is None,
+                  "cajas: con fuente de 500 W; 0 mm y 0 ranuras, sin dato")
+        dis = {x["nombre"]: x for x in leer_tabla(os.path.join(salida, "disipadores.json")).values()}
+        comprobar(set(dis) == {"Thermalright Peerless Assassin 120 SE 66.17 CFM CPU Cooler", "ARCTIC Liquid Freezer III 360 A-RGB 48.82 CFM Water 360mm Black",
+                               "Otro Disipador 1151v2"}, f"disipadores: sin el que solo vale para zócalos viejos ({sorted(dis)})")
+        pa = dis.get("Thermalright Peerless Assassin 120 SE 66.17 CFM CPU Cooler", {})
+        comprobar(pa.get("zocalos") == ["AM5", "AM4", "LGA 1851", "LGA 1700", "LGA 1200", "LGA 1151", "LGA 115x"] and pa.get("alto") == 155
+                  and pa.get("liquida") == 0 and pa.get("radiador") is None, f"disipadores: zócalos en orden y 1150 como 115x ({pa})")
+        lf = dis.get("ARCTIC Liquid Freezer III 360 A-RGB 48.82 CFM Water 360mm Black", {})
+        comprobar(lf.get("liquida") == 1 and lf.get("radiador") == 360 and lf.get("alto") is None, "disipadores: líquida, con radiador y sin altura")
+        comprobar(dis.get("Otro Disipador 1151v2", {}).get("zocalos") == ["LGA 1151"] and dis["Otro Disipador 1151v2"]["alto"] is None,
+                  "disipadores: 1151v2 es 1151; altura 0, sin dato")
+        comprobar(all(p.get("x16") is None for p in placas.values()), "placas: sin ranuras en la ficha, x16 sin dato")
+        with open(os.path.join(OPENDB, "open-db", "Motherboard", "p1.json"), encoding="utf-8") as f:
+            base_x16 = json.load(f)
+        reglas_plat = dpc.leer_reglas(reglas)
+        con = dict(base_x16, pcie_slots=[{"gen": "4.0", "lanes": 16, "quantity": 1}, {"gen": "3.0", "lanes": 1, "quantity": 2}])
+        sin = dict(base_x16, pcie_slots=[{"gen": "3.0", "lanes": 1, "quantity": 2}])
+        comprobar(dpc.preparar_placas([con], reglas_plat, dpc.Avisos())[0]["x16"] == 1
+                  and dpc.preparar_placas([sin], reglas_plat, dpc.Avisos())[0]["x16"] == 0, "placas: con ranura x16 (1) y sin ella (0)")
 
         # salidas de vídeo: las que hay, ninguna (solo si BuildCores lo confirma) o no se sabe
         comprobar(dpc.salidas_video({"back_panel_ports": ["1x HDMI port", "1x Display port", "2x USB 2.0"]}) == ["HDMI", "DisplayPort"],
@@ -569,8 +621,13 @@ def prueba_datos_pc():
         with open(corr, "w", encoding="utf-8") as f:
             json.dump({"placas": [
                 {"nombre": "MSI MAG B550 TOMAHAWK", "fuente": "https://www.msi.com/x", "m2": [["2280", 4, 4, "ps"]],
-                 "video": [], "flashback": True, "notas_m2": ["Nota de prueba."]},
-                {"nombre": "Placa que ya no existe", "fuente": "https://example.com", "flashback": True}]}, f)
+                 "video": [], "flashback": True, "notas_m2": ["Nota de prueba."], "notas_grafica": ["Ranura de prueba."]},
+                {"nombre": "Placa que ya no existe", "fuente": "https://example.com", "flashback": True}],
+                "graficas": [{"nombre": "Sapphire PULSE Radeon RX 6500 XT 4GB", "fuente": "https://www.sapphiretech.com/x",
+                              "largo": 194, "conectores": [1, 0, 0]}],
+                "fuentes": [{"nombre": "Montech APX 750W Non-Modular", "fuente": "https://www.montech.com/x", "pcie": [4, 0], "formato": "ATX"}],
+                "cajas": [{"nombre": "Lian Li LANCOOL 216 ATX Mid Tower Black", "fuente": "https://lian-li.com/x", "disipador_max": 180, "psu_max": 220}],
+                "disipadores": [{"nombre": "Otro Disipador 1151v2", "fuente": "https://example.com/d", "alto": 150}]}, f)
         salida2 = os.path.join(t, "datos2")
         with contextlib.redirect_stdout(io.StringIO()):
             dpc.main(["--opendb", OPENDB, "--salida", salida2, "--reglas", reglas, "--correcciones", corr])
@@ -582,6 +639,17 @@ def prueba_datos_pc():
             avisos2 = json.load(f)["avisos"]
         comprobar(avisos2.get("placa: corregida a mano con la ficha del fabricante") == 1
                   and any("ya no está" in k for k in avisos2), f"correcciones: cuenta las hechas y avisa de las que no casan ({avisos2})")
+        comprobar(b5.get("notas_grafica") == ["Ranura de prueba."], "correcciones: notas de la ranura de la gráfica")
+        g2 = {x["nombre"]: x for x in leer_tabla(os.path.join(salida2, "graficas.json")).values()}.get("Sapphire PULSE Radeon RX 6500 XT 4GB", {})
+        f2 = {x["nombre"]: x for x in leer_tabla(os.path.join(salida2, "fuentes.json")).values()}.get("Montech APX 750W Non-Modular", {})
+        k2 = {x["nombre"]: x for x in leer_tabla(os.path.join(salida2, "cajas.json")).values()}.get("Lian Li LANCOOL 216 ATX Mid Tower Black", {})
+        d2 = {x["nombre"]: x for x in leer_tabla(os.path.join(salida2, "disipadores.json")).values()}.get("Otro Disipador 1151v2", {})
+        comprobar(g2.get("largo") == 194 and g2.get("conectores") == [1, 0, 0] and g2.get("fuente") == "https://www.sapphiretech.com/x"
+                  and f2.get("pcie") == [4, 0] and f2.get("formato") == "ATX" and k2.get("disipador_max") == 180 and k2.get("psu_max") == 220
+                  and d2.get("alto") == 150 and d2.get("fuente") == "https://example.com/d",
+                  "correcciones: también gráficas, fuentes, cajas y disipadores")
+        comprobar(all(avisos2.get(f"{p}: corregida a mano con la ficha del fabricante") == 1 for p in ("gráfica", "fuente", "caja", "disipador")),
+                  "correcciones: cuenta las de cada tipo")
 
         av = dpc.Avisos()
         raros = {x["nombre"]: x for x in dpc.preparar_ssd([

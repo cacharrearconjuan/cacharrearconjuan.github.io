@@ -53,8 +53,8 @@ IDS_RESERVADOS = {"contenido", "descarga", "lista", "novedades"}
 
 # la herramienta «¿Qué le va a mi PC?» (/pc/): enlazada arriba a la izquierda en todas las páginas
 TITULO_PC = "¿Qué le va a mi PC?"
-LEMA_PC = ("Placa, procesador, memoria y SSD: qué encaja, a qué velocidad irá la memoria "
-           "y si el procesador trae gráfica. Se actualiza solo cada día.")
+LEMA_PC = ("Placa, procesador, memoria, SSD, gráfica, fuente, caja y disipador: qué encaja, a qué velocidad irá "
+           "la memoria, si la gráfica cabe y si la fuente puede con ella. Se actualiza solo cada día.")
 
 
 class ErrorWeb(Exception):
@@ -985,7 +985,7 @@ def portada(sitio, proyectos, guias=(), videos=()):
 def pagina_pc(sitio):
     cuerpo = f"""<section class="ancho seccion pc">
   <h1 class="pagina-titulo">{esc(TITULO_PC)}</h1>
-  <p class="pagina-lema">Elige lo que tienes o lo que quieres comprar y te digo qué le va, si encaja con lo demás, a qué velocidad irá la memoria y si el procesador trae gráfica. Vale en los dos sentidos: de la placa a la memoria y de la memoria a la placa.</p>
+  <p class="pagina-lema">Elige lo que tienes o lo que quieres comprar y te digo qué le va, si encaja con lo demás, a qué velocidad irá la memoria, si el procesador trae gráfica, si la tarjeta gráfica cabe en la caja y si la fuente puede con ella. Vale en los dos sentidos: de la placa a la memoria y de la memoria a la placa, de la caja a la gráfica y de la gráfica a la caja.</p>
   <p class="visual-oculto" role="status" id="pc-estado"></p>
   <div id="pc-app" class="pc-app">
     <p class="pc-cargando">Cargando piezas…</p>
@@ -994,7 +994,7 @@ def pagina_pc(sitio):
   <section class="pc-bloque pc-creditos" aria-labelledby="t-creditos">
     <h2 id="t-creditos">De dónde sale todo</h2>
     <p>Las piezas son de <a href="https://github.com/buildcores/buildcores-open-db" rel="noopener">BuildCores OpenDB</a>, con licencia <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" rel="noopener">CC BY-NC-SA 4.0</a>, adaptadas aquí: menos campos, nombres limpios y sin los datos que no cuadran. Se actualizan solas cada día.<span id="pc-fecha"></span> Los datos adaptados se pueden usar con la misma licencia.</p>
-    <p>Las reglas (qué chipset admite qué procesador, velocidades oficiales de memoria, PCIe) están sacadas a mano de las fichas de AMD e Intel, y cada dato enlaza su fuente. Es orientativo: antes de comprar, mira la lista de procesadores y de memorias (QVL) de tu placa en la web del fabricante.</p>
+    <p>Las reglas (qué chipset admite qué procesador, velocidades oficiales de memoria, PCIe, qué fuente pide cada gráfica, anclajes de disipadores) están sacadas a mano de las fichas de AMD, Intel, NVIDIA y otros fabricantes, y cada dato enlaza su fuente. Las medidas de cajas, gráficas y disipadores salen de la ficha de cada pieza. Es orientativo: antes de comprar, mira la lista de procesadores y de memorias (QVL) de tu placa y las medidas en la web del fabricante.</p>
     <div id="pc-fuentes"></div>
   </section>
 </section>"""
@@ -1207,7 +1207,8 @@ def mapa_sitio(sitio, proyectos, guias=()):
 # ---------------------------------------------------------------- todo junto
 
 ARCHIVOS_PC = ("logica.js", "app.js", "reglas.json")
-DATOS_PC = ("cpu.json", "placas.json", "ram.json", "ssd.json", "meta.json")
+DATOS_PC = ("cpu.json", "placas.json", "ram.json", "ssd.json", "graficas.json", "fuentes.json", "cajas.json",
+            "disipadores.json", "meta.json")
 
 
 def comprobar_pc(carpeta_datos):

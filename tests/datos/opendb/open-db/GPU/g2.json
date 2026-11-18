@@ -1,0 +1,33 @@
+{
+ "opendb_id": "g2",
+ "metadata": {
+  "name": "DUAL GeForce RTX 4060 8GB",
+  "manufacturer": "Asus"
+ },
+ "identifiers": {
+  "version": 1,
+  "identifiers": [],
+  "retailer_listings": [
+   {
+    "source": "amazon",
+    "channel": "es",
+    "source_product_id": "B0C7W1HNNX",
+    "pricing_enabled": true,
+    "verified": true
+   }
+  ]
+ },
+ "chipset": "GeForce RTX 4060",
+ "chipset_manufacturer": "NVIDIA",
+ "memory": 8,
+ "length": 0,
+ "total_slot_width": 0,
+ "tdp": 115,
+ "interface": "PCIe 4.0 x8",
+ "power_connectors": {
+  "pcie_6_pin": 0,
+  "pcie_8_pin": 0,
+  "pcie_12VHPWR": 0,
+  "pcie_12V_2x6": 0
+ }
+}

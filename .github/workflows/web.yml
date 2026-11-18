@@ -49,6 +49,7 @@ jobs:
           [ -f _datos-pc/meta.json ] && anterior="--anterior _datos-pc"
           if git clone --quiet --depth 1 --filter=blob:none --sparse https://github.com/buildcores/buildcores-open-db /tmp/opendb \
              && git -C /tmp/opendb sparse-checkout set open-db/CPU open-db/Motherboard open-db/RAM open-db/Storage \
+                  open-db/GPU open-db/PSU open-db/PCCase open-db/CPUCooler \
              && python3 web/datos_pc.py --opendb /tmp/opendb --salida _datos-pc-nuevos $anterior; then
             rm -rf _datos-pc && mv _datos-pc-nuevos _datos-pc
             echo "nuevas=si" >> "$GITHUB_OUTPUT"

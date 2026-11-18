@@ -1,0 +1,19 @@
+{
+ "opendb_id": "k2",
+ "metadata": {
+  "name": "Caja Micro con fuente",
+  "manufacturer": "Genérica"
+ },
+ "identifiers": {
+  "version": 1,
+  "identifiers": []
+ },
+ "form_factor": "Micro ATX Mini Tower",
+ "supported_motherboard_form_factors": [
+  "Micro ATX",
+  "Mini-ITX"
+ ],
+ "max_video_card_length": 0,
+ "expansion_slots": 0,
+ "power_supply": "500 W"
+}

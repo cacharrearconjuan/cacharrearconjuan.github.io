@@ -1,0 +1,26 @@
+{
+ "opendb_id": "k1",
+ "metadata": {
+  "name": "LANCOOL 216 ATX Mid Tower Black",
+  "manufacturer": "Lian Li"
+ },
+ "identifiers": {
+  "version": 1,
+  "identifiers": []
+ },
+ "form_factor": "ATX Mid Tower",
+ "supported_motherboard_form_factors": [
+  "EATX",
+  "ATX",
+  "Micro ATX",
+  "Mini-ITX"
+ ],
+ "supported_power_supply_form_factors": [
+  "ATX"
+ ],
+ "max_video_card_length": 392,
+ "max_cpu_cooler_height": 180,
+ "max_psu_length": 0,
+ "expansion_slots": 7,
+ "power_supply": "None"
+}

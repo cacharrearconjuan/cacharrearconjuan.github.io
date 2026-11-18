@@ -1,0 +1,32 @@
+{
+ "opendb_id": "f1",
+ "metadata": {
+  "name": "RM750e 750W 80+ Gold Fully Modular ATX",
+  "manufacturer": "Corsair"
+ },
+ "identifiers": {
+  "version": 1,
+  "identifiers": [],
+  "retailer_listings": [
+   {
+    "source": "amazon",
+    "channel": "es",
+    "source_product_id": "B0CGXRYNDK",
+    "pricing_enabled": true,
+    "verified": true
+   }
+  ]
+ },
+ "wattage": 750,
+ "form_factor": "ATX",
+ "length": 140,
+ "modular": "Full",
+ "efficiency_rating": "80+ Gold",
+ "connectors": {
+  "atx_24_pin": 1,
+  "eps_8_pin": 2,
+  "pcie_12vhpwr": 1,
+  "pcie_6_plus_2_pin": 3,
+  "sata": 7
+ }
+}

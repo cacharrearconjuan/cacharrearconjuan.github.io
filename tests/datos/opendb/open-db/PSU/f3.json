@@ -1,0 +1,13 @@
+{
+ "opendb_id": "f3",
+ "metadata": {
+  "name": "Fuente sin potencia",
+  "manufacturer": "Nadie"
+ },
+ "identifiers": {
+  "version": 1,
+  "identifiers": []
+ },
+ "wattage": 0,
+ "form_factor": "ATX"
+}

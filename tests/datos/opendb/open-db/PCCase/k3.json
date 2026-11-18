@@ -1,0 +1,13 @@
+{
+ "opendb_id": "k3",
+ "metadata": {
+  "name": "Caja sin formatos",
+  "manufacturer": "Nadie"
+ },
+ "identifiers": {
+  "version": 1,
+  "identifiers": []
+ },
+ "form_factor": "ATX Mid Tower",
+ "supported_motherboard_form_factors": []
+}

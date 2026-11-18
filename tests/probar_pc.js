@@ -489,11 +489,333 @@ function pruebaResto() {
   comprobar(filas.length === 4 && filas.some((f) => f.que === 'Memoria y placa' && f.estado === 'no'), 'veredicto: la DDR5 en B550 no encaja');
 }
 
+// ------------------------------------------------------------ gráfica, fuente, caja y disipador (con reglas de prueba)
+
+// Reglas inventadas para probar la lógica sin depender de las cifras reales (esas tienen su prueba aparte).
+function reglasDePrueba() {
+  const RG = JSON.parse(JSON.stringify(R));
+  RG.graficas = {
+    chips: {
+      'GeForce RTX 4060': {marca: 'NVIDIA', pcie: [4, 8], consumo: 115, psu: 550, ref: [0, 1, 0], adaptador: null, fuentes: ['f-4060']},
+      'GeForce RTX 4090': {marca: 'NVIDIA', pcie: [4, 16], consumo: 450, psu: 850, ref: [0, 0, 1], adaptador: 3, fuentes: ['f-4090']},
+      'GeForce RTX 5060 Ti': {marca: 'NVIDIA', pcie: [5, 8], consumo: 180, psu: 450, ref: [0, 1, 0], adaptador: null, fuentes: []},
+      'Radeon RX 6500 XT': {marca: 'AMD', pcie: [4, 4], consumo: 107, psu: 400, ref: [1, 0, 0], adaptador: null, fuentes: []},
+      'Arc B580': {marca: 'Intel', pcie: [4, 8], consumo: 190, psu: null, ref: [0, 1, 0], rebar: true, fuentes: []},
+      'GeForce GT 1030': {marca: 'NVIDIA', pcie: [3, 4], consumo: 30, psu: 300, ref: [0, 0, 0], fuentes: []},
+    },
+    rendimiento: [
+      {hasta: 4, tipo: 'aviso', texto: 'Con x4 en PCIe 3.0 se pierde bastante.', fuentes: ['f-x4']},
+      {hasta: 8, tipo: 'info', texto: 'Con x8 en PCIe 3.0 se pierde algo.', fuentes: []},
+      {hasta: 16, tipo: 'info', texto: 'Casi no se nota.', fuentes: []},
+    ],
+    rebar: {familias: ['comet', 'rocket', 'alder', 'raptor', 'raptor_r', 'arrow', 'arrow_r', 'matisse', 'vermeer', 'cezanne', 'raphael', 'phoenix', 'granite'],
+      texto_pide: 'Pide Resizable BAR.', texto_si: 'Este procesador tiene Resizable BAR.', texto_no: 'Este procesador no tiene Resizable BAR.', fuentes: ['f-rebar']},
+    adaptador: {texto: 'Usa cables separados.', fuentes: []},
+    potencia: {fuentes: []},
+    compatible: {fuentes: []},
+  };
+  const ch = (z, c) => RG.plataformas[z].chipsets[c];
+  ch('AM4', 'B450').grafica = 3;
+  ch('AM4', 'A520').grafica = 3;
+  ch('AM4', 'B550').grafica = 4;
+  ch('AM4', 'X570').grafica = 4;
+  ch('AM5', 'B650').grafica = [4, 5];
+  ch('LGA 1700', 'Z790').grafica = 5;
+  RG.familias.vermeer.grafica = {gen: 4, carriles: 16};
+  RG.familias.matisse.grafica = {gen: 4, carriles: 16};
+  RG.familias.cezanne.grafica = {gen: 3, carriles: 16};
+  RG.familias.raphael.grafica = {gen: 5, carriles: 16};
+  RG.familias.phoenix.grafica = {gen: 4, carriles: 8, por_modelo: {'ryzen-5-8500g': [4, 4]}};
+  RG.familias.alder.grafica = {gen: 5, carriles: 16};
+  RG.graficas.margen = {texto: 'Ya lleva margen.', fuentes: ['f-margen']};
+  RG.graficas.cable16 = {texto: 'Cable de 600 W.', fuentes: []};
+  RG.cpu_consumo = {amd_factor: 1.35, fuentes_amd: ['f-ppt'],
+    intel: [{familias: ['raptor', 'raptor_r'], gamas: ['i5'], sufijos: [''], modelos: ['13400', '14400'], pl2: 148, fuentes: ['f-ark']},
+      {familias: ['raptor', 'raptor_r'], gamas: ['i5'], sufijos: ['K'], pl2: 181, fuentes: []},
+      {familias: ['arrow_r'], gamas: ['u7'], sufijos: ['K'], pl2: 250, fuentes: []}],
+    intel_factor: [{familias: ['coffee', 'coffee_r'], factor: 1.25, fuentes: []}]};
+  RG.cajas = {sfx_en_atx: {texto: 'Con soporte.', fuentes: []}, ranuras: {texto: '', fuentes: []}};
+  RG.disipadores = {
+    grupos: [{zocalos: ['LGA 1700', 'LGA 1851'], texto: 'Mismo anclaje 1700/1851.', fuentes: []},
+      {zocalos: ['LGA 115x', 'LGA 1151', 'LGA 1200'], texto: 'Mismo anclaje 115x/1200.', fuentes: []}],
+    am4_en_am5: {texto: 'AMD dice que valen.', fuentes: []},
+    am5_en_am4: {texto: 'Debería valer.', fuentes: []},
+    kit: {texto: 'Hace falta el kit.', fuentes: ['f-kit']},
+  };
+  return RG;
+}
+
+function gpu(nombre, chip, extra) {
+  return Object.assign({id: nombre, nombre: nombre, chip: chip, marca: 'NVIDIA', gb: 8, largo: 250, ranuras: 2, tdp: null, conectores: null, pcie: null, amazon: ''}, extra || {});
+}
+
+function psu(nombre, vatios, pcie, extra) {
+  return Object.assign({id: nombre, nombre: nombre, vatios: vatios, formato: 'ATX', largo: 160, pcie: pcie, modular: 'total', eficiencia: '80+ Gold', amazon: ''}, extra || {});
+}
+
+function caja(nombre, extra) {
+  return Object.assign({id: nombre, nombre: nombre, formato: 'ATX Mid Tower', placas: ['Mini-ITX', 'Micro ATX', 'ATX'], psu: ['ATX'],
+    gpu_max: 330, disipador_max: 165, psu_max: 200, ranuras: 7, incluida: null, amazon: ''}, extra || {});
+}
+
+function disipador(nombre, zocalos, extra) {
+  return Object.assign({id: nombre, nombre: nombre, zocalos: zocalos, alto: 155, liquida: 0, radiador: null, amazon: ''}, extra || {});
+}
+
+function pruebaPiezasNuevas() {
+  console.log('Gráfica, fuente, caja y disipador');
+  const RG = reglasDePrueba();
+  const g4060 = gpu('RTX 4060 Dual', 'GeForce RTX 4060', {conectores: [0, 1, 0]});
+  const g4090 = gpu('RTX 4090 Gaming', 'GeForce RTX 4090', {conectores: [0, 0, 1], largo: 340, ranuras: 3.5});
+  const g6500 = gpu('RX 6500 XT Pulse', 'Radeon RX 6500 XT', {marca: 'AMD'});
+  const g5060 = gpu('RTX 5060 Ti', 'GeForce RTX 5060 Ti', {conectores: [0, 1, 0]});
+  const arc = gpu('Arc B580 LE', 'Arc B580', {marca: 'Intel', conectores: [0, 1, 0]});
+  const g1030 = gpu('GT 1030', 'GeForce GT 1030');
+  const rara = gpu('Tarjeta rara', 'Chip desconocido', {tdp: 250});
+
+  // --- gráfica y placa
+  let r = PC.graficaEnPlaca(RG, g4060, b550, r5600x);
+  comprobar(r.estado === 'si' && /toda su velocidad \(PCIe 4\.0 x8\)/.test(r.texto), 'RTX 4060 en B550 con 5600X: a toda velocidad');
+  r = PC.graficaEnPlaca(RG, g4060, b450, r5600x);
+  comprobar(r.estado === 'si' && /PCIe 3\.0 x8/.test(r.texto) && /la placa \(chipset B450\)/.test(r.texto) && r.notas[0] === 'Con x8 en PCIe 3.0 se pierde algo.',
+    'RTX 4060 en B450: a PCIe 3.0 x8 por la placa, con nota');
+  r = PC.graficaEnPlaca(RG, g6500, b450, r3600);
+  comprobar(r.estado === 'depende' && /PCIe 3\.0 x4/.test(r.texto) && r.fuentes.indexOf('f-x4') >= 0, 'RX 6500 XT en B450: depende (x4 en PCIe 3.0)');
+  r = PC.graficaEnPlaca(RG, g4090, a520, r5600g);
+  comprobar(r.estado === 'si' && /el procesador y la placa \(A520\)/.test(r.texto) && /PCIe 3\.0 x16/.test(r.texto), 'RTX 4090 con 5600G en A520: limitan los dos');
+  r = PC.graficaEnPlaca(RG, g4060, b650, r8500g);
+  comprobar(/PCIe 4\.0 x4/.test(r.texto) && /el procesador/.test(r.texto), '8500G: la gráfica va a x4');
+  r = PC.graficaEnPlaca(RG, g5060, b650, r7800x3d);
+  comprobar(/PCIe 4\.0 x8/.test(r.texto) && /o a PCIe 5\.0 x8 si la placa/.test(r.texto), 'B650: 4.0 o 5.0 según la placa');
+  r = PC.graficaEnPlaca(RG, arc, z790, i12400);
+  comprobar(r.estado === 'si' && r.notas.indexOf('Este procesador tiene Resizable BAR.') >= 0, 'Arc con 12.ª gen: Resizable BAR');
+  r = PC.graficaEnPlaca(RG, arc, z390, i8700k);
+  comprobar(r.estado === 'depende' && r.notas.indexOf('Este procesador no tiene Resizable BAR.') >= 0, 'Arc con 8.ª gen: depende (sin Resizable BAR)');
+  r = PC.graficaEnPlaca(RG, rara, b550, r5600x);
+  comprobar(r.estado === 'si' && /No tengo comprobada la interfaz/.test(r.texto), 'chip sin regla: entra, sin velocidad');
+  r = PC.graficaEnPlaca(RG, g4060, Object.assign({}, b550, {x16: 0}), r5600x);
+  comprobar(r.estado === 'depende' && /ninguna ranura PCIe x16/.test(r.texto), 'placa sin x16 en la ficha: depende');
+  r = PC.graficaEnPlaca(RG, gpu('Con ficha', 'Chip desconocido', {pcie: [3, 16]}), b550, r5600x);
+  comprobar(r.estado === 'si' && /toda su velocidad \(PCIe 3\.0 x16\)/.test(r.texto), 'sin regla de chip: usa la interfaz de su ficha');
+
+  // --- gráfica y fuente
+  r = PC.graficaConFuente(RG, g4060, psu('550', 550, [2, 0]), r5600x);
+  comprobar(r.estado === 'si' && /NVIDIA pide una fuente de 550 W/.test(r.texto) && /llegan/.test(r.texto), 'RTX 4060 con 550 W y dos 6+2: sí');
+  comprobar(r.notas.some((n) => /Estimación: en pico, el equipo puede llegar a unos 253-303 W/.test(n)) && r.fuentes.indexOf('f-ppt') >= 0, 'estimación del pico con el PPT de AMD');
+  r = PC.graficaConFuente(RG, g4060, psu('450', 450, [1, 0]), r5600x);
+  comprobar(r.estado === 'depende' && /Justa/.test(r.texto), 'RTX 4060 con 450 W: justa');
+  r = PC.graficaConFuente(RG, g4090, psu('850', 850, [4, 0]), r7800x3d);
+  comprobar(r.estado === 'si' && /adaptador/.test(r.texto) && r.notas.indexOf('Usa cables separados.') >= 0, 'RTX 4090 con 850 W y cuatro 6+2: sí, con adaptador');
+  r = PC.graficaConFuente(RG, g4090, psu('1000', 1000, [2, 0]), r7800x3d);
+  comprobar(r.estado === 'no' && /no llegan/.test(r.texto) && /pide 3 de 8 pines/.test(r.texto), 'RTX 4090 con dos 6+2: no llegan para el adaptador');
+  r = PC.graficaConFuente(RG, g4090, psu('850 nativa', 850, [2, 1]), r7800x3d);
+  comprobar(r.estado === 'si' && !/adaptador/.test(r.texto), 'RTX 4090 con conector de 16 pines: sin adaptador');
+  r = PC.graficaConFuente(RG, g4090, psu('400', 400, [2, 0]), r7800x3d);
+  comprobar(r.estado === 'no' && /No llega/.test(r.texto) && /570 W/.test(r.texto), 'RTX 4090 con 400 W: no llega');
+  r = PC.graficaConFuente(RG, g4090, psu('700', 700, [4, 0]), cpu('ryzen-9-7950x', 'AMD Ryzen 9 7950X', 'AM5', 'raphael', true, {tdp: 170}));
+  comprobar(r.estado === 'no' && /No llega: NVIDIA pide una fuente de 850 W/.test(r.texto) && /puede pasar de 730 W/.test(r.texto),
+    'por debajo de lo que pide el fabricante y del pico estimado: no');
+  r = PC.graficaConFuente(RG, g4090, psu('Solo 16', 1000, [0, 1]), r7800x3d);
+  comprobar(r.estado === 'si' && /trae un conector de 16 pines y ninguno de 6\+2/.test(r.texto), 'fuente con solo 16 pines: bien dicho');
+  r = PC.graficaConFuente(RG, g4060, psu('550', 550, [2, 0]), r5600x);
+  comprobar(/La gráfica lleva un conector de 8 pines y la fuente trae 2 conectores de 6\+2 pines: llegan/.test(r.texto), 'conectores: bien dicho');
+  comprobar(PC.textoConectores([1, 1, 0]) === 'un conector de 8 pines y uno de 6 pines' && PC.textoConectores([0, 2, 0]) === '2 conectores de 8 pines',
+    'textos de conectores');
+  r = PC.graficaConFuente(RG, g1030, psu('300', 300, null), i12400);
+  comprobar(r.estado === 'si' && /75 W o menos/.test(r.texto), 'GT 1030: sin conector, con la ranura vale');
+  r = PC.graficaConFuente(RG, g4060, psu('sin dato', 650, null), r5600x);
+  comprobar(r.estado === 'depende' && /no dice cuántos conectores PCIe/.test(r.texto), 'fuente sin conectores en la ficha: depende');
+  r = PC.graficaConFuente(RG, rara, psu('750', 750, [2, 0]), r5600x);
+  comprobar(r.estado === 'nose' && /No sé qué conectores/.test(r.texto), 'chip sin regla ni conectores: sin comprobar');
+  r = PC.graficaConFuente(RG, g6500, psu('400', 400, [1, 0]), r5600x);
+  comprobar(r.estado === 'si' && /tarjeta de referencia/.test(r.texto), 'sin conectores en la ficha: los de la referencia, avisando');
+  r = PC.graficaConFuente(RG, g4060, psu('650', 650, [2, 0]), null);
+  comprobar(r.notas.some((n) => /Elige el procesador/.test(n)), 'sin procesador: pide elegirlo para afinar');
+  comprobar(PC.consumoCpu(RG, i13600k).w === 181 && PC.consumoCpu(RG, i13400).w === 148 && PC.consumoCpu(RG, i13400).fuentes[0] === 'f-ark',
+    'consumo de Intel por gama, sufijo y modelo');
+  const i8700k95 = cpu('core-i7-8700k', 'Intel Core i7-8700K', 'LGA 1151', 'coffee', true, {tdp: 95});
+  comprobar(PC.consumoCpu(RG, i8700k95).w === 119 && /95 W de TDP × 1,25/.test(PC.consumoCpu(RG, i8700k95).base), 'consumo de 8.ª gen: TDP × 1,25');
+  comprobar(PC.consumoCpu(RG, cpu('core-ultra-7-270k-plus', 'Intel Core Ultra 7 270K Plus', 'LGA 1851', 'arrow_r', true, {tdp: 125})).w === 250,
+    'consumo de un «K Plus»');
+  comprobar(PC.consumoCpu(RG, r5600x).w === 88 && /× 1,35/.test(PC.consumoCpu(RG, r5600x).base), 'consumo de AMD: TDP × 1,35');
+  r = PC.graficaConFuente(RG, g4060, psu('450', 450, [1, 0]), r5600x);
+  comprobar(r.notas.indexOf('Ya lleva margen.') >= 0 && r.fuentes.indexOf('f-margen') >= 0, 'fuente por debajo de lo que pide: explica el margen');
+  const g5090 = gpu('RTX 5090', 'GeForce RTX 5090', {conectores: [0, 0, 1]});
+  RG.graficas.chips['GeForce RTX 5090'] = {marca: 'NVIDIA', pcie: [5, 16], consumo: 575, psu: 1000, ref: [0, 0, 1], adaptador: 4, fuentes: []};
+  r = PC.graficaConFuente(RG, g5090, psu('1200', 1200, [4, 1]), r7800x3d);
+  comprobar(r.estado === 'si' && r.notas.indexOf('Cable de 600 W.') >= 0, 'gráfica de más de 450 W con cable de 16 pines: mira que sea de 600 W');
+  r = PC.graficaConFuente(RG, g4090, psu('850 nativa', 850, [2, 1]), r7800x3d);
+  comprobar(r.notas.indexOf('Cable de 600 W.') < 0, 'con 450 W o menos, sin aviso del cable');
+
+  // --- caja
+  r = PC.graficaEnCaja(RG, g4060, caja('Caja'));
+  comprobar(r.estado === 'si' && /Cabe de largo/.test(r.texto) && !r.notas.length, 'gráfica de 250 mm en caja de 330: cabe');
+  r = PC.graficaEnCaja(RG, gpu('Larga', 'GeForce RTX 4060', {largo: 320}), caja('Caja'));
+  comprobar(r.estado === 'si' && /Va justa \(le sobran 10 mm\)/.test(r.notas[0] || ''), 'gráfica de 320 mm en 330: cabe justa');
+  r = PC.graficaEnCaja(RG, g4090, caja('Caja'));
+  comprobar(r.estado === 'no' && /mide 340 mm/.test(r.texto), 'gráfica de 340 mm en 330: no');
+  r = PC.graficaEnCaja(RG, g4090, caja('ITX', {gpu_max: 350, ranuras: 3}));
+  comprobar(r.estado === 'no' && /ocupa 4 ranuras y la caja tiene 3/.test(r.texto), 'gráfica de 3,5 ranuras en caja de 3: no');
+  comprobar(PC.huecosGrafica(2.05) === 2 && PC.huecosGrafica(2.5) === 3 && PC.huecosGrafica(2.2) === 3, 'huecos: 2,05 son 2 y 2,5 son 3');
+  r = PC.graficaEnCaja(RG, gpu('Sin largo', 'GeForce RTX 4060', {largo: null}), caja('Caja'));
+  comprobar(r.estado === 'nose', 'gráfica sin largo: sin comprobar');
+  r = PC.graficaEnCaja(RG, g4060, caja('Sin medida', {gpu_max: null}));
+  comprobar(r.estado === 'nose' && /no dice hasta qué largo/.test(r.texto), 'caja sin medida de gráfica: sin comprobar');
+  comprobar(PC.placaEnCaja(RG, b450, caja('Caja')).estado === 'si', 'placa ATX en caja ATX');
+  comprobar(PC.placaEnCaja(RG, Object.assign({}, b450, {formato: 'EATX'}), caja('Caja')).estado === 'no', 'placa EATX en caja ATX: no');
+  comprobar(PC.placaEnCaja(RG, Object.assign({}, b450, {formato: 'Thin Mini-ITX'}), caja('Caja')).estado === 'si', 'Thin Mini-ITX donde las Mini-ITX');
+  comprobar(PC.placaEnCaja(RG, Object.assign({}, b450, {formato: null}), caja('Caja')).estado === 'nose', 'placa sin formato: sin comprobar');
+  comprobar(PC.fuenteEnCaja(RG, psu('ATX', 750, [2, 0]), caja('Caja')).estado === 'si', 'fuente ATX en caja ATX');
+  r = PC.fuenteEnCaja(RG, psu('SFX', 750, [2, 0], {formato: 'SFX'}), caja('Caja'));
+  comprobar(r.estado === 'depende' && /soporte adaptador/.test(r.texto), 'fuente SFX en caja ATX: con soporte');
+  comprobar(PC.fuenteEnCaja(RG, psu('ATX', 750, [2, 0]), caja('Mini', {psu: ['SFX', 'SFX-L']})).estado === 'no', 'fuente ATX en caja SFX: no');
+  comprobar(PC.fuenteEnCaja(RG, psu('ATX', 750, [2, 0]), caja('Sin dato', {psu: null})).estado === 'nose', 'caja sin formatos de fuente: sin comprobar');
+  comprobar(PC.fuenteEnCaja(RG, psu('Larga', 750, [2, 0], {largo: 210}), caja('Caja')).estado === 'no', 'fuente de 210 mm en hueco de 200: no');
+  r = PC.fuenteEnCaja(RG, psu('ATX', 750, [2, 0]), caja('Con fuente', {incluida: 500}));
+  comprobar(r.notas.some((n) => /ya trae una fuente de 500 W/.test(n)), 'caja con fuente incluida: aviso');
+
+  // --- disipador
+  const moderno = disipador('Moderno', ['AM5', 'AM4', 'LGA 1700']);
+  const viejo = disipador('Viejo', ['AM4', 'LGA 1200', 'LGA 1151', 'LGA 115x']);
+  r = PC.disipadorConCpu(RG, moderno, u265k);
+  comprobar(r.estado === 'si' && /mismo anclaje que LGA 1700/.test(r.texto), 'disipador de LGA 1700 en LGA 1851: mismo anclaje');
+  r = PC.disipadorConCpu(RG, viejo, r7800x3d);
+  comprobar(r.estado === 'depende' && /AMD dice que valen/.test(r.texto), 'disipador de AM4 en AM5: seguramente sí');
+  r = PC.disipadorConCpu(RG, viejo, i12400);
+  comprobar(r.estado === 'no' && /No trae anclaje para LGA 1700/.test(r.texto) && !/115x/.test(r.texto)
+    && r.notas.indexOf('Hace falta el kit.') >= 0 && r.fuentes.indexOf('f-kit') >= 0, 'disipador de LGA 1200 en LGA 1700: no, con el kit');
+  r = PC.disipadorEnZocalo(RG, disipador('Solo AM5', ['AM5']), 'AM4');
+  comprobar(r.estado === 'depende' && /Debería valer/.test(r.texto), 'disipador de AM5 en AM4: puede que sí');
+  r = PC.disipadorEnZocalo(RG, disipador('Solo AM4', ['AM4']), 'LGA 1700');
+  comprobar(r.estado === 'no' && !r.notas.length, 'de AM4 a Intel: no, sin hablar del kit de Intel');
+  comprobar(PC.disipadorConCpu(RG, disipador('Solo 1151', ['LGA 1151']), i10400).estado === 'si', 'disipador de LGA 1151 en LGA 1200: sí');
+  comprobar(PC.disipadorEnCaja(RG, moderno, caja('Caja')).estado === 'si', 'disipador de 155 mm en caja de 165: cabe');
+  comprobar(PC.disipadorEnCaja(RG, disipador('Alto', ['AM4'], {alto: 170}), caja('Caja')).estado === 'no', 'disipador de 170 mm en 165: no');
+  r = PC.disipadorEnCaja(RG, disipador('AIO', ['AM5'], {alto: null, liquida: 1, radiador: 360}), caja('Caja'));
+  comprobar(r.estado === 'nose' && /radiador de 360 mm/.test(r.texto), 'líquida: mira el radiador');
+  comprobar(PC.disipadorEnCaja(RG, moderno, caja('Sin dato', {disipador_max: null})).estado === 'nose', 'caja sin altura de disipador: sin comprobar');
+
+  // --- gráfica integrada con tarjeta
+  comprobar(PC.grafica(RG, i12400f, z790, g4060).estado === 'si', 'F con tarjeta: no le hace falta gráfica integrada');
+  comprobar(/conecta el monitor a la tarjeta/.test(PC.grafica(RG, i12400, z790, g4060).texto), 'con tarjeta: el monitor a la tarjeta');
+
+  // --- listas en los dos sentidos
+  const gpus = [g4060, g4090, g6500, g1030];
+  const enCaja = PC.graficasParaCaja(RG, gpus, caja('Caja'));
+  comprobar(enCaja.every((x) => x.estado === 'si') && enCaja.reduce((s, x) => s + x.piezas.length, 0) === 3, 'gráficas que caben: todas menos la de 340 mm');
+  comprobar(enCaja.map((x) => x.titulo).join('|') === 'Radeon RX 6500 XT|GeForce RTX 4060|GeForce GT 1030', 'gráficas por chip: lo más nuevo primero');
+  const fuentes = PC.fuentesParaGrafica(RG, [psu('a', 650, [2, 0]), psu('b', 450, [2, 0]), psu('c', 300, [2, 0])], g4060, r5600x);
+  comprobar(fuentes.length === 3 && fuentes[0].estado === 'si' && fuentes[0].titulo === '650 W'
+    && fuentes[1].titulo === '300 W' && fuentes[1].estado === 'depende' && fuentes[2].titulo === '450 W',
+    'fuentes para una gráfica: primero las que le valen, luego las justas por potencia');
+  r = PC.graficaConFuente(RG, g4060, psu('250', 250, [2, 0]), r5600x);
+  comprobar(r.estado === 'no' && r.notas.some((n) => /por debajo de ese pico/.test(n)), 'fuente por debajo de lo que pide y del pico: no, y lo dice');
+  const zocalo = PC.disipadoresParaZocalo(RG, [moderno, viejo, disipador('Solo Intel', ['LGA 1200'])], 'AM5');
+  comprobar(zocalo.length === 2 && zocalo[0].estado === 'si' && zocalo[1].estado === 'depende', 'disipadores para AM5: los de AM4, aparte');
+  const filas = PC.comprobar(RG, {placa: b550, cpu: r5600x, gpu: g4060, psu: psu('650', 650, [2, 0]), caja: caja('Caja'), disipador: moderno});
+  comprobar(['Gráfica y placa', 'Gráfica y fuente', 'Gráfica y caja', 'Placa y caja', 'Fuente y caja', 'Disipador y procesador', 'Disipador y caja']
+    .every((q) => filas.some((f) => f.que === q)), 'veredicto: las siete comprobaciones nuevas');
+  comprobar(PC.peor(['si', 'depende', 'si']) === 'depende' && PC.peor(['si', 'no', 'nose']) === 'no', 'peor de varios estados');
+
+  // --- dónde comprarlo
+  const busca = (t, nombre, extra) => PC.textoBusqueda(t, Object.assign({nombre: nombre}, extra || {}));
+  comprobar(busca('graficas', 'Asus DUAL EVO GeForce RTX 4060 8GB GDDR6 Black') === 'Asus DUAL EVO GeForce RTX 4060 8GB', 'buscar gráfica: sin GDDR ni color');
+  comprobar(busca('graficas', 'MSI GeForce RTX 4070 VENTUS 2X 12G OC White') === 'MSI GeForce RTX 4070 VENTUS 2X 12G OC', 'buscar gráfica: sin color al final');
+  comprobar(busca('fuentes', 'Corsair RM750 (2019) Black ATX 750W Fully Modular 80+ Gold', {vatios: 750}) === 'Corsair RM750 750W', 'buscar fuente: modelo y vatios');
+  comprobar(busca('fuentes', 'Corsair RM750 750W 80+ Gold Certified Fully Modular ATX', {vatios: 750}) === 'Corsair RM750 750W', 'buscar fuente: vatios una vez');
+  comprobar(busca('cajas', 'NZXT H5 Flow (2022) ATX Mid Tower Black with Tempered Glass Side Panel') === 'NZXT H5 Flow', 'buscar caja: solo el modelo');
+  comprobar(busca('disipadores', 'Thermalright Peerless Assassin 120 SE 66.17 CFM CPU Cooler') === 'Thermalright Peerless Assassin 120 SE', 'buscar disipador de aire');
+  comprobar(busca('disipadores', 'ARCTIC Liquid Freezer III 360 A-RGB 48.82 CFM Water 360mm Black') === 'ARCTIC Liquid Freezer III 360 A-RGB', 'buscar líquida');
+}
+
+// ------------------------------------------------------------ reglas reales de las gráficas
+
+function pruebaReglasGraficas() {
+  console.log('Reglas de las gráficas (pc/reglas.json)');
+  const chips = (R.graficas || {}).chips || {};
+  const nombres = Object.keys(chips);
+  comprobar(nombres.length >= 70, `hay reglas de chips (${nombres.length})`);
+  for (const n of nombres) {
+    const c = chips[n];
+    const bien = c.fuentes && c.fuentes.length && c.fuentes.every((f) => R.fuentes[f])
+      && ['NVIDIA', 'AMD', 'Intel'].indexOf(c.marca) >= 0
+      && (!c.pcie || ([1, 2, 3, 4, 5].indexOf(c.pcie[0]) >= 0 && [1, 4, 8, 16].indexOf(c.pcie[1]) >= 0))
+      && (!c.consumo || (c.consumo >= 10 && c.consumo <= 700))
+      && (!c.psu || (c.psu >= 200 && c.psu <= 1600 && (!c.consumo || c.psu > c.consumo)))
+      && (!c.psu || (c.fuentes_psu && c.fuentes_psu.length && c.fuentes_psu.every((f) => R.fuentes[f])))
+      && (!c.ref || (c.ref.length === 3 && c.ref.every((x) => Number.isInteger(x) && x >= 0 && x <= 4)))
+      && (!c.adaptador || (c.ref && c.ref[2] > 0 && c.adaptador >= 1 && c.adaptador <= 4));
+    comprobar(bien, `chip ${n}: datos posibles y con fuente`);
+  }
+  const es = (n, campo, v) => comprobar(JSON.stringify((chips[n] || {})[campo]) === JSON.stringify(v), `${n}: ${campo} = ${JSON.stringify(v)}`);
+  // cifras de las fichas de los fabricantes (si cambian, hay que mirar la fuente otra vez)
+  es('GeForce RTX 4060', 'pcie', [4, 8]);
+  es('GeForce RTX 4060', 'consumo', 115);
+  es('GeForce RTX 4060', 'psu', 550);
+  es('GeForce RTX 4090', 'adaptador', 3);
+  es('GeForce RTX 5090', 'psu', 1000);
+  es('Radeon RX 6500 XT', 'pcie', [4, 4]);
+  es('Radeon RX 7600', 'pcie', [4, 8]);
+  es('Radeon RX 9070 XT', 'pcie', [5, 16]);
+  es('Arc B580', 'rebar', true);
+  es('Arc B580', 'pcie', [4, 8]);
+
+  // ranura de la gráfica y carriles del procesador (AMD, Intel y las placas)
+  const ranura = (z, c) => R.plataformas[z].chipsets[c].grafica;
+  comprobar(ranura('AM4', 'B450') === 3 && ranura('AM4', 'A520') === 3 && ranura('AM4', 'B550') === 4 && ranura('AM4', 'X570') === 4,
+    'AM4: B450 y A520 a PCIe 3.0; B550 y X570 a 4.0');
+  comprobar(ranura('AM5', 'B650') === 4 && ranura('AM5', 'B650E') === 5 && ranura('AM5', 'X870') === 5
+    && JSON.stringify(ranura('AM5', 'B850')) === '[4,5]', 'AM5: B650 a 4.0, B650E y X870 a 5.0, B850 según la placa');
+  comprobar(ranura('LGA 1200', 'B460') === 3 && ranura('LGA 1200', 'B560') === 4, 'LGA 1200: B460 a 3.0 y B560 a 4.0');
+  let todos = true;
+  for (const z of Object.keys(R.plataformas)) {
+    for (const c of Object.keys(R.plataformas[z].chipsets)) {
+      const d = R.plataformas[z].chipsets[c];
+      const g = d.grafica;
+      const bien = (Number.isInteger(g) && g >= 3 && g <= 5) || (Array.isArray(g) && g[0] < g[1] && g[0] >= 3 && g[1] <= 5);
+      if (!bien || !(d.fuentes_grafica || []).length || !d.fuentes_grafica.every((f) => R.fuentes[f])) {
+        todos = false;
+        comprobar(false, `ranura de la gráfica en ${z} ${c}: ${JSON.stringify(g)}`);
+      }
+    }
+  }
+  comprobar(todos, 'todos los chipsets: ranura de la gráfica posible y con fuente');
+  comprobar(Object.keys(R.familias).every((f) => {
+    const g = R.familias[f].grafica;
+    return g && [3, 4, 5].indexOf(g.gen) >= 0 && [4, 8, 16].indexOf(g.carriles) >= 0 && g.fuentes.length && g.fuentes.every((x) => R.fuentes[x]);
+  }), 'todas las familias: carriles para la gráfica, con fuente');
+  comprobar(R.familias.phoenix.grafica.carriles === 8 && JSON.stringify(R.familias.phoenix.grafica.por_modelo['ryzen-5-8500g']) === '[4,4]'
+    && R.familias.cezanne.grafica.gen === 3 && R.familias.raphael.grafica.gen === 5, 'carriles: 8000G a x8 (8500G a x4), 5000G a PCIe 3.0, 7000 a 5.0');
+  const tramos = R.graficas.rendimiento;
+  comprobar(tramos.length >= 4 && tramos.every((t, i) => t.fuentes.length && t.fuentes.every((f) => R.fuentes[f]) && (!i || t.hasta >= tramos[i - 1].hasta)),
+    'tramos de rendimiento: en orden y con fuente');
+  comprobar(R.graficas.rebar && R.graficas.rebar.familias.indexOf('vermeer') >= 0 && R.graficas.rebar.familias.indexOf('coffee') < 0,
+    'Resizable BAR: Ryzen 5000 sí, Core 8.ª gen no');
+
+  // casos reales: lo que pasa con piezas de verdad
+  const g4060 = gpu('RTX 4060', 'GeForce RTX 4060', {gb: 8, conectores: [0, 1, 0]});
+  let r = PC.graficaEnPlaca(R, g4060, b450, r5600x);
+  comprobar(r.estado === 'depende' && /PCIe 3\.0 x8/.test(r.texto) && r.notas.some((n) => /8 GB/.test(n)),
+    'RTX 4060 (8 GB) en B450: a PCIe 3.0 x8, con aviso de memoria');
+  r = PC.graficaEnPlaca(R, gpu('RTX 4060 Ti 16 GB', 'GeForce RTX 4060 Ti', {gb: 16}), b450, r5600x);
+  comprobar(r.estado === 'si' && /PCIe 3\.0 x8/.test(r.texto), 'RTX 4060 Ti de 16 GB en B450: sí, con nota');
+  r = PC.graficaEnPlaca(R, gpu('RX 6500 XT', 'Radeon RX 6500 XT', {gb: 4}), a520, r5600g);
+  comprobar(r.estado === 'depende' && /PCIe 3\.0 x4/.test(r.texto), 'RX 6500 XT en A520: depende (PCIe 3.0 x4)');
+  r = PC.graficaEnPlaca(R, gpu('RTX 4090', 'GeForce RTX 4090', {gb: 24}), b550, r5600x);
+  comprobar(r.estado === 'si' && /toda su velocidad \(PCIe 4\.0 x16\)/.test(r.texto), 'RTX 4090 en B550 con 5600X: a toda velocidad');
+  r = PC.graficaEnPlaca(R, gpu('RTX 5090', 'GeForce RTX 5090', {gb: 32}), b650, r7800x3d);
+  comprobar(r.estado === 'si' && /PCIe 4\.0 x16/.test(r.texto) && r.notas.some((n) => /diferencia medida es pequeña/.test(n)), 'RTX 5090 en B650: a 4.0, pierde poco');
+  r = PC.graficaEnPlaca(R, gpu('RTX 4060', 'GeForce RTX 4060', {gb: 8}), b650, r8500g);
+  comprobar(/PCIe 4\.0 x4/.test(r.texto) && r.estado === 'depende', 'RTX 4060 con 8500G: a x4, ojo');
+}
+
 pruebaReglas();
 pruebaCpuPlaca();
 pruebaMemoria();
 pruebaSsd();
 pruebaResto();
 pruebaCompra();
+pruebaPiezasNuevas();
+pruebaReglasGraficas();
 console.log(`\n${hechas - fallos.length} de ${hechas} comprobaciones bien.`);
 process.exit(fallos.length ? 1 : 0);

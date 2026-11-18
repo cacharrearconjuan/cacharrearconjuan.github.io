@@ -1,6 +1,6 @@
 {
  "version": "2026-11-18",
- "nota": "Reglas sacadas a mano de las fichas de AMD e Intel (y de pruebas publicadas cuando el fabricante no da la cifra). Cada dato lleva su fuente.",
+ "nota": "Reglas sacadas a mano de las fichas de AMD, Intel, NVIDIA y otros fabricantes (y de pruebas publicadas cuando el fabricante no da la cifra). Cada dato lleva su fuente.",
  "fuentes": {
   "amd-am4": {
    "titulo": "AMD: chipsets AM4",
@@ -565,6 +565,1362 @@
   "samsung-990-evo-plus": {
    "titulo": "Samsung: el 990 EVO Plus, PCIe 4.0 x4 o 5.0 x2",
    "url": "https://news.samsung.com/global/samsung-launches-990-evo-plus-ssd-with-best-in-class-performance-speeds-supported-by-pcie-4-0"
+  },
+  "nv-5090": {
+   "titulo": "NVIDIA: GeForce RTX 5090, especificaciones",
+   "url": "https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5090/"
+  },
+  "nv-ug-5090": {
+   "titulo": "NVIDIA: GeForce RTX 5090 Founders Edition, guía de usuario (PDF)",
+   "url": "https://www.nvidia.com/content/geforce-gtx/geforce-rtx-5090-user-guide-r2.pdf"
+  },
+  "sr-5090": {
+   "titulo": "StorageReview: NVIDIA GeForce RTX 5090 Review (23-01-2025)",
+   "url": "https://www.storagereview.com/review/nvidia-geforce-rtx-5090-review-pushing-boundaries-with-ai-acceleration?amp"
+  },
+  "wp-rtx50": {
+   "titulo": "Wikipedia (en): GeForce RTX 50 series, tabla de especificaciones (fila «Interface»)",
+   "url": "https://en.wikipedia.org/wiki/GeForce_RTX_50_series"
+  },
+  "fps-5090": {
+   "titulo": "The FPS Review: NVIDIA GeForce RTX 5090 Founders Edition (23-01-2025)",
+   "url": "https://www.thefpsreview.com/2025/01/23/nvidia-geforce-rtx-5090-founders-edition-video-card-review/"
+  },
+  "nv-5080": {
+   "titulo": "NVIDIA: GeForce RTX 5080, especificaciones",
+   "url": "https://nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5080"
+  },
+  "nv-ug-5080": {
+   "titulo": "NVIDIA: GeForce RTX 5080 Founders Edition, guía de usuario (PDF)",
+   "url": "https://www.nvidia.com/content/geforce-gtx/geforce-rtx-5080-user-guide-r2.pdf"
+  },
+  "sr-5080": {
+   "titulo": "StorageReview: NVIDIA GeForce RTX 5080 Review (29-01-2025)",
+   "url": "https://www.storagereview.com/review/nvidia-geforce-rtx-5080-review-the-sweet-spot-for-ai-workloads"
+  },
+  "hwc-5080": {
+   "titulo": "HWCooling: Nvidia GeForce RTX 5080 FE Review (30-01-2025)",
+   "url": "https://hwcooling.net/en/nvidia-geforce-rtx-5080-fe-review-more-performance-same-price/2"
+  },
+  "kg-5080": {
+   "titulo": "KitGuru: Nvidia RTX 5080 Review (29-01-2025)",
+   "url": "https://www.kitguru.net/components/graphic-cards/dominic-moass/nvidia-rtx-5080-review-efficiency-gains-but-a-performance-letdown/2/"
+  },
+  "nv-5070fam": {
+   "titulo": "NVIDIA: GeForce RTX 5070 Family (5070 Ti y 5070), especificaciones",
+   "url": "https://www.nvidia.com/en-gb/geforce/graphics-cards/50-series/rtx-5070-family"
+  },
+  "th-5070ti": {
+   "titulo": "Tom's Hardware: Nvidia GeForce RTX 5070 Ti review (19-02-2025)",
+   "url": "https://www.tomshardware.com/pc-components/gpus/nvidia-geforce-rtx-5070-ti-review-asus"
+  },
+  "kg-5070ti": {
+   "titulo": "KitGuru: MSI RTX 5070 Ti Ventus 3X OC review (19-02-2025)",
+   "url": "https://www.kitguru.net/components/graphic-cards/dominic-moass/msi-rtx-5070-ti-ventus-3x-oc-review/all/1"
+  },
+  "nv-ug-5070": {
+   "titulo": "NVIDIA: GeForce RTX 5070 Founders Edition, guía de usuario (PDF)",
+   "url": "https://www.nvidia.com/content/geforce-gtx/geforce-rtx-5070-user-guide-r2.pdf"
+  },
+  "nv-5060fam": {
+   "titulo": "NVIDIA: GeForce RTX 5060 Family (5060 Ti 16/8 GB y 5060), especificaciones",
+   "url": "https://nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5060-family"
+  },
+  "th-5060ti16": {
+   "titulo": "Tom's Hardware: Nvidia GeForce RTX 5060 Ti 16GB review (16-04-2025)",
+   "url": "https://www.tomshardware.com/pc-components/gpus/nvidia-geforce-rtx-5060-ti-16gb-review/3"
+  },
+  "ts-5060ti-pcie": {
+   "titulo": "TechSpot: RTX 5060 Ti, prueba de escalado PCIe",
+   "url": "https://www.techspot.com/review/3004-nvidia-rtx-5060-ti-pcie-benchmark/"
+  },
+  "kg-5060ti16": {
+   "titulo": "KitGuru: Nvidia RTX 5060 Ti 16GB review (16-04-2025)",
+   "url": "https://www.kitguru.net/components/graphic-cards/dominic-moass/nvidia-rtx-5060-ti-16gb-review-ft-gigabyte-palit/all/1"
+  },
+  "nv-news-5060": {
+   "titulo": "NVIDIA: Ultimate Guide To GeForce RTX 5060 & 5060 Ti (19-05-2025)",
+   "url": "https://www.nvidia.com/en-us/geforce/news/ultimate-guide-to-5060/"
+  },
+  "ts-5060": {
+   "titulo": "TechSpot: análisis de la GeForce RTX 5060",
+   "url": "https://www.techspot.com/review/2992-nvidia-geforce-rtx-5060/"
+  },
+  "hh-5060": {
+   "titulo": "HotHardware: NVIDIA GeForce RTX 5060 GPU Review",
+   "url": "https://hothardware.com/reviews/nvidia-geforce-rtx-5060-blackwell-gpu-preview?page=1"
+  },
+  "nv-5050": {
+   "titulo": "NVIDIA: GeForce RTX 5050, especificaciones",
+   "url": "https://nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5050"
+  },
+  "nv-news-5050": {
+   "titulo": "NVIDIA: anuncio de la GeForce RTX 5050 de sobremesa (24-06-2025)",
+   "url": "https://nvidia.com/en-us/geforce/news/rtx-5050-desktop-gpu-and-laptops"
+  },
+  "c386-5050": {
+   "titulo": "Club386: Gigabyte GeForce RTX 5050 Windforce OC review (16-07-2025)",
+   "url": "https://club386.com/nvidia-geforce-rtx-5050-review"
+  },
+  "hwc-5050": {
+   "titulo": "HWCooling: Gigabyte GeForce RTX 5050 Gaming OC Review (11-07-2025)",
+   "url": "https://www.hwcooling.net/en/gigabyte-geforce-rtx-5050-gaming-oc-review-budget-tier/"
+  },
+  "nv-4090": {
+   "titulo": "NVIDIA: GeForce RTX 4090, especificaciones y guía de montaje",
+   "url": "https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4090.html"
+  },
+  "nv-qsg-4090": {
+   "titulo": "NVIDIA: GeForce RTX 4090 Founders Edition, guía rápida (PDF)",
+   "url": "https://www.nvidia.com/content/geforce-gtx/GeForce_RTX_4090_QSG_Rev1.pdf"
+  },
+  "wp-rtx40": {
+   "titulo": "Wikipedia (en): GeForce RTX 40 series",
+   "url": "https://en.wikipedia.org/wiki/GeForce_RTX_40_series"
+  },
+  "nv-4080fam": {
+   "titulo": "NVIDIA: GeForce RTX 4080 Family (4080 SUPER y 4080), especificaciones",
+   "url": "https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4080"
+  },
+  "fps-4080s": {
+   "titulo": "The FPS Review: NVIDIA GeForce RTX 4080 SUPER Founders Edition (27-03-2024)",
+   "url": "https://www.thefpsreview.com/2024/03/27/nvidia-geforce-rtx-4080-super-founders-edition-review-the-4080-done-right"
+  },
+  "nv-news-super": {
+   "titulo": "NVIDIA: anuncio de la serie GeForce RTX 40 SUPER (08-01-2024)",
+   "url": "https://nvidia.com/en-us/geforce/news/geforce-rtx-4080-4070-ti-4070-super-gpu"
+  },
+  "nv-qsg-4080": {
+   "titulo": "NVIDIA: GeForce RTX 4080 Founders Edition, guía rápida (PDF)",
+   "url": "https://www.nvidia.com/content/geforce-gtx/GeForce_RTX_4080_QSG_Rev1.pdf"
+  },
+  "nv-4070fam": {
+   "titulo": "NVIDIA: GeForce RTX 4070 Family (4070 Ti SUPER, 4070 Ti, 4070 SUPER y 4070), especificaciones",
+   "url": "https://nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4070-family/"
+  },
+  "kg-4070tis": {
+   "titulo": "KitGuru: Nvidia RTX 4070 Ti Super review ft. MSI (23-01-2024)",
+   "url": "https://www.kitguru.net/components/graphic-cards/dominic-moass/nvidia-rtx-4070-ti-super-review-ft-msi/all/1"
+  },
+  "th-4070ti": {
+   "titulo": "Tom's Hardware: Nvidia GeForce RTX 4070 Ti Review (04-01-2023)",
+   "url": "https://www.tomshardware.com/reviews/nvidia-geforce-rtx-4070-ti-review-a-costly-70-class-gpu/2"
+  },
+  "fps-4070s": {
+   "titulo": "The FPS Review: NVIDIA GeForce RTX 4070 SUPER Founders Edition (16-01-2024)",
+   "url": "https://www.thefpsreview.com/2024/01/16/nvidia-geforce-rtx-4070-super-founders-edition-video-card-review"
+  },
+  "nv-qsg-4070": {
+   "titulo": "NVIDIA: GeForce RTX 4070 Founders Edition, guía rápida (PDF)",
+   "url": "https://www.nvidia.com/content/geforce-gtx/GeForce_RTX_4070_QSG_Rev1.pdf"
+  },
+  "nv-4060fam": {
+   "titulo": "NVIDIA: GeForce RTX 4060 Family (4060 Ti y 4060), especificaciones y guía de montaje de la 4060 Ti Founders Edition",
+   "url": "https://www.nvidia.com/en-gb/geforce/graphics-cards/40-series/rtx-4060/"
+  },
+  "hh-4060ti": {
+   "titulo": "HotHardware: NVIDIA GeForce RTX 4060 Ti Review",
+   "url": "https://hothardware.com/reviews/nvidia-geforce-rtx-4060-ti-gpu-review"
+  },
+  "nv-news-4060": {
+   "titulo": "NVIDIA: anuncio de las GeForce RTX 4060 y RTX 4060 Ti (18-05-2023)",
+   "url": "https://www.nvidia.com/en-au/geforce/news/geforce-rtx-4060-4060ti/"
+  },
+  "kg-4060": {
+   "titulo": "KitGuru: Nvidia RTX 4060 review ft. MSI (28-06-2023)",
+   "url": "https://www.kitguru.net/components/graphic-cards/dominic-moass/nvidia-rtx-4060-review-ft-msi/all/1"
+  },
+  "th-4060": {
+   "titulo": "Tom's Hardware: Nvidia GeForce RTX 4060 Review (28-06-2023)",
+   "url": "https://www.tomshardware.com/reviews/nvidia-geforce-rtx-4060-review-asus-dual/3"
+  },
+  "nv_3090": {
+   "titulo": "NVIDIA: familia GeForce RTX 3090 (RTX 3090 Ti y RTX 3090), especificaciones",
+   "url": "https://www.nvidia.com/en-eu/geforce/graphics-cards/30-series/rtx-3090-3090ti/"
+  },
+  "nv_compare": {
+   "titulo": "NVIDIA: comparativa de especificaciones GeForce (tablas de las series RTX 30, RTX 20 y GTX 16, y tabla de tecnologías con la generación PCIe de cada serie)",
+   "url": "https://www.nvidia.com/en-eu/geforce/graphics-cards/compare/"
+  },
+  "wp_lista": {
+   "titulo": "Wikipedia (en): List of Nvidia desktop graphics processing units (columna «Bus interface»)",
+   "url": "https://en.wikipedia.org/wiki/List_of_Nvidia_desktop_graphics_processing_units"
+  },
+  "th_3090ti": {
+   "titulo": "Tom's Hardware: GeForce RTX 3090 Ti to Ship With Triple 8-Pin Power Adapter",
+   "url": "https://www.tomshardware.com/news/geforce-rtx-3090-ti-triple-8pin-power-adapter"
+  },
+  "nv_3080": {
+   "titulo": "NVIDIA: familia GeForce RTX 3080 (RTX 3080 Ti y RTX 3080 de 12 y 10 GB), especificaciones",
+   "url": "https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3080-3080ti/"
+  },
+  "th_3080_12": {
+   "titulo": "Tom's Hardware: GeForce RTX 3080 12GB Gets Official: More Cores and Higher TDP",
+   "url": "https://www.tomshardware.com/news/nvidia-geforce-rtx-3080-12gb-launch"
+  },
+  "nv_3070": {
+   "titulo": "NVIDIA: familia GeForce RTX 3070 (RTX 3070 Ti y RTX 3070), especificaciones",
+   "url": "https://www.nvidia.com/en-eu/geforce/graphics-cards/30-series/rtx-3070-3070ti.md"
+  },
+  "nv_3060": {
+   "titulo": "NVIDIA: familia GeForce RTX 3060 (RTX 3060 Ti y RTX 3060), especificaciones",
+   "url": "https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3060-3060ti/"
+  },
+  "th_3060ti_g6x": {
+   "titulo": "Tom's Hardware: Asus Launches GeForce RTX 3060 Ti GDDR6X GPUs",
+   "url": "https://www.tomshardware.com/news/asus-launches-geforce-rtx-3060-ti-gddr6x-gpus"
+  },
+  "pcw_3060": {
+   "titulo": "PCWorld: There will be no GeForce RTX 3060 Founders Edition, Nvidia confirms",
+   "url": "https://www.pcworld.com/article/393962/there-will-be-no-geforce-rtx-3060-founders-edition-nvidia-confirms.html"
+  },
+  "nv_3050": {
+   "titulo": "NVIDIA: GeForce RTX 3050 (8 GB y 6 GB), especificaciones",
+   "url": "https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3050/"
+  },
+  "wp_30": {
+   "titulo": "Wikipedia (en): GeForce RTX 30 series",
+   "url": "https://en.wikipedia.org/wiki/GeForce_RTX_30_series"
+  },
+  "nv_2080ti": {
+   "titulo": "NVIDIA: GeForce RTX 2080 Ti, especificaciones (referencia y Founders Edition)",
+   "url": "https://www.nvidia.com/content/nvidiaGDC/zz/en_ZZ/geforce/graphics-cards/rtx-2080-ti.html"
+  },
+  "wp_20": {
+   "titulo": "Wikipedia (en): GeForce RTX 20 series",
+   "url": "https://en.wikipedia.org/wiki/GeForce_RTX_20_series"
+  },
+  "nv_2080s": {
+   "titulo": "NVIDIA: GeForce RTX 2080 SUPER, especificaciones",
+   "url": "https://www.nvidia.com/en-gb/geforce/graphics-cards/rtx-2080-super/"
+  },
+  "nv_2080": {
+   "titulo": "NVIDIA: GeForce RTX 2080, especificaciones (referencia y Founders Edition)",
+   "url": "https://www.nvidia.com/content/nvidiaGDC/zz/en_ZZ/geforce/graphics-cards/rtx-2080.html"
+  },
+  "nv_2070s": {
+   "titulo": "NVIDIA: GeForce RTX 2070 SUPER, especificaciones",
+   "url": "https://www.nvidia.com/en-gb/geforce/graphics-cards/rtx-2070-super"
+  },
+  "nv_2070": {
+   "titulo": "NVIDIA: GeForce RTX 2070, especificaciones (referencia y Founders Edition)",
+   "url": "https://www.nvidia.com/en-gb/geforce/graphics-cards/rtx-2070.html"
+  },
+  "nv_2060s": {
+   "titulo": "NVIDIA: GeForce RTX 2060 SUPER, especificaciones",
+   "url": "https://www.nvidia.com/en-gb/geforce/graphics-cards/rtx-2060-super/"
+  },
+  "nv_2060": {
+   "titulo": "NVIDIA: GeForce RTX 2060 (Founders Edition de 6 GB), especificaciones",
+   "url": "https://www.nvidia.com/content/nvidiaGDC/zz/en_ZZ/geforce/graphics-cards/rtx-2060.html"
+  },
+  "nv_1660ti": {
+   "titulo": "NVIDIA: GeForce GTX 1660 Ti y GTX 1660, especificaciones",
+   "url": "https://www.nvidia.com/content/nvidiaGDC/zz/en_ZZ/geforce/graphics-cards/gtx-1660-ti.html"
+  },
+  "wp_16": {
+   "titulo": "Wikipedia (en): GeForce GTX 16 series",
+   "url": "https://en.wikipedia.org/wiki/GeForce_GTX_16_series"
+  },
+  "nv_1660s": {
+   "titulo": "NVIDIA: GeForce GTX 1660 SUPER, especificaciones",
+   "url": "https://www.nvidia.com/en-my/geforce/graphics-cards/gtx-1660-super"
+  },
+  "nv_1650s": {
+   "titulo": "NVIDIA: GeForce GTX 1650 SUPER, especificaciones",
+   "url": "https://www.nvidia.com/en-ph/geforce/graphics-cards/gtx-1650-super/"
+  },
+  "nv_1650": {
+   "titulo": "NVIDIA: GeForce GTX 1650 (GDDR6 y GDDR5), especificaciones",
+   "url": "https://www.nvidia.com/en-my/geforce/graphics-cards/gtx-1650/"
+  },
+  "nv_1080ti_guia": {
+   "titulo": "NVIDIA: guía de instalación de la GeForce GTX 1080 Ti (PDF)",
+   "url": "https://www.nvidia.com/content/geforce-gtx/gtx_1080_ti_user_guide.pdf"
+  },
+  "hh_1080ti": {
+   "titulo": "HotHardware: NVIDIA GeForce GTX 1080 Ti Review",
+   "url": "https://hothardware.com/reviews/nvidia-geforce-gtx-1080-ti-performance-review-with-intel-and-ryzen?page=1"
+  },
+  "gn_1080ti": {
+   "titulo": "GamersNexus: Official NVIDIA GTX 1080 Ti Specs Announced",
+   "url": "https://gamersnexus.net/news-pc/2820-official-nvidia-gtx-1080-ti-specs-announced"
+  },
+  "hh_1080": {
+   "titulo": "HotHardware: NVIDIA GeForce GTX 1080 Performance Review: Pascal, The New King",
+   "url": "https://amp.hothardware.com/reviews/nvidia-geforce-gtx-1080-pascal-gpu-review?page=1"
+  },
+  "nv_1080_noticia": {
+   "titulo": "NVIDIA: «GeForce GTX 1080 Now Available» (artículo con tabla de especificaciones)",
+   "url": "https://www.nvidia.com/en-us/geforce/news/geforce-gtx-1080-gaming-perfected/"
+  },
+  "bt_1070ti": {
+   "titulo": "bit-tech: Nvidia GeForce GTX 1070 Ti Founders Edition Review",
+   "url": "https://bit-tech.net/reviews/tech/graphics/nvidia-geforce-gtx-1070-ti-founders-edition-review/1/"
+  },
+  "th_1070ti": {
+   "titulo": "Tom's Hardware: Nvidia Officially Details GTX 1070 Ti, Opens Founder's Edition Pre-Orders",
+   "url": "https://www.tomshardware.com/uk/news/nvidia-geforce-gtx-1070-ti,35773.html"
+  },
+  "hh_1070ti": {
+   "titulo": "HotHardware: NVIDIA GeForce GTX 1070 Ti Review",
+   "url": "https://hothardware.com/reviews/nvidia-geforce-gtx-1070-ti-review"
+  },
+  "th_1070": {
+   "titulo": "Tom's Hardware: Nvidia GTX 1070: The Full Specifications",
+   "url": "https://www.tomshardware.com/news/geforce-gtx-1070-specifications,31822.html"
+  },
+  "hh_1060": {
+   "titulo": "HotHardware: NVIDIA GeForce GTX 1060 Review: Pascal Value And Performance Per Watt",
+   "url": "https://hothardware.com/reviews/nvidia-geforce-gtx-1060-review?page=1"
+  },
+  "nv_1060_noticia": {
+   "titulo": "NVIDIA: «GeForce GTX 1060 Out Now» (artículo con tabla de especificaciones)",
+   "url": "https://www.nvidia.com/en-us/geforce/news/nvidia-geforce-gtx-1060/"
+  },
+  "gn_1060_3gb": {
+   "titulo": "GamersNexus: Official GTX 1060 3GB Specs",
+   "url": "https://gamersnexus.net/news-pc/2567-official-gtx-1060-3gb-specs-and-sm-disabled"
+  },
+  "th_1050": {
+   "titulo": "Tom's Hardware: Nvidia Announces GTX 1050 Ti, GTX 1050 Graphics Cards, But No Founder's Edition",
+   "url": "https://www.tomshardware.com/news/nvidia-geforce-gtx-1050ti-1050,32877.html"
+  },
+  "nv_gt1030": {
+   "titulo": "NVIDIA: GeForce GT 1030, especificaciones",
+   "url": "https://www.nvidia.com/en-us/geforce/graphics-cards/gt-1030/specifications/"
+  },
+  "nv_titanxp": {
+   "titulo": "NVIDIA: NVIDIA TITAN Xp, especificaciones (web de NVIDIA en checo)",
+   "url": "https://www.nvidia.com/cs-cz/titan/titan-xp/"
+  },
+  "th_titanxp": {
+   "titulo": "Tom's Hardware: Nvidia Titan Xp 12GB Review",
+   "url": "https://www.tomshardware.com/reviews/nvidia-titan-xp%2C5066.html"
+  },
+  "nv_titanx_guia": {
+   "titulo": "NVIDIA: guía de instalación de la NVIDIA TITAN X (Pascal, 2016) (PDF)",
+   "url": "https://www.nvidia.com/content/geforce-gtx/NVIDIA_TITAN_X_User_Guide.pdf"
+  },
+  "hh_titanx": {
+   "titulo": "HotHardware: NVIDIA TITAN X Review: The Pascal Beast Unleashed",
+   "url": "https://hothardware.com/reviews/nvidia-titan-x-review?page=1"
+  },
+  "nv_titanrtx_guia": {
+   "titulo": "NVIDIA: guía de usuario de la NVIDIA TITAN RTX (PDF)",
+   "url": "https://www.nvidia.com/content/geforce-gtx/NVIDIA_TITAN_RTX_User_Guide.pdf"
+  },
+  "th_titanrtx": {
+   "titulo": "Tom's Hardware: Nvidia Unleashes the Titan RTX",
+   "url": "https://www.tomshardware.com/news/nvidia-titan-rtx-specs-pricing,38184.html"
+  },
+  "nv_titanv": {
+   "titulo": "NVIDIA: NVIDIA TITAN V, especificaciones (web de NVIDIA en alemán, Austria)",
+   "url": "https://www.nvidia.com/de-at/titan/titan-v/"
+  },
+  "amd-9070xt": {
+   "titulo": "AMD: Radeon RX 9070 XT, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/9000-series/amd-radeon-rx-9070xt.html"
+  },
+  "nbc-9070-sin-mba": {
+   "titulo": "Notebookcheck (22/02/2025): AMD no venderá los diseños de referencia de la RX 9070 y 9070 XT",
+   "url": "https://www.notebookcheck.net/AMD-will-not-compete-with-AIB-partners-with-RX-9070-series-reference-designs.965674.0.html"
+  },
+  "club386-sapphire-9070": {
+   "titulo": "Club386 (28/02/2025): Sapphire RX 9070 series; Nitro+ con 12V-2x6, Pure y Pulse con dos 8 pines",
+   "url": "https://www.club386.com/sapphire-unleashes-its-rx-9070-series-featuring-a-12v-2x6-connector"
+  },
+  "amd-9070": {
+   "titulo": "AMD: Radeon RX 9070, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/9000-series/amd-radeon-rx-9070.html"
+  },
+  "amd-9070gre": {
+   "titulo": "AMD: Radeon RX 9070 GRE, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/9000-series/amd-radeon-rx-9070-gre.html"
+  },
+  "hh-9070gre": {
+   "titulo": "HotHardware: análisis de la AMD Radeon RX 9070 GRE",
+   "url": "https://hothardware.com/reviews/amd-radeon-rx-9070-gre-review"
+  },
+  "amd-9060xt-16": {
+   "titulo": "AMD: Radeon RX 9060 XT (16GB), especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/9000-series/amd-radeon-rx-9060xt.html"
+  },
+  "tt-9060xt-sin-mba": {
+   "titulo": "TweakTown (15/05/2025): AMD presenta la RX 9060 XT con un diseño de referencia «not for sale»",
+   "url": "https://www.tweaktown.com/news/105254/amd-teases-radeon-rx-9060-xt-at-computex-with-not-for-sale-reference-design/index.html"
+  },
+  "amd-9060xt-8": {
+   "titulo": "AMD: Radeon RX 9060 XT (8GB), especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/9000-series/amd-radeon-rx-9060xt-8gb.html?specs=1"
+  },
+  "amd-9060": {
+   "titulo": "AMD: Radeon RX 9060, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/9000-series/amd-radeon-rx-9060.html"
+  },
+  "toms-9060-si": {
+   "titulo": "Tom's Hardware (04/08/2025): la RX 9060 es solo para integradores de sistemas",
+   "url": "https://www.tomshardware.com/pc-components/gpu-drivers/amd-quietly-announces-radeon-rx-9060-alongside-new-adrenalin-driver-new-entry-level-gpu-is-for-select-system-integrators-only"
+  },
+  "amd-7900xtx": {
+   "titulo": "AMD: Radeon RX 7900 XTX, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/7000-series/amd-radeon-rx-7900xtx.html"
+  },
+  "wiki-lista-amd": {
+   "titulo": "Wikipedia (en): List of AMD graphics processing units (columna «Bus interface»)",
+   "url": "https://en.wikipedia.org/wiki/List_of_AMD_graphics_processing_units"
+  },
+  "kitguru-7900xtx": {
+   "titulo": "KitGuru (12/12/2022): análisis de la AMD RX 7900 XTX de referencia",
+   "url": "https://www.kitguru.net/components/graphic-cards/dominic-moass/amd-rx-7900-xtx-review/2"
+  },
+  "amd-7900xt": {
+   "titulo": "AMD: Radeon RX 7900 XT, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/7000-series/amd-radeon-rx-7900xt.html"
+  },
+  "wiki-rx7000": {
+   "titulo": "Wikipedia (en): Radeon RX 7000 series",
+   "url": "https://en.wikipedia.org/wiki/AMD_Radeon_RX_7000_series"
+  },
+  "amd-7900gre": {
+   "titulo": "AMD: Radeon RX 7900 GRE, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/7000-series/amd-radeon-rx-7900-gre.html"
+  },
+  "soyacincau-7900gre": {
+   "titulo": "SoyaCincau (27/02/2024): RX 7900 GRE, precio y especificaciones (fuente de 700 W)",
+   "url": "https://soyacincau.com/2024/02/27/amd-radeon-rx-7900-gre-official-price-specs-launch/"
+  },
+  "kitguru-7900gre": {
+   "titulo": "KitGuru (26/02/2024): análisis de la AMD RX 7900 GRE de referencia (MBA)",
+   "url": "https://www.kitguru.net/components/graphic-cards/dominic-moass/amd-rx-7900-gre-review/all/1"
+  },
+  "toms-7900gre": {
+   "titulo": "Tom's Hardware: análisis de la RX 7900 GRE (lanzamiento global vía socios)",
+   "url": "https://www.tomshardware.com/pc-components/gpus/amd-radeon-rx-7900-gre-review/2"
+  },
+  "amd-7800xt": {
+   "titulo": "AMD: Radeon RX 7800 XT, especificaciones",
+   "url": "https://amd.com/en/products/graphics/desktops/radeon/7000-series/amd-radeon-rx-7800-xt.html"
+  },
+  "toms-7800xt-7700xt": {
+   "titulo": "Tom's Hardware (25/08/2023): todas las RX 7800 XT y RX 7700 XT; sin MBA de la 7700 XT",
+   "url": "https://www.tomshardware.com/news/all-the-amd-rx-7800-xt-and-rx-7700-xt-graphics-cards"
+  },
+  "amd-qsg-7800xt": {
+   "titulo": "AMD: guía rápida de instalación de la AMD Radeon RX 7800 XT (PDF)",
+   "url": "https://www.amd.com/content/dam/amd/en/documents/radeon-tech-docs/user-guides/quick-start-guide-amd-radeon-7800xt.pdf"
+  },
+  "amd-pr-7800xt-7700xt": {
+   "titulo": "AMD (nota de prensa, 25/08/2023): Radeon RX 7800 XT y RX 7700 XT; solo la 7800 XT se vende también en AMD.com",
+   "url": "https://www.amd.com/en/newsroom/press-releases/2023-8-25-new-amd-radeon-rx-7800-xt-and-radeon-rx-7700-xt-gr.html"
+  },
+  "amd-7700xt": {
+   "titulo": "AMD: Radeon RX 7700 XT, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/7000-series/amd-radeon-rx-7700-xt.html"
+  },
+  "pcgh-7700xt-mba": {
+   "titulo": "PC Games Hardware (29/12/2025): aparece un prototipo del diseño de referencia nunca lanzado de la RX 7700 XT",
+   "url": "https://www.pcgameshardware.de/Radeon-RX-7700-XT-Grafikkarte-279842/News/Prototyp-AMDs-Referenzdesign-aufgetaucht-1489843/"
+  },
+  "amd-7600xt": {
+   "titulo": "AMD: Radeon RX 7600 XT, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/7000-series/amd-radeon-rx-7600-xt.html"
+  },
+  "pcgamer-7600xt": {
+   "titulo": "PC Gamer (08/01/2024): AMD anuncia la RX 7600 XT, sin tarjeta de referencia",
+   "url": "https://pcgamer.com/amd-announces-the-radeon-rx-7600-xt-bringing-16gb-of-vram-to-its-lowliest-rdna-3-chip"
+  },
+  "amd-7600": {
+   "titulo": "AMD: Radeon RX 7600, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/7000-series/amd-radeon-rx-7600.html"
+  },
+  "igorslab-7600": {
+   "titulo": "igor'sLAB: AMD Radeon RX 7600 8 GB MBA a prueba",
+   "url": "https://www.igorslab.de/en/amd-radeon-rx-7600-8-gb-mba-im-test-eine-leise-und-kurze-rtx-3060-aber-von-amd/1/"
+  },
+  "amd-qsg-7600": {
+   "titulo": "AMD: guía rápida de instalación de la AMD Radeon RX 7600 (PDF)",
+   "url": "https://www.amd.com/content/dam/amd/en/documents/radeon-tech-docs/user-guides/quick-start-guide-amd-radeon-rx7600.pdf"
+  },
+  "amd-6950xt": {
+   "titulo": "AMD: Radeon RX 6950 XT, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/6000-series/amd-radeon-rx-6950-xt.html"
+  },
+  "wiki-rx6000": {
+   "titulo": "Wikipedia (en): Radeon RX 6000 series (tabla de modelos de sobremesa)",
+   "url": "https://en.wikipedia.org/wiki/AMD_Radeon_RX_6000_series"
+  },
+  "anandtech-6x50": {
+   "titulo": "AnandTech (10/05/2022): AMD lanza las RX 6950 XT, 6750 XT y 6650 XT",
+   "url": "https://at-web1.www.anandtech.com/show/17381/amd-releases-radeon-rx-6950-xt-6750-xt-and-6650-xt"
+  },
+  "computerbase-6x50": {
+   "titulo": "ComputerBase (mayo 2022): RX 6650 XT, 6750 XT y 6950 XT a prueba",
+   "url": "https://www.computerbase.de/2022-05/amd-radeon-rx-6650-xt-6750-xt-6950-xt-review-test/"
+  },
+  "amd-pr-6x50": {
+   "titulo": "AMD (nota de prensa del 10/05/2022, reproducida por Edge AI and Vision Alliance): RX 6950 XT, 6750 XT y 6650 XT",
+   "url": "https://www.edge-ai-vision.com/2022/05/amd-announces-three-new-radeon-rx-6000-series-graphics-cards-and-first-games-adding-support-for-amd-fidelityfx-super-resolution-2-0/"
+  },
+  "amd-6900xt": {
+   "titulo": "AMD: Radeon RX 6900 XT, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/6000-series/amd-radeon-rx-6900-xt.html"
+  },
+  "toms-6900xt": {
+   "titulo": "Tom's Hardware: análisis de la AMD Radeon RX 6900 XT",
+   "url": "https://www.tomshardware.com/reviews/amd-radeon-rx-6900-xt-review"
+  },
+  "amd-6800xt": {
+   "titulo": "AMD: Radeon RX 6800 XT, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/6000-series/amd-radeon-rx-6800-xt.html"
+  },
+  "toms-6800xt-6800": {
+   "titulo": "Tom's Hardware (18/11/2020): análisis de las RX 6800 XT y RX 6800 de referencia",
+   "url": "https://www.tomshardware.com/news/the-amd-radeon-rx-6800-xt-and-rx-6800-review"
+  },
+  "amd-6800": {
+   "titulo": "AMD: Radeon RX 6800, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/6000-series/amd-radeon-rx-6800.html"
+  },
+  "amd-6750xt": {
+   "titulo": "AMD: Radeon RX 6750 XT, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/6000-series/amd-radeon-rx-6750-xt.html"
+  },
+  "amd-6700xt": {
+   "titulo": "AMD: Radeon RX 6700 XT, especificaciones",
+   "url": "https://amd.com/en/products/graphics/desktops/radeon/6000-series/amd-radeon-rx-6700-xt.html"
+  },
+  "amd-qsg-6700xt": {
+   "titulo": "AMD: guía rápida de instalación de la AMD Radeon RX 6700 XT (PDF)",
+   "url": "https://www.amd.com/content/dam/amd/en/documents/radeon-tech-docs/user-guides/quick-start-guide-amd-radeon-rx6700xt.pdf"
+  },
+  "amd-6700": {
+   "titulo": "AMD: Radeon RX 6700, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/6000-series/amd-radeon-rx-6700.html"
+  },
+  "club386-6700": {
+   "titulo": "Club386 (06/06/2022): Sapphire lanza discretamente la RX 6700",
+   "url": "https://www.club386.com/sapphire-quietly-launches-amd-radeon-rx-6700-graphics-card"
+  },
+  "pcgh-6700": {
+   "titulo": "PC Games Hardware (03/06/2022): Sapphire hace oficial la RX 6700",
+   "url": "https://www.pcgameshardware.de/Grafikkarten-Grafikkarte-97980/News/AMD-Radeon-RX-6700-Sapphire-macht-neue-Grafikkarte-offiziell-1396401/"
+  },
+  "amd-6650xt": {
+   "titulo": "AMD: Radeon RX 6650 XT, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/6000-series/amd-radeon-rx-6650-xt.html"
+  },
+  "amd-6600xt": {
+   "titulo": "AMD: Radeon RX 6600 XT, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/6000-series/amd-radeon-rx-6600-xt.html"
+  },
+  "toms-6600xt": {
+   "titulo": "Tom's Hardware (10/08/2021): análisis de la RX 6600 XT (solo socios)",
+   "url": "https://www.tomshardware.com/reviews/amd-radeon-rx-6600-xt-review/2"
+  },
+  "amd-6600": {
+   "titulo": "AMD: Radeon RX 6600, especificaciones",
+   "url": "https://amd.com/en/products/graphics/desktops/radeon/6000-series/amd-radeon-rx-6600.html"
+  },
+  "amd-pr-6600": {
+   "titulo": "AMD (nota de prensa, 13/10/2021): Radeon RX 6600",
+   "url": "https://ir.amd.com/news-events/press-releases/detail/1023/amd-radeon-rx-6600-graphics-card-delivers-incredible"
+  },
+  "amd-6500xt": {
+   "titulo": "AMD: Radeon RX 6500 XT, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/6000-series/amd-radeon-rx-6500-xt.html"
+  },
+  "amd-guia-rx6000": {
+   "titulo": "AMD: Radeon RX 6000 Series Graphics Cards Quick Reference Guide (PDF, oct. 2023)",
+   "url": "https://www.amd.com/content/dam/amd/en/documents/partner-hub/radeon/amd-radeon-rx-6000-series-quick-reference-competitive.pdf"
+  },
+  "toms-6500xt": {
+   "titulo": "Tom's Hardware (04/01/2022): AMD detalla las RX 6500 XT y RX 6400",
+   "url": "https://www.tomshardware.com/news/amd-radeon-rx-6500xt-6400xt-gpus"
+  },
+  "amd-pr-6500xt-6400": {
+   "titulo": "AMD (nota de prensa, 04/01/2022): Radeon RX 6500 XT y RX 6400",
+   "url": "https://ir.amd.com/news-events/press-releases/detail/1038/amd-unveils-new-power-efficient-high-performance-mobile-graphics-for-premium-and-thin-and-light-laptops-and-new-desktop-graphics-cards"
+  },
+  "amd-6400": {
+   "titulo": "AMD: Radeon RX 6400, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/desktops/radeon/6000-series/amd-radeon-rx-6400.html"
+  },
+  "amd-r9700": {
+   "titulo": "AMD: Radeon AI PRO R9700, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/workstations/radeon-ai-pro/ai-9000-series/amd-radeon-ai-pro-r9700.html"
+  },
+  "pcgh-r9700-ref": {
+   "titulo": "PC Games Hardware (30/05/2025): PowerColor saca la R9700 con el diseño de referencia",
+   "url": "https://www.pcgameshardware.de/Radeon-RX-9070-XT-Grafikkarte-281023/News/AI-Pro-R9700-im-Referenzdesign-1473935/"
+  },
+  "pcgh-r9700-sapphire": {
+   "titulo": "PC Games Hardware (29/07/2025): Sapphire usa el diseño de referencia en la R9700",
+   "url": "https://www.pcgameshardware.de/Grafikkarten-Grafikkarte-97980/News/Sapphire-Radeon-AI-Pro-R9700-vorgestellt-1478466/"
+  },
+  "toms-r9700-asrock": {
+   "titulo": "Tom's Hardware (20/06/2025): ASRock R9700 Creator, basada en la R9700 de referencia, con 12V-2x6",
+   "url": "https://www.tomshardware.com/pc-components/gpus/asrock-preps-radeon-rx-ai-pro-r9700-creator-for-ai-and-workstation-users-blower-card-adopts-16-pin-connector-features-300w-tbp-rating"
+  },
+  "sth-r9700": {
+   "titulo": "ServeTheHome: análisis de la ASRock Creator Radeon AI PRO R9700",
+   "url": "https://servethehome.com/asrock-creator-radeon-ai-pro-r9700-review-workstation-inference-amd-style"
+  },
+  "fpsreview-r9700": {
+   "titulo": "The FPS Review (25/10/2025): lanzamiento amplio de la R9700; PowerColor 32G-B con 16 pines y adaptador de 2x 8 pines",
+   "url": "https://www.thefpsreview.com/2025/10/25/amd-radeon-ai-pro-r9700-featuring-32-gb-gddr6-gets-wide-release-on-october-27-for-1299-powercolor-reveals-12hwpwr-model/"
+  },
+  "gigabyte-r9700": {
+   "titulo": "Gigabyte: Radeon AI PRO R9700 AI TOP 32G (rev. 1.1), especificaciones",
+   "url": "https://www.gigabyte.com/Graphics-Card/GV-R9700AI-TOP-32GD-rev-11/sp"
+  },
+  "amd-r9700s": {
+   "titulo": "AMD: Radeon AI PRO R9700S, especificaciones",
+   "url": "https://www.amd.com/en/products/graphics/workstations/radeon-ai-pro/ai-9000-series/amd-radeon-ai-pro-r9700s.html"
+  },
+  "pcgh-r9700s": {
+   "titulo": "PC Games Hardware (11/12/2025): R9700S pasiva con 12V-2x6 y 300 W",
+   "url": "https://www.pcgameshardware.de/Radeon-AI-Pro-R9700-Grafikkarte-281741/News/Neue-Profi-Grafikkarten-mit-32-GiByte-passiv-1488827/"
+  },
+  "wccftech-r9700s": {
+   "titulo": "Wccftech (14/12/2025): Sapphire, PowerColor y ASRock lanzan sus R9700S pasivas",
+   "url": "https://wccftech.com/sapphire-powercolor-and-asrock-launch-their-fanless-radeon-ai-pro-r9700s-and-r9600d-editions/"
+  },
+  "amd-rx5700xt": {
+   "titulo": "AMD: Radeon RX 5700 XT, especificaciones (página de controladores y soporte)",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/graphics/radeon-rx/radeon-rx-5000-series/amd-radeon-rx-5700-xt.html"
+  },
+  "amd-np-rx5700": {
+   "titulo": "AMD, nota de prensa (7 jul 2019): disponibilidad de la serie Radeon RX 5700 con PCIe 4.0",
+   "url": "https://ir.amd.com/news-events/press-releases/detail/899/amd-unleashes-ultimate-pc-gaming-platform-with-worldwide-availability-of-amd-radeon-rx-5700-series-graphics-cards-and-amd-ryzen-3000-series-desktop-processors"
+  },
+  "toms-rx5700": {
+   "titulo": "Tom's Hardware: AMD Radeon RX 5700 XT and Radeon RX 5700 Review (consumo)",
+   "url": "https://www.tomshardware.com/reviews/amd-radeon-rx_5700-rx_5700_xt%2C6216-4.html"
+  },
+  "amd-rx5700": {
+   "titulo": "AMD: Radeon RX 5700, especificaciones (página de controladores y soporte)",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/graphics/radeon-rx/radeon-rx-5000-series/amd-radeon-rx-5700.html"
+  },
+  "amd-rx5600xt": {
+   "titulo": "AMD: Radeon RX 5600 XT, especificaciones (página de controladores y soporte)",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/graphics/radeon-rx/radeon-rx-5000-series/amd-radeon-rx-5600-xt.html"
+  },
+  "amd-np-rx5600": {
+   "titulo": "AMD, nota de prensa (6 ene 2020): serie Radeon RX 5600 con PCIe 4.0",
+   "url": "https://ir.amd.com/news-events/press-releases/detail/925/amd-unveils-four-new-desktop-and-mobile-gpus-including-amd-radeon-rx-5600-series-ultimate-1080p-gaming-breath-taking-visuals-and-game-changing-software-features"
+  },
+  "anandtech-rx5600xt": {
+   "titulo": "AnandTech: The AMD Radeon RX 5600 XT Review (copia en at-web1; www redirige al foro)",
+   "url": "https://at-web1.www.anandtech.com/show/15422/the-amd-radeon-rx-5600-xt-review/3"
+  },
+  "amd-rx5500xt": {
+   "titulo": "AMD: Radeon RX 5500 XT, especificaciones (página de controladores y soporte)",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/graphics/radeon-rx/radeon-rx-5000-series/amd-radeon-rx-5500-xt.html"
+  },
+  "amd-np-rx5500": {
+   "titulo": "AMD, nota de prensa (7 oct 2019): serie Radeon RX 5500 con PCIe 4.0",
+   "url": "https://ir.amd.com/news-events/press-releases/detail/909/amd-introduces-radeon-rx-5500-series-graphics-superior-visual-fidelity-advanced-features-and-high-performance-gaming-experiences"
+  },
+  "toms-rx5500xt": {
+   "titulo": "Tom's Hardware: AMD Radeon RX 5500 XT Review: 7nm RDNA on a Budget",
+   "url": "https://www.tomshardware.com/reviews/amd-radeon-rx-5500-xt-4gb"
+  },
+  "toms-rx590": {
+   "titulo": "Tom's Hardware: Radeon RX 590 Review: AMD's First 12nm GPU Hits 225W",
+   "url": "https://www.tomshardware.com/reviews/amd-radeon-rx-590,5907.html"
+  },
+  "amd-rx590": {
+   "titulo": "AMD: Radeon RX 590, especificaciones (página de controladores y soporte; sin consumo ni fuente)",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/graphics/radeon-600-500-400/radeon-rx-500-series/radeon-rx-590.html"
+  },
+  "anandtech-rx590": {
+   "titulo": "AnandTech: The AMD Radeon RX 590 Review, feat. XFX & PowerColor (copia en at-web1; www redirige al foro)",
+   "url": "https://at-web1.www.anandtech.com/show/13570/the-amd-radeon-rx-590-review/3"
+  },
+  "amd-rx580": {
+   "titulo": "AMD: Radeon RX 580, especificaciones (página de controladores y soporte)",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/graphics/radeon-600-500-400/radeon-rx-500-series/radeon-rx-580.html"
+  },
+  "anandtech-rx580-rx570": {
+   "titulo": "AnandTech: The AMD Radeon RX 580 & RX 570 Review, «The Test» (copia en at-web1; www redirige al foro)",
+   "url": "https://at-web1.www.anandtech.com/show/11278/amd-radeon-rx-580-rx-570-review/4"
+  },
+  "toms-rx580": {
+   "titulo": "Tom's Hardware: AMD Radeon RX 580 8GB Review",
+   "url": "https://www.tomshardware.com/reviews/amd-radeon-rx-580-review,5020.html"
+  },
+  "amd-rx570": {
+   "titulo": "AMD: Radeon RX 570 (OEM), especificaciones (página de controladores y soporte)",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/graphics/radeon-600-500-400/radeon-rx-500-series/radeon-rx-570.html"
+  },
+  "toms-rx570": {
+   "titulo": "Tom's Hardware: AMD Radeon RX 570 4GB Review",
+   "url": "https://www.tomshardware.com/reviews/amd-radeon-rx-570-4gb%2C5028.html"
+  },
+  "amd-rx560": {
+   "titulo": "AMD: Radeon RX 560, especificaciones (página de controladores y soporte)",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/graphics/radeon-600-500-400/radeon-rx-500-series/radeon-rx-560.html"
+  },
+  "toms-rx560": {
+   "titulo": "Tom's Hardware: AMD Radeon RX 560 4GB Review",
+   "url": "https://www.tomshardware.com/reviews/amd-radeon-rx-560-4gb%2C5254.html"
+  },
+  "amd-rx550": {
+   "titulo": "AMD: Radeon RX 550, especificaciones (página de controladores y soporte)",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/graphics/radeon-600-500-400/radeon-rx-500-series/radeon-rx-550.html"
+  },
+  "toms-rx550": {
+   "titulo": "Tom's Hardware: AMD Radeon RX 550 2GB Review",
+   "url": "https://www.tomshardware.com/reviews/amd-radeon-rx-550-2gb,5034.html"
+  },
+  "amd-rx480": {
+   "titulo": "AMD: Radeon RX 480, especificaciones (página de controladores y soporte)",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/graphics/radeon-600-500-400/radeon-rx-400-series/radeon-rx-480.html"
+  },
+  "pcper-rx480": {
+   "titulo": "PC Perspective: The AMD Radeon RX 480 Review, «The Radeon RX 480 Reference Card»",
+   "url": "https://pcper.com/2016/06/the-amd-radeon-rx-480-review-the-polaris-promise/5/"
+  },
+  "hothardware-rx480": {
+   "titulo": "HotHardware: AMD Radeon RX 480 Review: Polaris Hitting The Sweet Spot",
+   "url": "https://hothardware.com/reviews/amd-radeon-rx-480-polaris-gpu-review-hitting-the-sweet-spot?page=1"
+  },
+  "amd-rx470": {
+   "titulo": "AMD: Radeon RX 470, especificaciones (página de controladores y soporte)",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/graphics/radeon-600-500-400/radeon-rx-400-series/radeon-rx-470.html"
+  },
+  "amd-rx460": {
+   "titulo": "AMD: Radeon RX 460, especificaciones (página de controladores y soporte)",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/graphics/radeon-600-500-400/radeon-rx-400-series/radeon-rx-460.html"
+  },
+  "toms-rx460": {
+   "titulo": "Tom's Hardware: AMD Radeon RX 460 Review",
+   "url": "https://www.tomshardware.com/reviews/amd-radeon-rx-460,4707.html"
+  },
+  "amd-vega64": {
+   "titulo": "AMD: Radeon RX Vega 64, especificaciones (página de controladores y soporte)",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/graphics/radeon-rx/radeon-rx-vega-series/radeon-rx-vega-64.html"
+  },
+  "toms-vega64": {
+   "titulo": "Tom's Hardware: AMD Radeon RX Vega 64 8GB Review",
+   "url": "https://www.tomshardware.com/reviews/amd-radeon-rx-vega-64,5173.html"
+  },
+  "hexus-vega": {
+   "titulo": "HEXUS: Review: AMD Radeon RX Vega 64 and Radeon RX Vega 56 (página 3)",
+   "url": "https://m.hexus.net/tech/reviews/graphics/108889-amd-radeon-rx-vega-64-radeon-rx-vega-56/?page=3"
+  },
+  "amd-vega56": {
+   "titulo": "AMD: Radeon RX Vega 56, especificaciones (página de controladores y soporte)",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/graphics/radeon-rx/radeon-rx-vega-series/radeon-rx-vega-56.html"
+  },
+  "amd-radeon-vii": {
+   "titulo": "AMD: Radeon VII, especificaciones (página de controladores y soporte)",
+   "url": "https://www.amd.com/en/support/downloads/drivers.html/graphics/radeon-rx/radeon-rx-vega-series/amd-radeon-vii.html"
+  },
+  "anandtech-radeon-vii": {
+   "titulo": "AnandTech: The AMD Radeon VII Review, «Meet The Radeon VII» (copia en at-web1; www redirige al foro)",
+   "url": "https://at-web1.www.anandtech.com/show/13923/the-amd-radeon-vii-review/4"
+  },
+  "intel-b580": {
+   "titulo": "Intel: Arc B580, especificaciones",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/241598/intel-arc-b580-graphics/specifications.html"
+  },
+  "intel-guia-escritorio": {
+   "titulo": "Intel: Intel Arc Graphics, Desktop Quick Start Guide (artículo 000091128)",
+   "url": "https://www.intel.com/content/www/us/en/support/articles/000091128/graphics/intel-arc-dedicated-graphics-family.html"
+  },
+  "intel-b570": {
+   "titulo": "Intel: Arc B570, especificaciones",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/241676/intel-arc-b570-graphics/specifications.html"
+  },
+  "intel-lanzamiento-serie-b": {
+   "titulo": "Intel Newsroom: Intel Launches Arc B-Series Graphics Cards (3 dic 2024)",
+   "url": "https://download.intel.com/newsroom/archive/2025/en-us-2024-12-03-intel-launches-arc-bseries-graphics-cards.pdf"
+  },
+  "intel-integracion-serie-a": {
+   "titulo": "Intel: Intel Arc A-Series Discrete Graphics Card Integration Checks (artículo 000093015)",
+   "url": "https://www.intel.com/content/www/us/en/support/articles/000093015/graphics.html"
+  },
+  "intel-a770": {
+   "titulo": "Intel: Arc A770 (16 GB), especificaciones",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/229151/intel-arc-a770-graphics-16gb/specifications.html"
+  },
+  "intel-conectores-le": {
+   "titulo": "Intel: How to Connect Power to an Intel Arc Alchemist Graphics Limited Edition Card (artículo 000092523)",
+   "url": "https://www.intel.com/content/www/us/en/support/articles/000092523/graphics.html"
+  },
+  "intel-rebar-serie-a": {
+   "titulo": "Intel: Do You Need a Resizable BAR to Use Intel Arc A-Series Graphics? (artículo 000092416)",
+   "url": "https://www.intel.com/content/www/us/en/support/articles/000092416/graphics.html"
+  },
+  "intel-a750": {
+   "titulo": "Intel: Arc A750, especificaciones",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/227954/intel-arc-a750-graphics/specifications.html"
+  },
+  "intel-a580": {
+   "titulo": "Intel: Arc A580, especificaciones",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/227961/intel-arc-a580-graphics/specifications.html"
+  },
+  "intel-nota-a580": {
+   "titulo": "Intel Newsroom: Intel Arc A580 Graphics Available Worldwide",
+   "url": "https://newsroom.intel.com/client-computing/intel-arc-a580-graphics-available-worldwide"
+  },
+  "intel-a380": {
+   "titulo": "Intel: Arc A380, especificaciones",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/227959/intel-arc-a380-graphics/specifications.html"
+  },
+  "intel-datasheet-a380-a310": {
+   "titulo": "Intel: datasheet Intel Arc A380 and A310 Graphics",
+   "url": "https://cdrdv2-public.intel.com/790111/Datasheet-Intel-Arc-A380-and-A310-Graphics.pdf"
+  },
+  "intel-guia-a380": {
+   "titulo": "Intel: Arc A380 Product Guide V1.3 (feb 2024)",
+   "url": "https://cdrdv2-public.intel.com/779532/A380%20Product%20Guide%20V1.3.pdf"
+  },
+  "intel-a310": {
+   "titulo": "Intel: Arc A310, especificaciones",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/227958/intel-arc-a310-graphics/specifications.html"
+  },
+  "intel-pro-b60": {
+   "titulo": "Intel: Arc Pro B60, especificaciones",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/243916/intel-arc-pro-b60-graphics/specifications.html"
+  },
+  "intel-datasheet-pro-b60": {
+   "titulo": "Intel: datasheet Arc Pro B60",
+   "url": "https://www.intel.com/content/dam/www/central-libraries/us/en/documents/2026-03/datasheet-b60-gpu.pdf"
+  },
+  "intel-guia-pro": {
+   "titulo": "Intel: Intel Arc Pro Graphics, Desktop Quick Start Guide (artículo 000099073)",
+   "url": "https://www.intel.com/content/www/us/en/support/articles/000099073/graphics.html"
+  },
+  "intel-pro-b50": {
+   "titulo": "Intel: Arc Pro B50, especificaciones",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/242615/intel-arc-pro-b50-graphics/specifications.html"
+  },
+  "intel-datasheet-pro-b50": {
+   "titulo": "Intel: datasheet Arc Pro B50",
+   "url": "https://www.intel.com/content/dam/www/central-libraries/us/en/documents/2026-03/datasheet-b50-gpu.pdf"
+  },
+  "intel-pro-b70": {
+   "titulo": "Intel: Arc Pro B70, especificaciones",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/245797/intel-arc-pro-b70-graphics/specifications.html"
+  },
+  "intel-datasheet-pro-b70": {
+   "titulo": "Intel: datasheet Arc Pro B70",
+   "url": "https://www.intel.com/content/dam/www/central-libraries/us/en/documents/2026-03/datasheet-b70-gpu.pdf"
+  },
+  "storagereview-pro-b70": {
+   "titulo": "StorageReview: Intel Arc Pro B70 Review",
+   "url": "https://www.storagereview.com/review/intel-arc-pro-b70-review"
+  },
+  "intel-pro-a60": {
+   "titulo": "Intel: Arc Pro A60, especificaciones",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/235979/intel-arc-pro-a60-graphics/specifications.html"
+  },
+  "intel-pro-a50": {
+   "titulo": "Intel: Arc Pro A50, especificaciones",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230316/intel-arc-pro-a50-graphics/specifications.html"
+  },
+  "intel-pro-a40": {
+   "titulo": "Intel: Arc Pro A40, especificaciones",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230317/intel-arc-pro-a40-graphics/specifications.html"
+  },
+  "toms-pcie": {
+   "titulo": "Tom's Hardware: What Is PCIe? A Basic Definition (la tarjeta va a la generación más baja presente)",
+   "url": "https://www.tomshardware.com/reviews/pcie-definition,5754.html"
+  },
+  "toms_am5_ppt": {
+   "titulo": "Tom's Hardware – AMD Corrects Socket AM5 for Ryzen 7000 Power Specs: 230W Peak Power, 170W TDP",
+   "url": "https://www.tomshardware.com/news/amd-corrects-socket-am5-for-ryzen-7000-power-specs-230w-peak-power-170w-tdp"
+  },
+  "techpowerup_amd_ppt": {
+   "titulo": "TechPowerUp – AMD Clarifies Ryzen 7000 Zen 4 TDP and Power Limits: 170W TDP, 230W PPT (26-05-2022)",
+   "url": "https://techpowerup.com/295301/amd-clarifies-ryzen-7000-zen-4-tdp-and-power-limits-170w-tdp-230w-ppt"
+  },
+  "ark_12900k": {
+   "titulo": "Intel ARK – Core i9-12900K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/134599/specifications.html"
+  },
+  "ark_12900ks": {
+   "titulo": "Intel ARK – Core i9-12900KS",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/225916/x/specifications.html"
+  },
+  "ark_12700k": {
+   "titulo": "Intel ARK – Core i7-12700K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/134594/specifications.html"
+  },
+  "ark_12600k": {
+   "titulo": "Intel ARK – Core i5-12600K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/134589/specifications.html"
+  },
+  "ark_12900": {
+   "titulo": "Intel ARK – Core i9-12900",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/134597/x/specifications.html"
+  },
+  "ark_12700": {
+   "titulo": "Intel ARK – Core i7-12700",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/134591/x/specifications.html"
+  },
+  "ark_12600": {
+   "titulo": "Intel ARK – Core i5-12600",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/96149/intel-core-i512600-processor-18m-cache-up-to-4-80-ghz/specifications.html"
+  },
+  "ark_12400": {
+   "titulo": "Intel ARK – Core i5-12400",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/134586/specifications.html"
+  },
+  "ark_12100": {
+   "titulo": "Intel ARK – Core i3-12100",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/134584/specifications.html"
+  },
+  "ark_12900t": {
+   "titulo": "Intel ARK – Core i9-12900T",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/134601/intel-core-i912900t-processor-30m-cache-up-to-4-90-ghz/specifications.html"
+  },
+  "ark_12700t": {
+   "titulo": "Intel ARK – Core i7-12700T",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/134596/intel-core-i712700t-processor-25m-cache-up-to-4-70-ghz/specifications.html"
+  },
+  "ark_12600t": {
+   "titulo": "Intel ARK – Core i5-12600T",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/96150/intel-core-i512600t-processor-18m-cache-up-to-4-60-ghz/specifications.html"
+  },
+  "ark_12100t": {
+   "titulo": "Intel ARK – Core i3-12100T",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/223097/intel-core-i312100t-processor-12m-cache-up-to-4-10-ghz/specifications.html"
+  },
+  "ark_13900k": {
+   "titulo": "Intel ARK – Core i9-13900K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230496/specifications.html"
+  },
+  "ark_14900k": {
+   "titulo": "Intel ARK – Core i9-14900K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/236773/specifications.html"
+  },
+  "intel_qrg_14gen": {
+   "titulo": "Intel – Intel Core Desktop Processors (14th gen) Quick Reference Guide / Specification Table (K y KF)",
+   "url": "https://cdrdv2-public.intel.com/787258/Intel%20Core%20Desktop%20Processors%2014th%20gen%20Quick%20Reference%20Guide.pdf"
+  },
+  "ark_13900ks": {
+   "titulo": "Intel ARK – Core i9-13900KS",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/232167/x/specifications.html"
+  },
+  "ark_14900ks": {
+   "titulo": "Intel ARK – Core i9-14900KS",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/237504/specifications.html"
+  },
+  "ark_13700k": {
+   "titulo": "Intel ARK – Core i7-13700K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230500/specifications.html"
+  },
+  "ark_13600k": {
+   "titulo": "Intel ARK – Core i5-13600K",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230493/specifications.html"
+  },
+  "ark_13900": {
+   "titulo": "Intel ARK – Core i9-13900",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230499/x/specifications.html"
+  },
+  "intel_deck_14gen_65_35": {
+   "titulo": "Intel – Intel Core Processors: HX/U Mobile & 65/35W Desktop (media deck, enero 2024)",
+   "url": "https://cdrdv2-public.intel.com/813081/Media-Deck-Intel-Core-Processors-HXU-Mobile-65-35W-Desktop.pdf"
+  },
+  "ark_13700f": {
+   "titulo": "Intel ARK – Core i7-13700F",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230491/x/specifications.html"
+  },
+  "ark_13600": {
+   "titulo": "Intel ARK – Core i5-13600",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230574.html"
+  },
+  "ark_13400": {
+   "titulo": "Intel ARK – Core i5-13400",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230495/specifications.html"
+  },
+  "ark_13100": {
+   "titulo": "Intel ARK – Core i3-13100 (la URL de Intel lleva un nombre de producto erróneo, pero la ficha es la del i3-13100)",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230575/intel-pentium-gold-g7400-processor-6m-cache-3-70-ghz/specifications.html"
+  },
+  "ark_13100f": {
+   "titulo": "Intel ARK – Core i3-13100F",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230576/intel-core-i313100f-processor-12m-cache-up-to-4-50-ghz/specifications.html"
+  },
+  "ark_13900t": {
+   "titulo": "Intel ARK – Core i9-13900T",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230498.html"
+  },
+  "ark_13700t": {
+   "titulo": "Intel ARK – Core i7-13700T",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230492.html"
+  },
+  "ark_13500t": {
+   "titulo": "Intel ARK – Core i5-13500T",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230578.html"
+  },
+  "ark_13400t": {
+   "titulo": "Intel ARK – Core i5-13400T",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/230577.html"
+  },
+  "intel_qrg_200s": {
+   "titulo": "Intel – Intel Core Ultra Desktop Processors (Series 2) Quick Reference Guide",
+   "url": "https://cdrdv2-public.intel.com/842314/intel-core-ultra-desktop-ph2-quick-reference-guide-public.pdf"
+  },
+  "ark_ultra9_285": {
+   "titulo": "Intel ARK – Core Ultra 9 285",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/241061/specifications.html"
+  },
+  "ark_ultra9_285t": {
+   "titulo": "Intel ARK – Core Ultra 9 285T",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/241059/specifications.html"
+  },
+  "toms_200s_nok_t": {
+   "titulo": "Tom's Hardware – Intel lists non-K and T-series Core Ultra 200S processors for desktop PCs",
+   "url": "https://www.tomshardware.com/pc-components/cpus/intel-lists-non-k-and-t-series-core-ultra-200s-processors-for-desktop-pcs"
+  },
+  "ark_ultra5_245t": {
+   "titulo": "Intel ARK – Core Ultra 5 245T",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/241874/specifications.html"
+  },
+  "intel_ds_11gen": {
+   "titulo": "Intel – 11th Generation Intel Core Processor Desktop Datasheet, Vol. 1 of 2 (doc. 634648-004, mayo 2022), tabla 5-3; copia alojada por un distribuidor",
+   "url": "https://edshop.edsystem.cz/fileshare/products/datasheet/int/11gen-1(537877).pdf"
+  },
+  "toms_10gen_pl": {
+   "titulo": "Tom's Hardware – Intel Reveals PL1, PL2 and Tau Values For 10th-Gen Comet Lake-S Processors (05-06-2020, tomado del datasheet de Intel)",
+   "url": "https://www.tomshardware.com/news/intel-pl1-pl2-tau-10th-gen-comet-lake-processors"
+  },
+  "intel_ds_8_9gen": {
+   "titulo": "Intel – 8th/9th Generation Intel Core Processor Families Datasheet, Vol. 1 of 2, tabla 5-7 (S-Processor); copia en Mouser",
+   "url": "https://www.mouser.com/datasheet/2/612/8th_gen_core_family_datasheet_vol_1-1663188.pdf"
+  },
+  "intel_ds_6gen": {
+   "titulo": "Intel – 6th Generation Intel Processor Families for S-Platforms Datasheet, Vol. 1 of 2 (332687-005, enero 2017); copia en un distribuidor",
+   "url": "https://cdn.iceshop.nl/objects/mmo_28496297_1486722644_0423_5427.pdf"
+  },
+  "intel_atx31": {
+   "titulo": "Intel – ATX Version 3 Multi Rail Desktop Platform Power Supply Design Guide (doc. 336521, rev. 2.1a, noviembre 2023)",
+   "url": "https://cdrdv2-public.intel.com/336521/336521_Rev2p1a.pdf"
+  },
+  "nvidia_workstation_power": {
+   "titulo": "NVIDIA – Power Guidelines for Workstation Products (DA-07261-001_v15, julio 2023)",
+   "url": "https://images.nvidia.com/aem-dam/en-zz/Solutions/design-visualization/quadro-product-literature/DA-07261-001_v15.pdf"
+  },
+  "hwbusters_atx31": {
+   "titulo": "Hardware Busters – ATX v3.1 & PCIe CEM 5.1 are official",
+   "url": "https://hwbusters.com/psus/atx-v3-1-pcie-cem-5-1-are-official/"
+  },
+  "seasonic_rtx40": {
+   "titulo": "Seasonic Knowledge Base – RTX 4xxx and 12VHPWR / 12V-2x6 Cable Guidance",
+   "url": "https://knowledge.seasonic.com/article/72-psu-recommendations-for-nvidia-rtx-4000-cards"
+  },
+  "corsair_native_vs_8pin": {
+   "titulo": "Corsair – Native 12V-2x6 vs 8-pin to 12V-2x6: what is the difference?",
+   "url": "https://www.corsair.com/explorer/diy-builder/power-supply-units/native-12v-2x6-vs-8-pin-to-12v-2x6-what-is-the-difference/"
+  },
+  "hwbusters_12v2x6": {
+   "titulo": "Hardware Busters – No more 12VHPWR connector, say hi to 12V-2x6",
+   "url": "https://hwbusters.com/news/no-more-12vhpwr-connector-say-hi-to-12v-2x6/"
+  },
+  "seasonic_calculadoras": {
+   "titulo": "Seasonic Insights – Power Supply Calculator Errors (24-06-2026)",
+   "url": "https://seasonic.com/insights/power-supply-calculator-errors/"
+  },
+  "igorslab_transitorios": {
+   "titulo": "igor'sLAB – Load peaks (transients) and power supply recommendation (análisis Radeon RX 6900 XT)",
+   "url": "https://igorslab.de/en/grasps-at-the-crown-radeon-rx-6900-xt-16-gb-in-test-with-benchmarks-and-a-technology-analysis/15"
+  },
+  "corsair_sf750": {
+   "titulo": "Corsair – SF Series SF750, 750 W 80 PLUS Platinum SFX PSU",
+   "url": "https://www.corsair.com/us/en/p/psu/cp-9020186-na/sf-series-sf750-750-watt-80-plus-platinum-certified-high-performance-sfx-psu-cp-9020186-na"
+  },
+  "silverstone_sx500lg": {
+   "titulo": "TechPowerUp – SilverStone Announces SX500-LG Power Supply (SFX-L, 21-01-2015)",
+   "url": "https://www.techpowerup.com/209070/silverstone-announces-sx500-lg-power-supply.html"
+  },
+  "sff_pp08": {
+   "titulo": "SmallFormFactor.net – SilverStone announces the PP08 SFX to ATX adapter bracket",
+   "url": "https://smallformfactor.net/news/silverstone-announces-the-pp08-sfx-to-atx-adapter-bracket"
+  },
+  "thomaskrenn_ranuras": {
+   "titulo": "Thomas-Krenn Wiki – Size specification / form factor of additional cards",
+   "url": "https://www.thomas-krenn.com/en/wiki/Size_specification_/_form_factor_of_additional_cards"
+  },
+  "asus_edgeup_gpu": {
+   "titulo": "ASUS Edge Up – gráficas para equipos pequeños (disipadores que tapan ranuras PCIe contiguas)",
+   "url": "https://edgeup.asus.com/?p=28811"
+  },
+  "intel_1851_termica": {
+   "titulo": "Intel – Are Cooling Solutions Designed for LGA1700 Compatible with LGA1851 Socket?",
+   "url": "https://www.intel.com/content/www/us/en/support/articles/000099700/processors.html"
+  },
+  "intel_1851_incompat": {
+   "titulo": "Intel – LGA1851 and LGA1700 Socket Incompatibility",
+   "url": "https://www.intel.com/content/www/us/en/support/articles/000099723.html"
+  },
+  "noctua_1851_guia": {
+   "titulo": "Noctua – Intel LGA1851 cooling: all you need to know",
+   "url": "https://noctua.at/es/intel-lga1851-all-you-need-to-know"
+  },
+  "noctua_1700_1851_faq": {
+   "titulo": "Noctua FAQ – How can I check if my Noctua CPU cooler already includes LGA1700 and LGA1851 mounting parts?",
+   "url": "https://noctua.at/en/support/faqs/how-can-i-check-if-my-noctua-cpu-cooler-already-includes-lga1700-lga1851-mounting-parts"
+  },
+  "techpowerup_noctua_1200": {
+   "titulo": "TechPowerUp – Noctua Confirms LGA1200 Cooler Compatibility, Identical to LGA115x Sockets (22-04-2020)",
+   "url": "https://techpowerup.com/266116/noctua-confirms-lga1200-cooler-compatibility-identical-to-lga115x-sockets"
+  },
+  "cdrinfo_noctua_1200": {
+   "titulo": "CDRinfo – Noctua says its existing LGA115x CPU coolers support new socket LGA1200 chips",
+   "url": "https://cdrinfo.com/d7/content/noctua-says-its-existing-lga115x-cpu-coolers-support-new-socket-lga1200-chips"
+  },
+  "noctua_nm_i115x": {
+   "titulo": "Noctua – NM-i115x-1200 (kit LGA1200/LGA115x)",
+   "url": "https://noctua.at/en/nm-i115x-mounting-kit/?tab=faq"
+  },
+  "arctic_lf3": {
+   "titulo": "ARCTIC – Compatibility Upgrade for Liquid Freezer III and Liquid Freezer III Pro (kit LGA1200/115X)",
+   "url": "https://arctic.de/en/blog/compatibility-upgrade-for-liquid-freezer-iii-and-freezer-36"
+  },
+  "noctua_nm_m1_mp78": {
+   "titulo": "Noctua – NM-M1-MP78 (kit para AM5, AM4, LGA1851, LGA1700, LGA1200 y LGA115x)",
+   "url": "https://www.noctua.at/en/products/nm-m1-mp78/features"
+  },
+  "fractal_am5": {
+   "titulo": "Fractal Design – AM5 Support for Fractal coolers (29-09-2022)",
+   "url": "https://support.fractal-design.com/support/solutions/articles/4000187356-am5-support-for-fractal-watercoolers"
+  },
+  "noctua_am5_guia": {
+   "titulo": "Noctua – AMD AM5: all you need to know",
+   "url": "https://www.noctua.at/en/expertise/guides/amd-am5-all-you-need-to-know"
+  },
+  "noctua_am5_nota": {
+   "titulo": "Noctua – Noctua confirms AM5 heatsink compatibility and announces free-of-charge upgrades (22-09-2022)",
+   "url": "https://noctua.at/en/noctua-confirms-am5-heatsink-compatibility-and-announces-free-of-charge-upgrades-for-low-profile-coolers-and-older-heatsink-models"
+  },
+  "noctua_am5_faq": {
+   "titulo": "Noctua FAQ – Which Noctua CPU coolers are compatible with AMD AM5?",
+   "url": "https://www.noctua.at/en/support/faqs/which-noctua-cpu-coolers-are-compatible-with-amd-am5"
+  },
+  "bequiet_am5": {
+   "titulo": "be quiet! – nota de prensa sobre disipadores compatibles con Ryzen 7000 / AM5 (29-09-2022)",
+   "url": "https://www.bequiet.com/cz/press/30283"
+  },
+  "techpowerup_lga1700": {
+   "titulo": "TechPowerUp – Intel LGA Socket 1700: Lower Height, New Hole Pattern Render Existing Cooling Solutions Incompatible (24-05-2021)",
+   "url": "https://www.techpowerup.com/282577/intel-lga-socket-1700-lower-height-new-hole-pattern-render-existing-cooling-solutions-incompatible"
+  },
+  "igorslab_lga1700": {
+   "titulo": "igor'sLAB – Intel Socket LGA-1700 and LGA-1800 in detail: data and drawings",
+   "url": "https://igorslab.de/en/intel-socket-lga-1700-and-lga-1800-in-detail-exclusive-data-and-drawings-for-the-new-cpus-ab-alder-lake/2"
+  },
+  "noctua_nm_i17xx_mp78": {
+   "titulo": "Noctua – NM-i17xx-MP78 (kit LGA1700/LGA1851 para disipadores con paso de 78 mm)",
+   "url": "https://noctua.at/fr/products/nm-i17xx-mp78-mounting-kit"
+  },
+  "hwcooling_bequiet_1700": {
+   "titulo": "HWCooling – The LGA 1700 kit is now included with almost all be quiet! coolers (09-04-2022)",
+   "url": "https://www.hwcooling.net/en/the-lga-1700-kit-is-now-included-with-almost-all-bequiet-coolers/"
+  },
+  "gb-b550m-ds3h": {
+   "titulo": "Gigabyte: ficha B550M DS3H (x16 por familia de Ryzen)",
+   "url": "https://www.gigabyte.com/Motherboard/B550M-DS3H-rev-17/sp"
+  },
+  "amd-am5-qrg": {
+   "titulo": "AMD: Socket AM5 Quick Reference Guide (nov. 2024, incluye B650 y B650E)",
+   "url": "https://www.amd.com/content/dam/amd/en/documents/partner-hub/ryzen/amd-socket-am5-quick-reference-guide.pdf"
+  },
+  "techspot-placas-am5": {
+   "titulo": "TechSpot (Hardware Unboxed): guía de placas X670, B650 y A620",
+   "url": "https://www.techspot.com/guides/2669-amd-ryzen-x670-b650-a620-motherboards/"
+  },
+  "amd-nota-ryzen7000": {
+   "titulo": "AMD: nota de prensa del lanzamiento de Ryzen 7000 y chipsets 600 (29-8-2022)",
+   "url": "https://www.amd.com/en/newsroom/press-releases/2022-8-29-amd-launches-ryzen-7000-series-desktop-processors-.html"
+  },
+  "wccftech-b850-b840": {
+   "titulo": "Wccftech (16-7-2024): B850 y B840, información previa al lanzamiento",
+   "url": "https://wccftech.com/amd-details-mainstream-b850-entry-level-b840-chipsets-b840-no-cpu-oc-pcie-gen3/"
+  },
+  "hwcooling-serie800": {
+   "titulo": "HWCooling (28-8-2024, act. 5-9-2024): X870E, X870, B850 y B840",
+   "url": "https://hwcooling.net/en/x870-x870e-b850-and-b840-boards-for-amd-differences-and-release-dates"
+  },
+  "msi-b850-carriles": {
+   "titulo": "MSI: reparto de carriles PCIe en sus placas B850",
+   "url": "https://www.msi.com/blog/overview-of-pcie-lane-sharing-on-msi-b850-motherboards"
+  },
+  "toms-z590": {
+   "titulo": "Tom's Hardware: Z590 frente a Z490 y Z390 (carriles de CPU)",
+   "url": "https://www.tomshardware.com/features/intel-z590-motherboard-and-chipset-overview-45-rocket-lake-boards-detailed"
+  },
+  "ark-h470-compat": {
+   "titulo": "Intel ARK: procesadores compatibles con H470",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/201835/intel-h470-chipset/compatible.html"
+  },
+  "computerbase-z490-pcie4": {
+   "titulo": "ComputerBase (abr. 2020): PCIe 4.0 en placas Intel 400, sin validar por Intel",
+   "url": "https://www.computerbase.de/2020-04/pci-express-4.0-mainboard-intel/"
+  },
+  "ark-q470-compat": {
+   "titulo": "Intel ARK: procesadores compatibles con Q470",
+   "url": "https://intel.com/content/www/us/en/products/sku/201836/intel-q470-chipset/compatible.html"
+  },
+  "wccftech-z490-pcie4": {
+   "titulo": "Wccftech: PCIe 4.0 en placas Z490 de ASUS, MSI, ASRock y Gigabyte",
+   "url": "https://wccftech.com/z490-motherboards-pcie-gen-4-support-detailed-asus-msi-asrock-gigabyte/"
+  },
+  "toms-msi-z490-pcie4": {
+   "titulo": "Tom's Hardware: MSI activa PCIe 4.0 en toda su gama Z490",
+   "url": "https://www.tomshardware.com/news/msi-unlocks-pci-e-40-support-on-z490-motherboards"
+  },
+  "ark-w480-compat": {
+   "titulo": "Intel ARK: procesadores compatibles con W480",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/201910/intel-w480-chipset/compatible.html"
+  },
+  "gb-h510m-h": {
+   "titulo": "Gigabyte: ficha H510M H (x16 a PCIe 4.0 solo con 11.ª gen)",
+   "url": "https://www.gigabyte.com/Motherboard/H510M-H-rev-10-11-15/sp"
+  },
+  "ark-h510-compat": {
+   "titulo": "Intel ARK: procesadores compatibles con H510",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/196646/intel-h510-chipset/compatible.html"
+  },
+  "intel-11gen-brief": {
+   "titulo": "Intel: product brief de los Core de 11.ª gen de sobremesa",
+   "url": "https://www.intel.com.au/content/dam/www/central-libraries/us/en/documents/11th-gen-product-brief-3-2-21.pdf"
+  },
+  "gb-h610m-s2h": {
+   "titulo": "Gigabyte: ficha H610M S2H (x16 a PCIe 4.0)",
+   "url": "https://www.gigabyte.com/Motherboard/H610M-S2H-rev-10/sp"
+  },
+  "gb-z690m-ds3h-ddr4": {
+   "titulo": "Gigabyte: ficha Z690M DS3H DDR4 (x16 a PCIe 4.0)",
+   "url": "https://www.gigabyte.com/Motherboard/Z690M-DS3H-DDR4-rev-10/sp"
+  },
+  "aorus-z690-gaming-x-ddr4": {
+   "titulo": "Gigabyte/Aorus: ficha Z690 GAMING X DDR4 (x16 a PCIe 5.0)",
+   "url": "https://www.aorus.com/Motherboard/Z690-GAMING-X-DDR4-rev-11/specification"
+  },
+  "gb-b760m-ds3h-ddr4": {
+   "titulo": "Gigabyte: B760M DS3H DDR4 (x16 a PCIe 4.0)",
+   "url": "https://www.gigabyte.com/Motherboard/B760M-DS3H-DDR4-rev-10/sp"
+  },
+  "gb-b760m-ds3h-ddr4-gen5": {
+   "titulo": "Gigabyte: ficha B760M DS3H DDR4 GEN5 (x16 a PCIe 5.0)",
+   "url": "https://www.gigabyte.com/Motherboard/B760M-DS3H-DDR4-GEN5/sp"
+  },
+  "gb-z790-s-ddr4": {
+   "titulo": "Gigabyte: ficha Z790 S DDR4 (x16 a PCIe 4.0)",
+   "url": "https://www.gigabyte.com/Motherboard/Z790-S-DDR4-rev-10/sp"
+  },
+  "gb-z790-d-ddr4": {
+   "titulo": "Gigabyte: ficha Z790 D DDR4 (x16 a PCIe 5.0)",
+   "url": "https://www.gigabyte.com/in/Motherboard/Z790-D-DDR4-rev-10/sp"
+  },
+  "msi-pro-z790-p-wifi": {
+   "titulo": "MSI: ficha PRO Z790-P WIFI (x16 a PCIe 5.0)",
+   "url": "https://www.msi.com/Motherboard/PRO-Z790-P-WIFI/Specification"
+  },
+  "gb-h810m-h": {
+   "titulo": "Gigabyte: ficha H810M H (x16 a PCIe 4.0)",
+   "url": "https://www.gigabyte.com/Motherboard/H810M-H-rev-10/sp"
+  },
+  "gb-h810m-h-gen5": {
+   "titulo": "Gigabyte: ficha H810M H GEN5 (x16 a PCIe 5.0)",
+   "url": "https://www.gigabyte.com/Motherboard/H810M-H-GEN5/sp"
+  },
+  "msi-pro-h810m-b": {
+   "titulo": "MSI: ficha PRO H810M-B (x16 a PCIe 5.0)",
+   "url": "https://www.msi.com/Motherboard/PRO-H810M-B/Specification"
+  },
+  "gb-b860m-k": {
+   "titulo": "Gigabyte: ficha B860M K (x16 a PCIe 4.0)",
+   "url": "https://www.gigabyte.com/Motherboard/B860M-K/sp"
+  },
+  "gb-b860m-aorus-elite": {
+   "titulo": "Gigabyte: ficha B860M AORUS ELITE (x16 a PCIe 5.0)",
+   "url": "https://www.gigabyte.com/Motherboard/B860M-AORUS-ELITE/sp"
+  },
+  "anandtech-bristol": {
+   "titulo": "AnandTech: Bristol Ridge y AM4, conectividad del APU",
+   "url": "https://at-web1.www.anandtech.com/show/10705/amd-7th-gen-bristol-ridge-and-am4-analysis-a12-9800-b350-a320-chipset/4"
+  },
+  "toms-bristol-retail": {
+   "titulo": "Tom's Hardware: A-Series de 7.ª gen y Athlon X4 950 a la venta",
+   "url": "https://www.tomshardware.com/news/amd-apu-bristol-ridge-a-series-athlon%2C35096.html"
+  },
+  "etilize-prime-x370-pro": {
+   "titulo": "ASUS PRIME X370-PRO: especificaciones (copia de Etilize)",
+   "url": "https://content.etilize.com/Detailed-Specs/EN/1038507640.html"
+  },
+  "asus-b450-spec": {
+   "titulo": "ASUS: Specification Updates for AMD B450 Series (ancho de la x16 por CPU)",
+   "url": "https://dlcdnets.asus.com/pub/ASUS/mb/SocketAM4/PRIME_B450M-A/IE14791_Specification_Updates_for_AMD_B450_Series.pdf"
+  },
+  "toms-foro-3000g": {
+   "titulo": "Foro de Tom's Hardware: Athlon 3000G con la gráfica a x4",
+   "url": "https://forums.tomshardware.com/threads/gpu-z-says-pcie-x4-when-it-should-be-x16.3681073"
+  },
+  "lanoc-4500": {
+   "titulo": "LanOC: análisis del Ryzen 5 4500",
+   "url": "https://lanoc.org/review/cpus/amd-ryzen-5-4500"
+  },
+  "amd-8400f": {
+   "titulo": "AMD: ficha del Ryzen 5 8400F",
+   "url": "https://www.amd.com/en/products/processors/desktops/ryzen/8000-series/amd-ryzen-5-8400f.html"
+  },
+  "pcgh-ai400": {
+   "titulo": "PC Games Hardware: los Ryzen AI 400 de sobremesa escatiman carriles PCIe",
+   "url": "https://www.pcgameshardware.de/CPU-CPU-154106/News/AMD-Ryzen-AI-400-geizen-mit-PCIe-Leitungen-1521238/"
+  },
+  "pausehardware-ai400": {
+   "titulo": "PauseHardware: Ryzen AI 400, PCIe limitado a 12 carriles útiles",
+   "url": "https://pausehardware.com/ryzen-ai-400-pcie-limite-rx9000/"
+  },
+  "ark-g6400": {
+   "titulo": "Intel ARK: Pentium Gold G6400",
+   "url": "https://www.intel.com/content/www/us/en/products/sku/199288/x/specifications.html"
+  },
+  "intel-arc-rebar-necesario": {
+   "titulo": "Intel: ¿hace falta Resizable BAR para las Arc A?",
+   "url": "https://www.intel.com/content/www/us/en/support/articles/000092416.html"
+  },
+  "toms-a770-rebar": {
+   "titulo": "Tom's Hardware (5-10-2022): la Arc A770 sin Resizable BAR (pruebas de TechPowerUp)",
+   "url": "https://www.tomshardware.com/news/arc-a770-loses-25-percent-performance-without-resizable-bar"
+  },
+  "amd-smart-tech": {
+   "titulo": "AMD: Smart Technology, nota GD-178 (requisitos de Smart Access Memory)",
+   "url": "https://www.amd.com/en/gaming/technologies/smart-technologies.html"
+  },
+  "computerbase-6500xt": {
+   "titulo": "ComputerBase: Radeon RX 6500 XT, PCIe 4.0 frente a PCIe 3.0",
+   "url": "https://www.computerbase.de/artikel/grafikkarten/amd-radeon-rx-6500-xt-test.79491/seite-3"
+  },
+  "pla-toms-6500xt": {
+   "titulo": "Tom's Hardware (19-1-2022): RX 6500 XT en PCIe 3.0 y 4.0",
+   "url": "https://www.tomshardware.com/news/rx-6500-xt-pcie-gen3-gen4-tested"
+  },
+  "techspot-6500xt": {
+   "titulo": "TechSpot (Hardware Unboxed): análisis de la RX 6500 XT, con PCIe 3.0",
+   "url": "https://www.techspot.com/review/2398-amd-radeon-6500-xt"
+  },
+  "tech4gamers-4060ti": {
+   "titulo": "Tech4Gamers (10-10-2023): RTX 4060 Ti en PCIe 3.0 (pruebas de Hardware Unboxed)",
+   "url": "https://tech4gamers.com/rtx-4060-ti-pcie-3-0-bottleneck"
+  },
+  "toms-5060ti-8gb": {
+   "titulo": "Tom's Hardware (3-5-2025): RTX 5060 Ti 8 GB en PCIe 4.0 (pruebas de ComputerBase)",
+   "url": "https://www.tomshardware.com/pc-components/gpus/nvidia-rtx-5060-ti-8gb-loses-up-to-10-percent-performance-when-using-pcie-4-0"
+  },
+  "chip-pl-4090": {
+   "titulo": "CHIP.pl (12-3-2023): escalado PCIe de la RTX 4090",
+   "url": "https://www.chip.pl/2023/03/sprawdzamy-skalowanie-pci-express-rtx-4090"
+  },
+  "gn-5090": {
+   "titulo": "Gamers Nexus (13-2-2025): RTX 5090 en PCIe 5.0, 4.0 y 3.0 x16",
+   "url": "https://gamersnexus.net/index%2Ephp/gpus/nvidia-rtx-5090-pcie-50-vs-40-vs-30-x16-scaling-benchmarks"
   }
  },
  "plataformas": {
@@ -612,7 +1968,11 @@
       "raven": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
       "pinnacle": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
       "picasso": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "amd-am4"
+     ]
     },
     "B350": {
      "soporte": {
@@ -664,7 +2024,11 @@
       "raven": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
       "pinnacle": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
       "picasso": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "amd-am4"
+     ]
     },
     "X370": {
      "soporte": {
@@ -715,7 +2079,11 @@
       "raven": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
       "pinnacle": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
       "picasso": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "amd-am4"
+     ]
     },
     "B450": {
      "soporte": {
@@ -756,7 +2124,11 @@
       "summit": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
       "raven": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
       "pinnacle": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "amd-am4"
+     ]
     },
     "X470": {
      "soporte": {
@@ -791,7 +2163,11 @@
       "summit": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
       "raven": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa.",
       "pinnacle": "Si la BIOS de la placa ya es la de los Ryzen 5000, puede que haya dejado de reconocer los procesadores más antiguos: mira la lista de tu placa."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "amd-am4"
+     ]
     },
     "A520": {
      "soporte": {
@@ -825,7 +2201,11 @@
      "depende": {
       "picasso": "AMD no los pone en su tabla de las placas 500 (aunque se llamen 3000, el 3200G, el 3400G y el Athlon 3000G son de antes), pero algunos fabricantes sí los admiten en ciertas placas, como la MSI A520M-A PRO o la Gigabyte B550 AORUS ELITE AX V2."
      },
-     "nota": "Sin PCIe 4.0, ni siquiera con un Ryzen 3000 o 5000."
+     "nota": "Sin PCIe 4.0, ni siquiera con un Ryzen 3000 o 5000.",
+     "grafica": 3,
+     "fuentes_grafica": [
+      "amd-am4"
+     ]
     },
     "B550": {
      "soporte": {
@@ -859,7 +2239,12 @@
      "depende": {
       "picasso": "AMD no los pone en su tabla de las placas 500 (aunque se llamen 3000, el 3200G, el 3400G y el Athlon 3000G son de antes), pero algunos fabricantes sí los admiten en ciertas placas, como la MSI A520M-A PRO o la Gigabyte B550 AORUS ELITE AX V2."
      },
-     "nota": "PCIe 4.0 en la gráfica y en el M.2 de la CPU solo con los Ryzen 3000 y 5000 normales: los 4000G, 5000G, 4100, 4500, 5500 y 5700 van a PCIe 3.0."
+     "nota": "PCIe 4.0 en la gráfica y en el M.2 de la CPU solo con los Ryzen 3000 y 5000 normales: los 4000G, 5000G, 4100, 4500, 5500 y 5700 van a PCIe 3.0.",
+     "grafica": 4,
+     "fuentes_grafica": [
+      "amd-am4",
+      "gb-b550m-ds3h"
+     ]
     },
     "X570": {
      "soporte": {
@@ -909,7 +2294,12 @@
       "bristol": "AMD dejó fuera de X570 los A-Series y los Ryzen 1000.",
       "summit": "AMD dejó fuera de X570 los A-Series y los Ryzen 1000.",
       "picasso": "AMD dejó fuera de X570 los Athlon con gráfica."
-     }
+     },
+     "grafica": 4,
+     "fuentes_grafica": [
+      "amd-am4",
+      "gb-b550m-ds3h"
+     ]
     }
    }
   },
@@ -937,7 +2327,13 @@
      ],
      "nota": "Las placas con este chipset están pensadas para procesadores de 65 W: los más potentes funcionan, pero pueden ir algo limitados y sin PBO.",
      "tdp_max": 65,
-     "nota_tdp": "Este procesador pasa de 65 W: en una A620 funciona, pero puede ir algo limitado (y sin PBO)."
+     "nota_tdp": "Este procesador pasa de 65 W: en una A620 funciona, pero puede ir algo limitado (y sin PBO).",
+     "grafica": 4,
+     "fuentes_grafica": [
+      "amd-am5",
+      "amd-am5-qrg",
+      "techspot-placas-am5"
+     ]
     },
     "A620A": {
      "soporte": {
@@ -957,7 +2353,11 @@
      ],
      "nota": "Es el chipset de las B550 con otro nombre, así que lo que cuelga del chipset va a PCIe 3.0. Las placas con este chipset están pensadas para procesadores de 65 W: los más potentes funcionan, pero pueden ir algo limitados y sin PBO.",
      "tdp_max": 65,
-     "nota_tdp": "Este procesador pasa de 65 W: en una A620A funciona, pero puede ir algo limitado (y sin PBO)."
+     "nota_tdp": "Este procesador pasa de 65 W: en una A620A funciona, pero puede ir algo limitado (y sin PBO).",
+     "grafica": 4,
+     "fuentes_grafica": [
+      "amd-am5"
+     ]
     },
     "B650": {
      "soporte": {
@@ -988,7 +2388,13 @@
      "fuentes_modelo": [
       "wccftech-x3d-agesa"
      ],
-     "nota": "La gráfica va a PCIe 4.0; el M.2 de la CPU, a 4.0 o 5.0 según la placa."
+     "nota": "La gráfica va a PCIe 4.0; el M.2 de la CPU, a 4.0 o 5.0 según la placa.",
+     "grafica": 4,
+     "fuentes_grafica": [
+      "amd-am5-qrg",
+      "amd-nota-ryzen7000",
+      "techspot-placas-am5"
+     ]
     },
     "B650E": {
      "soporte": {
@@ -1019,7 +2425,12 @@
      "fuentes_modelo": [
       "wccftech-x3d-agesa"
      ],
-     "nota": "Gráfica y M.2 de la CPU a PCIe 5.0."
+     "nota": "Gráfica y M.2 de la CPU a PCIe 5.0.",
+     "grafica": 5,
+     "fuentes_grafica": [
+      "amd-am5-qrg",
+      "techspot-placas-am5"
+     ]
     },
     "X670": {
      "soporte": {
@@ -1048,7 +2459,16 @@
      "fuentes_modelo": [
       "wccftech-x3d-agesa"
      ],
-     "nota": "M.2 de la CPU a PCIe 5.0; la gráfica, a 4.0."
+     "nota": "M.2 de la CPU a PCIe 5.0; la gráfica, a 4.0.",
+     "grafica": [
+      4,
+      5
+     ],
+     "fuentes_grafica": [
+      "amd-am5-qrg",
+      "amd-am5",
+      "amd-nota-ryzen7000"
+     ]
     },
     "X670E": {
      "soporte": {
@@ -1077,7 +2497,13 @@
      "fuentes_modelo": [
       "wccftech-x3d-agesa"
      ],
-     "nota": "Gráfica y M.2 de la CPU a PCIe 5.0."
+     "nota": "Gráfica y M.2 de la CPU a PCIe 5.0.",
+     "grafica": 5,
+     "fuentes_grafica": [
+      "amd-am5-qrg",
+      "amd-am5",
+      "amd-nota-ryzen7000"
+     ]
     },
     "B840": {
      "soporte": {
@@ -1094,7 +2520,14 @@
       "amd-am5",
       "msi-b840"
      ],
-     "nota": "Sin overclock del procesador; gráfica y M.2 a PCIe 4.0."
+     "nota": "Sin overclock del procesador; gráfica y M.2 a PCIe 4.0.",
+     "grafica": 4,
+     "fuentes_grafica": [
+      "amd-am5",
+      "msi-b840",
+      "wccftech-b850-b840",
+      "hwcooling-serie800"
+     ]
     },
     "B850": {
      "soporte": {
@@ -1111,7 +2544,17 @@
       "amd-am5",
       "tpu-800"
      ],
-     "nota": "M.2 de la CPU a PCIe 5.0 de serie; la gráfica, a 4.0 (5.0 en algunas placas)."
+     "nota": "M.2 de la CPU a PCIe 5.0 de serie; la gráfica, a 4.0 (5.0 en algunas placas).",
+     "grafica": [
+      4,
+      5
+     ],
+     "fuentes_grafica": [
+      "amd-am5",
+      "msi-b850-carriles",
+      "wccftech-b850-b840",
+      "hwcooling-serie800"
+     ]
     },
     "X870": {
      "soporte": {
@@ -1127,7 +2570,12 @@
      "fuentes": [
       "amd-am5"
      ],
-     "nota": "Gráfica y M.2 a PCIe 5.0, y USB4 de serie."
+     "nota": "Gráfica y M.2 a PCIe 5.0, y USB4 de serie.",
+     "grafica": 5,
+     "fuentes_grafica": [
+      "amd-am5",
+      "amd-am5-qrg"
+     ]
     },
     "X870E": {
      "soporte": {
@@ -1143,7 +2591,13 @@
      "fuentes": [
       "amd-am5"
      ],
-     "nota": "Gráfica y M.2 a PCIe 5.0, y USB4 de serie."
+     "nota": "Gráfica y M.2 a PCIe 5.0, y USB4 de serie.",
+     "grafica": 5,
+     "fuentes_grafica": [
+      "amd-am5",
+      "amd-am5-qrg",
+      "hwcooling-serie800"
+     ]
     }
    },
    "nota": "AMD ha dicho que AM5 tendrá soporte hasta 2029.",
@@ -1189,7 +2643,12 @@
      "motivo": {
       "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
       "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i5-6600k",
+      "ark-i7-7700k"
+     ]
     },
     "B150": {
      "soporte": {
@@ -1210,7 +2669,12 @@
      "motivo": {
       "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
       "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i5-6600k",
+      "ark-i7-7700k"
+     ]
     },
     "Q150": {
      "soporte": {
@@ -1231,7 +2695,12 @@
      "motivo": {
       "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
       "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i5-6600k",
+      "ark-i7-7700k"
+     ]
     },
     "H170": {
      "soporte": {
@@ -1252,7 +2721,12 @@
      "motivo": {
       "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
       "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i5-6600k",
+      "ark-i7-7700k"
+     ]
     },
     "Q170": {
      "soporte": {
@@ -1273,7 +2747,12 @@
      "motivo": {
       "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
       "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i5-6600k",
+      "ark-i7-7700k"
+     ]
     },
     "Z170": {
      "soporte": {
@@ -1294,7 +2773,12 @@
      "motivo": {
       "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
       "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i5-6600k",
+      "ark-i7-7700k"
+     ]
     },
     "B250": {
      "soporte": {
@@ -1314,7 +2798,12 @@
      "motivo": {
       "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
       "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i7-7700k",
+      "ark-i5-6600k"
+     ]
     },
     "Q250": {
      "soporte": {
@@ -1334,7 +2823,12 @@
      "motivo": {
       "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
       "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i7-7700k",
+      "ark-i5-6600k"
+     ]
     },
     "H270": {
      "soporte": {
@@ -1354,7 +2848,12 @@
      "motivo": {
       "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
       "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i7-7700k",
+      "ark-i5-6600k"
+     ]
     },
     "Q270": {
      "soporte": {
@@ -1374,7 +2873,12 @@
      "motivo": {
       "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
       "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i7-7700k",
+      "ark-i5-6600k"
+     ]
     },
     "Z270": {
      "soporte": {
@@ -1395,7 +2899,12 @@
      "motivo": {
       "coffee": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles).",
       "coffee_r": "Las placas 100 y 200 son para la 6.ª y la 7.ª generación; la 8.ª y la 9.ª necesitan una placa 300 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i7-7700k",
+      "ark-i5-6600k"
+     ]
     },
     "H310": {
      "soporte": {
@@ -1417,7 +2926,12 @@
      "motivo": {
       "skylake": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles).",
       "kaby": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i3-8100",
+      "ark-i5-9400"
+     ]
     },
     "B360": {
      "soporte": {
@@ -1439,7 +2953,12 @@
      "motivo": {
       "skylake": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles).",
       "kaby": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i3-8100",
+      "ark-i5-9400"
+     ]
     },
     "B365": {
      "soporte": {
@@ -1460,7 +2979,12 @@
      "motivo": {
       "skylake": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles).",
       "kaby": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i3-8100",
+      "ark-i5-9400"
+     ]
     },
     "H370": {
      "soporte": {
@@ -1482,7 +3006,12 @@
      "motivo": {
       "skylake": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles).",
       "kaby": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i3-8100",
+      "ark-i5-9400"
+     ]
     },
     "Q370": {
      "soporte": {
@@ -1504,7 +3033,12 @@
      "motivo": {
       "skylake": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles).",
       "kaby": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i3-8100",
+      "ark-i5-9400"
+     ]
     },
     "Z370": {
      "soporte": {
@@ -1526,7 +3060,12 @@
      "motivo": {
       "skylake": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles).",
       "kaby": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i3-8100",
+      "ark-i5-9400"
+     ]
     },
     "Z390": {
      "soporte": {
@@ -1547,7 +3086,12 @@
      "motivo": {
       "skylake": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles).",
       "kaby": "Las placas 300 son para la 8.ª y la 9.ª generación; la 6.ª y la 7.ª necesitan una placa 100 o 200 (mismo zócalo, pero no son compatibles)."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "ark-i5-9400",
+      "toms-z590"
+     ]
     }
    },
    "nota": "Mismo zócalo, dos mundos: las placas 100 y 200 son para la 6.ª y la 7.ª generación; las 300, para la 8.ª y la 9.ª."
@@ -1575,7 +3119,12 @@
      ],
      "motivo": {
       "rocket": "Intel dejó la 11.ª generación fuera de las H410 y B460."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "intel-400-11",
+      "ark-i5-10400"
+     ]
     },
     "B460": {
      "soporte": {
@@ -1593,7 +3142,12 @@
      ],
      "motivo": {
       "rocket": "Intel dejó la 11.ª generación fuera de las H410 y B460."
-     }
+     },
+     "grafica": 3,
+     "fuentes_grafica": [
+      "intel-400-11",
+      "ark-i5-10400"
+     ]
     },
     "H470": {
      "soporte": {
@@ -1612,7 +3166,16 @@
      ],
      "notas": {
       "rocket": "Con un Core de 11.ª en una placa 400, la memoria oficial es DDR4-2933: Intel solo da DDR4-3200 en placas 500."
-     }
+     },
+     "grafica": [
+      3,
+      4
+     ],
+     "fuentes_grafica": [
+      "intel-400-11",
+      "ark-h470-compat",
+      "computerbase-z490-pcie4"
+     ]
     },
     "Q470": {
      "soporte": {
@@ -1631,7 +3194,15 @@
      ],
      "notas": {
       "rocket": "Con un Core de 11.ª en una placa 400, la memoria oficial es DDR4-2933: Intel solo da DDR4-3200 en placas 500."
-     }
+     },
+     "grafica": [
+      3,
+      4
+     ],
+     "fuentes_grafica": [
+      "ark-q470-compat",
+      "computerbase-z490-pcie4"
+     ]
     },
     "Z490": {
      "soporte": {
@@ -1651,7 +3222,18 @@
      ],
      "notas": {
       "rocket": "PCIe 4.0 con la 11.ª generación solo en algunas placas (todas las MSI con BIOS nueva; en ASUS, pocas): mira la tuya. Con un Core de 11.ª en una placa 400, la memoria oficial es DDR4-2933: Intel solo da DDR4-3200 en placas 500."
-     }
+     },
+     "grafica": [
+      3,
+      4
+     ],
+     "fuentes_grafica": [
+      "intel-400-11",
+      "computerbase-z490-pcie4",
+      "wccftech-z490-pcie4",
+      "toms-msi-z490-pcie4",
+      "toms-z590"
+     ]
     },
     "W480": {
      "soporte": {
@@ -1670,7 +3252,15 @@
      ],
      "notas": {
       "rocket": "Con un Core de 11.ª en una placa 400, la memoria oficial es DDR4-2933: Intel solo da DDR4-3200 en placas 500."
-     }
+     },
+     "grafica": [
+      3,
+      4
+     ],
+     "fuentes_grafica": [
+      "ark-w480-compat",
+      "computerbase-z490-pcie4"
+     ]
     },
     "H510": {
      "soporte": {
@@ -1686,7 +3276,12 @@
       "intel-500-10",
       "intel-10400-compat"
      ],
-     "nota": "No tiene M.2 conectado a la CPU: todos sus M.2 van por el chipset a PCIe 3.0."
+     "nota": "No tiene M.2 conectado a la CPU: todos sus M.2 van por el chipset a PCIe 3.0.",
+     "grafica": 4,
+     "fuentes_grafica": [
+      "gb-h510m-h",
+      "ark-h510-compat"
+     ]
     },
     "B560": {
      "soporte": {
@@ -1712,7 +3307,12 @@
      ],
      "notas_m2": {
       "comet": "Con un Core de 10.ª generación, el M.2 que va a la CPU (el PCIe 4.0) se queda apagado y la gráfica baja a PCIe 3.0. En algunas MSI B560 ese M.2 pasa al chipset a PCIe 3.0."
-     }
+     },
+     "grafica": 4,
+     "fuentes_grafica": [
+      "intel-11gen-brief",
+      "ark-i5-11400"
+     ]
     },
     "H570": {
      "soporte": {
@@ -1738,7 +3338,12 @@
      ],
      "notas_m2": {
       "comet": "Con un Core de 10.ª generación, el M.2 que va a la CPU (el PCIe 4.0) se queda apagado y la gráfica baja a PCIe 3.0."
-     }
+     },
+     "grafica": 4,
+     "fuentes_grafica": [
+      "intel-11gen-brief",
+      "ark-i5-11400"
+     ]
     },
     "Q570": {
      "soporte": {
@@ -1759,7 +3364,12 @@
      ],
      "notas_m2": {
       "comet": "Con un Core de 10.ª generación, el M.2 que va a la CPU (el PCIe 4.0) se queda apagado y la gráfica baja a PCIe 3.0."
-     }
+     },
+     "grafica": 4,
+     "fuentes_grafica": [
+      "intel-11gen-brief",
+      "ark-i5-11400"
+     ]
     },
     "Z590": {
      "soporte": {
@@ -1780,7 +3390,12 @@
      ],
      "notas_m2": {
       "comet": "Con un Core de 10.ª generación, el M.2 que va a la CPU (el PCIe 4.0) se queda apagado y la gráfica baja a PCIe 3.0."
-     }
+     },
+     "grafica": 4,
+     "fuentes_grafica": [
+      "toms-z590",
+      "intel-11gen-brief"
+     ]
     },
     "W580": {
      "soporte": {
@@ -1795,6 +3410,10 @@
      "fuentes": [
       "intel-500-10",
       "intel-10400-compat"
+     ],
+     "grafica": 4,
+     "fuentes_grafica": [
+      "intel-11gen-brief"
      ]
     }
    }
@@ -1824,7 +3443,15 @@
       "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
       "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
      },
-     "nota": "Solo dos ranuras de memoria y sin overclock de memoria."
+     "nota": "Solo dos ranuras de memoria y sin overclock de memoria.",
+     "grafica": [
+      4,
+      5
+     ],
+     "fuentes_grafica": [
+      "ark-h610",
+      "gb-h610m-s2h"
+     ]
     },
     "B660": {
      "soporte": {
@@ -1842,7 +3469,14 @@
      "bios": {
       "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
       "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
-     }
+     },
+     "grafica": [
+      4,
+      5
+     ],
+     "fuentes_grafica": [
+      "ark-b660"
+     ]
     },
     "H670": {
      "soporte": {
@@ -1860,7 +3494,14 @@
      "bios": {
       "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
       "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
-     }
+     },
+     "grafica": [
+      4,
+      5
+     ],
+     "fuentes_grafica": [
+      "ark-h670"
+     ]
     },
     "Q670": {
      "soporte": {
@@ -1878,7 +3519,14 @@
      "bios": {
       "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
       "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
-     }
+     },
+     "grafica": [
+      4,
+      5
+     ],
+     "fuentes_grafica": [
+      "ark-q670"
+     ]
     },
     "Z690": {
      "soporte": {
@@ -1896,7 +3544,16 @@
      "bios": {
       "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
       "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
-     }
+     },
+     "grafica": [
+      4,
+      5
+     ],
+     "fuentes_grafica": [
+      "ark-z690",
+      "gb-z690m-ds3h-ddr4",
+      "aorus-z690-gaming-x-ddr4"
+     ]
     },
     "W680": {
      "soporte": {
@@ -1914,7 +3571,14 @@
      "bios": {
       "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
       "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
-     }
+     },
+     "grafica": [
+      4,
+      5
+     ],
+     "fuentes_grafica": [
+      "ark-w680"
+     ]
     },
     "B760": {
      "soporte": {
@@ -1933,7 +3597,16 @@
      "bios": {
       "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
       "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
-     }
+     },
+     "grafica": [
+      4,
+      5
+     ],
+     "fuentes_grafica": [
+      "ark-b760",
+      "gb-b760m-ds3h-ddr4",
+      "gb-b760m-ds3h-ddr4-gen5"
+     ]
     },
     "H770": {
      "soporte": {
@@ -1952,7 +3625,14 @@
      "bios": {
       "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
       "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
-     }
+     },
+     "grafica": [
+      4,
+      5
+     ],
+     "fuentes_grafica": [
+      "ark-h770"
+     ]
     },
     "Z790": {
      "soporte": {
@@ -1971,7 +3651,17 @@
      "bios": {
       "raptor": "mira en la web del fabricante qué versión de BIOS hace falta",
       "raptor_r": "mira en la web del fabricante qué versión de BIOS hace falta"
-     }
+     },
+     "grafica": [
+      4,
+      5
+     ],
+     "fuentes_grafica": [
+      "ark-z790",
+      "gb-z790-s-ddr4",
+      "gb-z790-d-ddr4",
+      "msi-pro-z790-p-wifi"
+     ]
     }
    },
    "nota": "Cada placa es DDR4 o DDR5, no las dos.",
@@ -2005,7 +3695,17 @@
       "intel-800-resumen",
       "kitguru-800-plus"
      ],
-     "nota": "Solo dos ranuras de memoria, sin overclock de memoria y sin M.2 conectado a la CPU."
+     "nota": "Solo dos ranuras de memoria, sin overclock de memoria y sin M.2 conectado a la CPU.",
+     "grafica": [
+      4,
+      5
+     ],
+     "fuentes_grafica": [
+      "intel-800-resumen",
+      "gb-h810m-h",
+      "gb-h810m-h-gen5",
+      "msi-pro-h810m-b"
+     ]
     },
     "B860": {
      "soporte": {
@@ -2021,7 +3721,16 @@
       "intel-800-resumen",
       "kitguru-800-plus"
      ],
-     "nota": "Un M.2 de la CPU a PCIe 5.0."
+     "nota": "Un M.2 de la CPU a PCIe 5.0.",
+     "grafica": [
+      4,
+      5
+     ],
+     "fuentes_grafica": [
+      "intel-800-resumen",
+      "gb-b860m-k",
+      "gb-b860m-aorus-elite"
+     ]
     },
     "Z890": {
      "soporte": {
@@ -2037,7 +3746,11 @@
       "intel-800-resumen",
       "kitguru-800-plus"
      ],
-     "nota": "Dos M.2 de la CPU (PCIe 5.0 y 4.0)."
+     "nota": "Dos M.2 de la CPU (PCIe 5.0 y 4.0).",
+     "grafica": 5,
+     "fuentes_grafica": [
+      "intel-800-resumen"
+     ]
     },
     "Q870": {
      "soporte": {
@@ -2051,6 +3764,10 @@
      "fuentes": [
       "ark-q870",
       "kitguru-800-plus"
+     ],
+     "grafica": 5,
+     "fuentes_grafica": [
+      "ark-q870"
      ]
     },
     "W880": {
@@ -2065,6 +3782,10 @@
      "fuentes": [
       "ark-w880",
       "kitguru-800-plus"
+     ],
+     "grafica": 5,
+     "fuentes_grafica": [
+      "ark-w880"
      ]
     }
    }
@@ -2091,7 +3812,17 @@
    "fuentes_igpu": [
     "toms-bristol"
    ],
-   "optimo": {}
+   "optimo": {},
+   "grafica": {
+    "gen": 3,
+    "carriles": 8,
+    "fuentes": [
+     "amd-am4",
+     "anandtech-bristol",
+     "toms-bristol-retail",
+     "etilize-prime-x370-pro"
+    ]
+   }
   },
   "summit": {
    "nombre": "Ryzen 1000 (Zen)",
@@ -2109,7 +3840,14 @@
     "amd-1800x"
    ],
    "igpu_nota": "en AM4 solo la traen los acabados en G (también GT y GE) y los A-Series",
-   "optimo": {}
+   "optimo": {},
+   "grafica": {
+    "gen": 3,
+    "carriles": 16,
+    "fuentes": [
+     "amd-1800x"
+    ]
+   }
   },
   "raven": {
    "nombre": "Ryzen 2000G y Athlon 200GE (Raven Ridge)",
@@ -2132,7 +3870,31 @@
    "fuentes_pcie": [
     "amd-2400g"
    ],
-   "optimo": {}
+   "optimo": {},
+   "grafica": {
+    "gen": 3,
+    "carriles": 8,
+    "fuentes": [
+     "amd-2400g",
+     "amd-am4",
+     "amd-200ge",
+     "asus-b450-spec"
+    ],
+    "por_modelo": {
+     "athlon-200ge": [
+      3,
+      4
+     ],
+     "athlon-220ge": [
+      3,
+      4
+     ],
+     "athlon-240ge": [
+      3,
+      4
+     ]
+    }
+   }
   },
   "pinnacle": {
    "nombre": "Ryzen 2000 (Zen+)",
@@ -2160,7 +3922,14 @@
    "fuentes_pcie": [
     "amd-2700x"
    ],
-   "igpu_nota": "en AM4 solo la traen los acabados en G (también GT y GE) y los A-Series"
+   "igpu_nota": "en AM4 solo la traen los acabados en G (también GT y GE) y los A-Series",
+   "grafica": {
+    "gen": 3,
+    "carriles": 16,
+    "fuentes": [
+     "amd-2700x"
+    ]
+   }
   },
   "picasso": {
    "nombre": "Ryzen 3000G (Picasso) y Athlon 3000G",
@@ -2184,7 +3953,24 @@
    "fuentes_pcie": [
     "amd-3200g"
    ],
-   "optimo": {}
+   "optimo": {},
+   "grafica": {
+    "gen": 3,
+    "carriles": 8,
+    "fuentes": [
+     "amd-3200g",
+     "amd-am4",
+     "amd-3000g",
+     "asus-b450-spec",
+     "toms-foro-3000g"
+    ],
+    "por_modelo": {
+     "athlon-3000g": [
+      3,
+      4
+     ]
+    }
+   }
   },
   "matisse": {
    "nombre": "Ryzen 3000 (Zen 2)",
@@ -2215,7 +4001,15 @@
    "fuentes_pcie": [
     "amd-3700x"
    ],
-   "igpu_nota": "en AM4 solo la traen los acabados en G (también GT y GE) y los A-Series"
+   "igpu_nota": "en AM4 solo la traen los acabados en G (también GT y GE) y los A-Series",
+   "grafica": {
+    "gen": 4,
+    "carriles": 16,
+    "fuentes": [
+     "amd-3700x",
+     "gb-b550m-ds3h"
+    ]
+   }
   },
   "renoir": {
    "nombre": "Ryzen 4000G y Ryzen 4100/4500 (Renoir)",
@@ -2235,7 +4029,16 @@
     "amd-4600g"
    ],
    "igpu_nota": "el 4100 y el 4500 vienen sin ella, aunque sean del mismo chip que los G",
-   "optimo": {}
+   "optimo": {},
+   "grafica": {
+    "gen": 3,
+    "carriles": 16,
+    "fuentes": [
+     "amd-4600g",
+     "gb-b550m-ds3h",
+     "lanoc-4500"
+    ]
+   }
   },
   "vermeer": {
    "nombre": "Ryzen 5000 (Zen 3)",
@@ -2268,7 +4071,16 @@
    "fuentes_pcie": [
     "amd-5800x"
    ],
-   "igpu_nota": "en AM4 solo la traen los acabados en G (también GT y GE) y los A-Series"
+   "igpu_nota": "en AM4 solo la traen los acabados en G (también GT y GE) y los A-Series",
+   "grafica": {
+    "gen": 4,
+    "carriles": 16,
+    "fuentes": [
+     "amd-5700x3d",
+     "amd-5800x",
+     "gb-b550m-ds3h"
+    ]
+   }
   },
   "cezanne": {
    "nombre": "Ryzen 5000G y Ryzen 5500/5700 (Cezanne)",
@@ -2292,7 +4104,17 @@
    "fuentes_igpu": [
     "amd-5700g"
    ],
-   "optimo": {}
+   "optimo": {},
+   "grafica": {
+    "gen": 3,
+    "carriles": 16,
+    "fuentes": [
+     "amd-5700",
+     "amd-5700g",
+     "amd-5600gt",
+     "gb-b550m-ds3h"
+    ]
+   }
   },
   "raphael": {
    "nombre": "Ryzen 7000 (Zen 4)",
@@ -2324,7 +4146,16 @@
     "amd-7950x"
    ],
    "igpu_modelo": "AMD Radeon Graphics (2 núcleos, la justa para tener imagen)",
-   "igpu_nota": "la F del nombre significa eso"
+   "igpu_nota": "la F del nombre significa eso",
+   "grafica": {
+    "gen": 5,
+    "carriles": 16,
+    "fuentes": [
+     "amd-7950x",
+     "amd-am5-qrg",
+     "msi-b840"
+    ]
+   }
   },
   "phoenix": {
    "nombre": "Ryzen 8000G (Zen 4 con gráfica)",
@@ -2356,7 +4187,27 @@
    "igpu_nota": "la F del nombre significa eso",
    "fuentes_igpu": [
     "amd-8000g"
-   ]
+   ],
+   "grafica": {
+    "gen": 4,
+    "carriles": 8,
+    "fuentes": [
+     "msi-b840",
+     "amd-8400f",
+     "amd-8500g",
+     "intel-guia-escritorio"
+    ],
+    "por_modelo": {
+     "ryzen-5-8500g": [
+      4,
+      4
+     ],
+     "ryzen-3-8300g": [
+      4,
+      4
+     ]
+    }
+   }
   },
   "granite": {
    "nombre": "Ryzen 9000 (Zen 5)",
@@ -2391,7 +4242,15 @@
    "igpu_nota": "la F del nombre significa eso",
    "fuentes_igpu": [
     "amd-9850x3d"
-   ]
+   ],
+   "grafica": {
+    "gen": 5,
+    "carriles": 16,
+    "fuentes": [
+     "amd-9950x",
+     "msi-b840"
+    ]
+   }
   },
   "gorgon": {
    "nombre": "Ryzen AI 400 de sobremesa",
@@ -2413,7 +4272,18 @@
    "fuentes_igpu": [
     "amd-ai-435g"
    ],
-   "optimo": {}
+   "optimo": {},
+   "grafica": {
+    "gen": 4,
+    "carriles": 8,
+    "fuentes": [
+     "amd-ai-450g",
+     "amd-ai-435g",
+     "wccftech-ai400",
+     "pcgh-ai400",
+     "pausehardware-ai400"
+    ]
+   }
   },
   "skylake": {
    "nombre": "Core de 6.ª generación (Skylake)",
@@ -2450,7 +4320,15 @@
    "fuentes_pcie": [
     "ark-i7-6700k"
    ],
-   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica"
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica",
+   "grafica": {
+    "gen": 3,
+    "carriles": 16,
+    "fuentes": [
+     "ark-i5-6600k",
+     "ark-g4400"
+    ]
+   }
   },
   "kaby": {
    "nombre": "Core de 7.ª generación (Kaby Lake)",
@@ -2489,7 +4367,15 @@
    "fuentes_pcie": [
     "ark-i7-7700k"
    ],
-   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica"
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica",
+   "grafica": {
+    "gen": 3,
+    "carriles": 16,
+    "fuentes": [
+     "ark-i7-7700k",
+     "ark-g3930"
+    ]
+   }
   },
   "coffee": {
    "nombre": "Core de 8.ª generación (Coffee Lake)",
@@ -2524,7 +4410,14 @@
    "fuentes_pcie": [
     "ark-i7-8700k"
    ],
-   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica"
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica",
+   "grafica": {
+    "gen": 3,
+    "carriles": 16,
+    "fuentes": [
+     "ark-i3-8100"
+    ]
+   }
   },
   "coffee_r": {
    "nombre": "Core de 9.ª generación (Coffee Lake Refresh)",
@@ -2559,7 +4452,14 @@
    "fuentes_pcie": [
     "ark-i9-9900k"
    ],
-   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica"
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica",
+   "grafica": {
+    "gen": 3,
+    "carriles": 16,
+    "fuentes": [
+     "ark-i5-9400"
+    ]
+   }
   },
   "comet": {
    "nombre": "Core de 10.ª generación (Comet Lake)",
@@ -2592,7 +4492,15 @@
    "fuentes_pcie": [
     "ark-i7-10700k"
    ],
-   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica"
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica",
+   "grafica": {
+    "gen": 3,
+    "carriles": 16,
+    "fuentes": [
+     "ark-i5-10400",
+     "ark-g6400"
+    ]
+   }
   },
   "rocket": {
    "nombre": "Core de 11.ª generación (Rocket Lake)",
@@ -2623,7 +4531,15 @@
    "fuentes_pcie": [
     "ark-i9-11900k"
    ],
-   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica"
+   "igpu_nota": "los que llevan F en el nombre vienen sin gráfica",
+   "grafica": {
+    "gen": 4,
+    "carriles": 16,
+    "fuentes": [
+     "ark-i5-11400",
+     "intel-11gen-brief"
+    ]
+   }
   },
   "alder": {
    "nombre": "Core de 12.ª generación (Alder Lake)",
@@ -2659,7 +4575,15 @@
    "fuentes_igpu": [
     "intel-gfx"
    ],
-   "optimo": {}
+   "optimo": {},
+   "grafica": {
+    "gen": 5,
+    "carriles": 16,
+    "fuentes": [
+     "ark-i3-12100f",
+     "ark-g6900"
+    ]
+   }
   },
   "raptor": {
    "nombre": "Core de 13.ª generación (Raptor Lake)",
@@ -2710,7 +4634,14 @@
    "fuentes_igpu": [
     "intel-gfx"
    ],
-   "optimo": {}
+   "optimo": {},
+   "grafica": {
+    "gen": 5,
+    "carriles": 16,
+    "fuentes": [
+     "ark-i5-13400f"
+    ]
+   }
   },
   "raptor_r": {
    "nombre": "Core de 14.ª generación (Raptor Lake Refresh)",
@@ -2758,7 +4689,14 @@
    "fuentes_igpu": [
     "intel-gfx"
    ],
-   "optimo": {}
+   "optimo": {},
+   "grafica": {
+    "gen": 5,
+    "carriles": 16,
+    "fuentes": [
+     "ark-i3-14100"
+    ]
+   }
   },
   "arrow": {
    "nombre": "Core Ultra 200S (Arrow Lake)",
@@ -2790,7 +4728,15 @@
    "fuentes_igpu": [
     "intel-200s"
    ],
-   "optimo": {}
+   "optimo": {},
+   "grafica": {
+    "gen": 5,
+    "carriles": 16,
+    "fuentes": [
+     "ark-u9-285k",
+     "intel-800-resumen"
+    ]
+   }
   },
   "arrow_r": {
    "nombre": "Core Ultra 200S Plus (Arrow Lake Refresh)",
@@ -2816,7 +4762,14 @@
     "intel-800-resumen"
    ],
    "igpu_nota": "los que llevan F en el nombre vienen sin gráfica",
-   "optimo": {}
+   "optimo": {},
+   "grafica": {
+    "gen": 5,
+    "carriles": 16,
+    "fuentes": [
+     "ark-u7-270k-plus"
+    ]
+   }
   }
  },
  "ssd": {
@@ -2834,6 +4787,3744 @@
    "texto": "Este SSD va igual de rápido en un hueco PCIe 4.0 x4 que en uno PCIe 5.0: usa cuatro carriles a 4.0 o dos a 5.0.",
    "fuentes": [
     "samsung-990-evo-plus"
+   ]
+  }
+ },
+ "graficas": {
+  "chips": {
+   "GeForce RTX 5090": {
+    "marca": "NVIDIA",
+    "pcie": [
+     5,
+     16
+    ],
+    "consumo": 575,
+    "psu": 1000,
+    "fuentes_psu": [
+     "nv-5090",
+     "nv-ug-5090"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 4,
+    "fuentes": [
+     "nv-5090",
+     "sr-5090",
+     "wp-rtx50",
+     "fps-5090",
+     "nv-ug-5090"
+    ]
+   },
+   "GeForce RTX 5080": {
+    "marca": "NVIDIA",
+    "pcie": [
+     5,
+     16
+    ],
+    "consumo": 360,
+    "psu": 850,
+    "fuentes_psu": [
+     "nv-5080",
+     "nv-ug-5080"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 3,
+    "fuentes": [
+     "nv-5080",
+     "sr-5080",
+     "wp-rtx50",
+     "nv-ug-5080",
+     "hwc-5080",
+     "kg-5080"
+    ]
+   },
+   "GeForce RTX 5070 Ti": {
+    "marca": "NVIDIA",
+    "pcie": [
+     5,
+     16
+    ],
+    "consumo": 300,
+    "psu": 750,
+    "fuentes_psu": [
+     "nv-5070fam"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 2,
+    "fuentes": [
+     "nv-5070fam",
+     "th-5070ti",
+     "wp-rtx50",
+     "kg-5070ti"
+    ]
+   },
+   "GeForce RTX 5070": {
+    "marca": "NVIDIA",
+    "pcie": [
+     5,
+     16
+    ],
+    "consumo": 250,
+    "psu": 650,
+    "fuentes_psu": [
+     "nv-5070fam",
+     "nv-ug-5070"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 2,
+    "fuentes": [
+     "nv-5070fam",
+     "wp-rtx50",
+     "sr-5090",
+     "sr-5080",
+     "nv-ug-5070"
+    ]
+   },
+   "GeForce RTX 5060 Ti": {
+    "marca": "NVIDIA",
+    "pcie": [
+     5,
+     8
+    ],
+    "consumo": 180,
+    "psu": 600,
+    "fuentes_psu": [
+     "nv-5060fam"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv-5060fam",
+     "th-5060ti16",
+     "ts-5060ti-pcie",
+     "wp-rtx50",
+     "kg-5060ti16",
+     "nv-news-5060"
+    ]
+   },
+   "GeForce RTX 5060 Ti 16 GB": {
+    "marca": "NVIDIA",
+    "pcie": [
+     5,
+     8
+    ],
+    "consumo": 180,
+    "psu": 600,
+    "fuentes_psu": [
+     "nv-5060fam"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv-5060fam",
+     "th-5060ti16",
+     "wp-rtx50",
+     "kg-5060ti16",
+     "nv-news-5060"
+    ]
+   },
+   "GeForce RTX 5060": {
+    "marca": "NVIDIA",
+    "pcie": [
+     5,
+     8
+    ],
+    "consumo": 145,
+    "psu": 550,
+    "fuentes_psu": [
+     "nv-5060fam"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv-5060fam",
+     "ts-5060",
+     "wp-rtx50",
+     "nv-news-5060",
+     "hh-5060"
+    ]
+   },
+   "GeForce RTX 5050": {
+    "marca": "NVIDIA",
+    "pcie": [
+     5,
+     8
+    ],
+    "consumo": 130,
+    "psu": 550,
+    "fuentes_psu": [
+     "nv-5050",
+     "nv-news-5050",
+     "c386-5050"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv-5050",
+     "wp-rtx50",
+     "c386-5050",
+     "hwc-5050",
+     "nv-news-5050"
+    ]
+   },
+   "GeForce RTX 4090": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 450,
+    "psu": 850,
+    "fuentes_psu": [
+     "nv-4090",
+     "nv-qsg-4090"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 3,
+    "fuentes": [
+     "nv-4090",
+     "wp-rtx40",
+     "sr-5090",
+     "nv-qsg-4090"
+    ]
+   },
+   "GeForce RTX 4080 SUPER": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 320,
+    "psu": 750,
+    "fuentes_psu": [
+     "nv-4080fam"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 3,
+    "fuentes": [
+     "nv-4080fam",
+     "wp-rtx40",
+     "fps-4080s",
+     "nv-news-super"
+    ]
+   },
+   "GeForce RTX 4080": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 320,
+    "psu": 750,
+    "fuentes_psu": [
+     "nv-4080fam",
+     "nv-qsg-4080"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 3,
+    "fuentes": [
+     "nv-4080fam",
+     "wp-rtx40",
+     "nv-qsg-4080"
+    ]
+   },
+   "GeForce RTX 4070 Ti SUPER": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 285,
+    "psu": 700,
+    "fuentes_psu": [
+     "nv-4070fam",
+     "kg-4070tis"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 2,
+    "fuentes": [
+     "nv-4070fam",
+     "wp-rtx40",
+     "kg-4070tis"
+    ]
+   },
+   "GeForce RTX 4070 Ti": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 285,
+    "psu": 700,
+    "fuentes_psu": [
+     "nv-4070fam"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 2,
+    "fuentes": [
+     "nv-4070fam",
+     "wp-rtx40",
+     "th-4070ti"
+    ]
+   },
+   "GeForce RTX 4070 SUPER": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 220,
+    "psu": 650,
+    "fuentes_psu": [
+     "nv-4070fam",
+     "fps-4070s"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 2,
+    "fuentes": [
+     "nv-4070fam",
+     "wp-rtx40",
+     "fps-4070s",
+     "nv-news-super"
+    ]
+   },
+   "GeForce RTX 4070": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 200,
+    "psu": 650,
+    "fuentes_psu": [
+     "nv-4070fam",
+     "nv-qsg-4070"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 2,
+    "fuentes": [
+     "nv-4070fam",
+     "wp-rtx40",
+     "nv-qsg-4070"
+    ]
+   },
+   "GeForce RTX 4060 Ti 8 GB": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     8
+    ],
+    "consumo": 160,
+    "psu": 550,
+    "fuentes_psu": [
+     "nv-4060fam",
+     "hh-4060ti"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 1,
+    "fuentes": [
+     "nv-4060fam",
+     "wp-rtx40",
+     "ts-5060",
+     "hh-4060ti",
+     "nv-news-4060"
+    ]
+   },
+   "GeForce RTX 4060 Ti": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     8
+    ],
+    "consumo": 160,
+    "psu": 550,
+    "fuentes_psu": [
+     "nv-4060fam",
+     "hh-4060ti"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 1,
+    "fuentes": [
+     "nv-4060fam",
+     "wp-rtx40",
+     "ts-5060",
+     "hh-4060ti",
+     "nv-news-4060"
+    ]
+   },
+   "GeForce RTX 4060": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     8
+    ],
+    "consumo": 115,
+    "psu": 550,
+    "fuentes_psu": [
+     "nv-4060fam"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv-4060fam",
+     "wp-rtx40",
+     "kg-4060",
+     "ts-5060",
+     "th-4060"
+    ]
+   },
+   "GeForce RTX 3090 Ti": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 450,
+    "psu": 850,
+    "fuentes_psu": [
+     "nv_3090",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 3,
+    "fuentes": [
+     "nv_3090",
+     "wp_lista",
+     "nv_compare",
+     "th_3090ti"
+    ]
+   },
+   "GeForce RTX 3090": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 350,
+    "psu": 750,
+    "fuentes_psu": [
+     "nv_3090",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 2,
+    "fuentes": [
+     "nv_3090",
+     "wp_lista",
+     "nv_compare"
+    ]
+   },
+   "GeForce RTX 3080 Ti": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 350,
+    "psu": 750,
+    "fuentes_psu": [
+     "nv_3080",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 2,
+    "fuentes": [
+     "nv_3080",
+     "wp_lista",
+     "nv_compare"
+    ]
+   },
+   "GeForce RTX 3080 12 GB": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 350,
+    "psu": 750,
+    "fuentes_psu": [
+     "nv_3080",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 2,
+    "fuentes": [
+     "nv_3080",
+     "wp_lista",
+     "nv_compare",
+     "th_3080_12"
+    ]
+   },
+   "GeForce RTX 3080 10 GB": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 320,
+    "psu": 750,
+    "fuentes_psu": [
+     "nv_3080",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 2,
+    "fuentes": [
+     "nv_3080",
+     "wp_lista",
+     "nv_compare"
+    ]
+   },
+   "GeForce RTX 3070 Ti": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 290,
+    "psu": 750,
+    "fuentes_psu": [
+     "nv_3070",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 2,
+    "fuentes": [
+     "nv_3070",
+     "wp_lista",
+     "nv_compare"
+    ]
+   },
+   "GeForce RTX 3070": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 220,
+    "psu": 650,
+    "fuentes_psu": [
+     "nv_3070",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 1,
+    "fuentes": [
+     "nv_3070",
+     "wp_lista",
+     "nv_compare"
+    ]
+   },
+   "GeForce RTX 3070 LHR": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 220,
+    "psu": 650,
+    "fuentes_psu": [
+     "nv_3070",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 1,
+    "fuentes": [
+     "nv_3070",
+     "wp_lista",
+     "nv_compare"
+    ]
+   },
+   "GeForce RTX 3060 Ti": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 200,
+    "psu": 600,
+    "fuentes_psu": [
+     "nv_3060",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 1,
+    "fuentes": [
+     "nv_3060",
+     "wp_lista",
+     "nv_compare"
+    ]
+   },
+   "GeForce RTX 3060 Ti GDDR6X": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 200,
+    "psu": 600,
+    "fuentes_psu": [
+     "nv_3060"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 1,
+    "fuentes": [
+     "nv_3060",
+     "wp_lista",
+     "th_3060ti_g6x"
+    ]
+   },
+   "GeForce RTX 3060 12 GB": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 170,
+    "psu": 550,
+    "fuentes_psu": [
+     "nv_3060",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_3060",
+     "wp_lista",
+     "nv_compare",
+     "pcw_3060"
+    ]
+   },
+   "GeForce RTX 3060 8 GB": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 170,
+    "psu": 550,
+    "fuentes_psu": [
+     "nv_3060",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_3060",
+     "wp_lista",
+     "nv_compare",
+     "pcw_3060"
+    ]
+   },
+   "GeForce RTX 3050 8 GB": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     8
+    ],
+    "consumo": 130,
+    "psu": 550,
+    "fuentes_psu": [
+     "nv_3050",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_3050",
+     "wp_lista",
+     "wp_30",
+     "nv_compare"
+    ]
+   },
+   "GeForce RTX 3050 6 GB": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     8
+    ],
+    "consumo": 70,
+    "psu": 300,
+    "fuentes_psu": [
+     "nv_3050",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     0,
+     0
+    ],
+    "fuentes": [
+     "nv_3050",
+     "wp_lista",
+     "wp_30",
+     "nv_compare"
+    ]
+   },
+   "GeForce RTX 3050": {
+    "marca": "NVIDIA",
+    "pcie": [
+     4,
+     8
+    ],
+    "consumo": 130,
+    "psu": 550,
+    "fuentes_psu": [
+     "nv_3050",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_3050",
+     "wp_lista",
+     "wp_30",
+     "nv_compare"
+    ]
+   },
+   "GeForce RTX 2080 Ti": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 260,
+    "psu": 650,
+    "fuentes_psu": [
+     "nv_2080ti",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_20",
+     "nv_2080ti"
+    ]
+   },
+   "GeForce RTX 2080 SUPER": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 250,
+    "psu": 650,
+    "fuentes_psu": [
+     "nv_2080s",
+     "nv_compare"
+    ],
+    "ref": [
+     1,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_20",
+     "nv_2080s"
+    ]
+   },
+   "GeForce RTX 2080": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 225,
+    "psu": 650,
+    "fuentes_psu": [
+     "nv_2080",
+     "nv_compare"
+    ],
+    "ref": [
+     1,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_20",
+     "nv_2080"
+    ]
+   },
+   "GeForce RTX 2070 SUPER": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 215,
+    "psu": 650,
+    "fuentes_psu": [
+     "nv_2070s",
+     "nv_compare"
+    ],
+    "ref": [
+     1,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_20",
+     "nv_2070s"
+    ]
+   },
+   "GeForce RTX 2070": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 185,
+    "psu": 550,
+    "fuentes_psu": [
+     "nv_2070",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_20",
+     "nv_2070"
+    ]
+   },
+   "GeForce RTX 2060 SUPER": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 175,
+    "psu": 550,
+    "fuentes_psu": [
+     "nv_2060s",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_20",
+     "nv_2060s"
+    ]
+   },
+   "GeForce RTX 2060": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 160,
+    "psu": 500,
+    "fuentes_psu": [
+     "nv_2060",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_20",
+     "nv_2060"
+    ]
+   },
+   "GeForce GTX 1660 Ti": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 120,
+    "psu": 450,
+    "fuentes_psu": [
+     "nv_1660ti",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_16",
+     "nv_1660ti"
+    ]
+   },
+   "GeForce GTX 1660 SUPER": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 125,
+    "psu": 450,
+    "fuentes_psu": [
+     "nv_1660s",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_16",
+     "nv_1660s"
+    ]
+   },
+   "GeForce GTX 1660": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 120,
+    "psu": 450,
+    "fuentes_psu": [
+     "nv_1660ti",
+     "nv_compare"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_16",
+     "nv_1660ti"
+    ]
+   },
+   "GeForce GTX 1650 SUPER": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 100,
+    "psu": 350,
+    "fuentes_psu": [
+     "nv_1650s",
+     "nv_compare"
+    ],
+    "ref": [
+     1,
+     0,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_16",
+     "nv_1650s"
+    ]
+   },
+   "GeForce GTX 1650": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 75,
+    "psu": 300,
+    "fuentes_psu": [
+     "nv_1650",
+     "nv_compare"
+    ],
+    "ref": [
+     1,
+     0,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_16",
+     "nv_1650"
+    ]
+   },
+   "GeForce GTX 1630": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 75,
+    "psu": 300,
+    "fuentes_psu": [
+     "nv_compare"
+    ],
+    "ref": [
+     1,
+     0,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_16"
+    ]
+   },
+   "GeForce GTX 1080 Ti": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 250,
+    "psu": 600,
+    "fuentes_psu": [
+     "nv_1080ti_guia",
+     "hh_1080ti"
+    ],
+    "ref": [
+     1,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "nv_1080ti_guia",
+     "wp_lista",
+     "hh_1080ti",
+     "gn_1080ti"
+    ]
+   },
+   "GeForce GTX 1080": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 180,
+    "psu": 500,
+    "fuentes_psu": [
+     "hh_1080"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_lista",
+     "nv_1080_noticia",
+     "hh_1080"
+    ]
+   },
+   "GeForce GTX 1070 Ti": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 180,
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_lista",
+     "bt_1070ti",
+     "th_1070ti",
+     "hh_1070ti"
+    ]
+   },
+   "GeForce GTX 1070": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 150,
+    "psu": 500,
+    "fuentes_psu": [
+     "th_1070"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "th_1070",
+     "wp_lista"
+    ]
+   },
+   "GeForce GTX 1060": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 120,
+    "psu": 400,
+    "fuentes_psu": [
+     "hh_1060"
+    ],
+    "ref": [
+     1,
+     0,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_lista",
+     "nv_1060_noticia",
+     "gn_1060_3gb",
+     "hh_1060"
+    ]
+   },
+   "GeForce GTX 1050 Ti": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 75,
+    "psu": 300,
+    "fuentes_psu": [
+     "th_1050"
+    ],
+    "ref": [
+     0,
+     0,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_lista",
+     "th_1050"
+    ]
+   },
+   "GeForce GTX 1050": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 75,
+    "psu": 300,
+    "fuentes_psu": [
+     "th_1050"
+    ],
+    "ref": [
+     0,
+     0,
+     0
+    ],
+    "fuentes": [
+     "nv_compare",
+     "wp_lista",
+     "th_1050"
+    ]
+   },
+   "GeForce GT 1030": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     4
+    ],
+    "consumo": 30,
+    "psu": 300,
+    "fuentes_psu": [
+     "nv_gt1030"
+    ],
+    "ref": [
+     0,
+     0,
+     0
+    ],
+    "fuentes": [
+     "nv_gt1030",
+     "wp_lista"
+    ]
+   },
+   "Titan Xp": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 250,
+    "psu": 600,
+    "fuentes_psu": [
+     "nv_titanxp"
+    ],
+    "ref": [
+     1,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_titanxp",
+     "wp_lista",
+     "th_titanxp"
+    ]
+   },
+   "Titan X (Pascal)": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 250,
+    "psu": 600,
+    "fuentes_psu": [
+     "nv_titanx_guia",
+     "hh_titanx"
+    ],
+    "ref": [
+     1,
+     1,
+     0
+    ],
+    "fuentes": [
+     "nv_titanx_guia",
+     "wp_lista",
+     "hh_titanx"
+    ]
+   },
+   "Titan RTX": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 280,
+    "psu": 650,
+    "fuentes_psu": [
+     "nv_titanrtx_guia"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "nv_titanrtx_guia",
+     "wp_20",
+     "th_titanrtx"
+    ]
+   },
+   "Titan V": {
+    "marca": "NVIDIA",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 250,
+    "psu": 600,
+    "fuentes_psu": [
+     "nv_titanv"
+    ],
+    "ref": [
+     1,
+     1,
+     0
+    ],
+    "fuentes": [
+     "wp_lista",
+     "nv_titanv"
+    ]
+   },
+   "Radeon RX 9070 XT": {
+    "marca": "AMD",
+    "pcie": [
+     5,
+     16
+    ],
+    "consumo": 304,
+    "psu": 750,
+    "fuentes_psu": [
+     "amd-9070xt"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "amd-9070xt",
+     "nbc-9070-sin-mba",
+     "club386-sapphire-9070"
+    ]
+   },
+   "Radeon RX 9070": {
+    "marca": "AMD",
+    "pcie": [
+     5,
+     16
+    ],
+    "consumo": 220,
+    "psu": 650,
+    "fuentes_psu": [
+     "amd-9070"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "amd-9070",
+     "nbc-9070-sin-mba",
+     "club386-sapphire-9070"
+    ]
+   },
+   "Radeon RX 9070 GRE": {
+    "marca": "AMD",
+    "pcie": [
+     5,
+     16
+    ],
+    "consumo": 220,
+    "psu": 650,
+    "fuentes_psu": [
+     "amd-9070gre"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "amd-9070gre",
+     "hh-9070gre"
+    ]
+   },
+   "Radeon RX 9060 XT 16 GB": {
+    "marca": "AMD",
+    "pcie": [
+     5,
+     16
+    ],
+    "consumo": 160,
+    "psu": 450,
+    "fuentes_psu": [
+     "amd-9060xt-16"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "amd-9060xt-16",
+     "tt-9060xt-sin-mba"
+    ]
+   },
+   "Radeon RX 9060 XT 8 GB": {
+    "marca": "AMD",
+    "pcie": [
+     5,
+     16
+    ],
+    "consumo": 150,
+    "psu": 450,
+    "fuentes_psu": [
+     "amd-9060xt-8"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "amd-9060xt-8",
+     "tt-9060xt-sin-mba"
+    ]
+   },
+   "Radeon RX 9060": {
+    "marca": "AMD",
+    "pcie": [
+     5,
+     16
+    ],
+    "consumo": 132,
+    "psu": 450,
+    "fuentes_psu": [
+     "amd-9060"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "amd-9060",
+     "toms-9060-si"
+    ]
+   },
+   "Radeon RX 7900 XTX": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 355,
+    "psu": 800,
+    "fuentes_psu": [
+     "amd-7900xtx"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-7900xtx",
+     "kitguru-7900xtx"
+    ]
+   },
+   "Radeon RX 7900 XT": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 315,
+    "psu": 750,
+    "fuentes_psu": [
+     "amd-7900xt"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-7900xt",
+     "wiki-rx7000"
+    ]
+   },
+   "Radeon RX 7900 GRE": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 260,
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-7900gre",
+     "soyacincau-7900gre",
+     "kitguru-7900gre",
+     "toms-7900gre"
+    ]
+   },
+   "Radeon RX 7800 XT": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 263,
+    "psu": 700,
+    "fuentes_psu": [
+     "amd-7800xt"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-7800xt",
+     "toms-7800xt-7700xt",
+     "amd-qsg-7800xt",
+     "amd-pr-7800xt-7700xt"
+    ]
+   },
+   "Radeon RX 7700 XT": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 245,
+    "psu": 700,
+    "fuentes_psu": [
+     "amd-7700xt"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-7700xt",
+     "toms-7800xt-7700xt",
+     "pcgh-7700xt-mba",
+     "amd-pr-7800xt-7700xt"
+    ]
+   },
+   "Radeon RX 7600 XT": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     8
+    ],
+    "consumo": 190,
+    "psu": 600,
+    "fuentes_psu": [
+     "amd-7600xt"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-7600xt",
+     "pcgamer-7600xt"
+    ]
+   },
+   "Radeon RX 7600": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     8
+    ],
+    "consumo": 165,
+    "psu": 550,
+    "fuentes_psu": [
+     "amd-7600"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "igorslab-7600",
+     "amd-7600",
+     "amd-qsg-7600"
+    ]
+   },
+   "Radeon RX 6950 XT": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 335,
+    "psu": 850,
+    "fuentes_psu": [
+     "amd-6950xt"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "wiki-rx6000",
+     "wiki-lista-amd",
+     "amd-6950xt",
+     "anandtech-6x50",
+     "computerbase-6x50",
+     "amd-pr-6x50"
+    ]
+   },
+   "Radeon RX 6900 XT": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 300,
+    "psu": 850,
+    "fuentes_psu": [
+     "amd-6900xt"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "wiki-rx6000",
+     "wiki-lista-amd",
+     "amd-6900xt",
+     "toms-6900xt"
+    ]
+   },
+   "Radeon RX 6800 XT": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 300,
+    "psu": 750,
+    "fuentes_psu": [
+     "amd-6800xt"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "wiki-rx6000",
+     "wiki-lista-amd",
+     "amd-6800xt",
+     "toms-6800xt-6800"
+    ]
+   },
+   "Radeon RX 6800": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 250,
+    "psu": 650,
+    "fuentes_psu": [
+     "amd-6800"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "wiki-rx6000",
+     "wiki-lista-amd",
+     "amd-6800",
+     "toms-6800xt-6800"
+    ]
+   },
+   "Radeon RX 6750 XT": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 250,
+    "psu": 650,
+    "fuentes_psu": [
+     "amd-6750xt"
+    ],
+    "ref": [
+     1,
+     1,
+     0
+    ],
+    "fuentes": [
+     "wiki-rx6000",
+     "wiki-lista-amd",
+     "amd-6750xt",
+     "anandtech-6x50",
+     "computerbase-6x50",
+     "amd-pr-6x50"
+    ]
+   },
+   "Radeon RX 6700 XT": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 230,
+    "psu": 650,
+    "fuentes_psu": [
+     "amd-6700xt"
+    ],
+    "ref": [
+     1,
+     1,
+     0
+    ],
+    "fuentes": [
+     "wiki-rx6000",
+     "wiki-lista-amd",
+     "amd-6700xt",
+     "amd-qsg-6700xt"
+    ]
+   },
+   "Radeon RX 6700": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 175,
+    "psu": 600,
+    "fuentes_psu": [
+     "amd-6700"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "wiki-rx6000",
+     "wiki-lista-amd",
+     "club386-6700",
+     "amd-6700",
+     "pcgh-6700"
+    ]
+   },
+   "Radeon RX 6650 XT": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     8
+    ],
+    "consumo": 180,
+    "psu": 500,
+    "fuentes_psu": [
+     "amd-6650xt"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "wiki-rx6000",
+     "wiki-lista-amd",
+     "amd-6650xt",
+     "computerbase-6x50",
+     "amd-pr-6x50"
+    ]
+   },
+   "Radeon RX 6600 XT": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     8
+    ],
+    "consumo": 160,
+    "psu": 500,
+    "fuentes_psu": [
+     "amd-6600xt"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "wiki-rx6000",
+     "wiki-lista-amd",
+     "amd-6600xt",
+     "toms-6600xt"
+    ]
+   },
+   "Radeon RX 6600": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     8
+    ],
+    "consumo": 132,
+    "psu": 450,
+    "fuentes_psu": [
+     "amd-6600"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "wiki-rx6000",
+     "wiki-lista-amd",
+     "amd-6600",
+     "amd-pr-6600"
+    ]
+   },
+   "Radeon RX 6500 XT": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     4
+    ],
+    "consumo": 113,
+    "psu": 400,
+    "fuentes_psu": [
+     "amd-6500xt"
+    ],
+    "ref": [
+     1,
+     0,
+     0
+    ],
+    "fuentes": [
+     "wiki-rx6000",
+     "wiki-lista-amd",
+     "amd-6500xt",
+     "amd-guia-rx6000",
+     "toms-6500xt",
+     "amd-pr-6500xt-6400"
+    ]
+   },
+   "Radeon RX 6400": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     4
+    ],
+    "consumo": 53,
+    "psu": 350,
+    "fuentes_psu": [
+     "amd-6400"
+    ],
+    "ref": [
+     0,
+     0,
+     0
+    ],
+    "fuentes": [
+     "wiki-rx6000",
+     "wiki-lista-amd",
+     "amd-6400",
+     "amd-pr-6500xt-6400"
+    ]
+   },
+   "Radeon AI PRO R9700": {
+    "marca": "AMD",
+    "pcie": [
+     5,
+     16
+    ],
+    "consumo": 300,
+    "psu": 750,
+    "fuentes_psu": [
+     "amd-r9700"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "adaptador": 2,
+    "fuentes": [
+     "amd-r9700",
+     "wiki-lista-amd",
+     "pcgh-r9700-ref",
+     "pcgh-r9700-sapphire",
+     "toms-r9700-asrock",
+     "sth-r9700",
+     "fpsreview-r9700",
+     "gigabyte-r9700"
+    ]
+   },
+   "Radeon AI PRO R9700S": {
+    "marca": "AMD",
+    "pcie": [
+     5,
+     16
+    ],
+    "consumo": 300,
+    "psu": 750,
+    "fuentes_psu": [
+     "amd-r9700s"
+    ],
+    "ref": [
+     0,
+     0,
+     1
+    ],
+    "fuentes": [
+     "amd-r9700s",
+     "wiki-lista-amd",
+     "pcgh-r9700s",
+     "wccftech-r9700s"
+    ]
+   },
+   "Radeon RX 5700 XT": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 225,
+    "psu": 600,
+    "fuentes_psu": [
+     "amd-rx5700xt"
+    ],
+    "ref": [
+     1,
+     1,
+     0
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-np-rx5700",
+     "amd-rx5700xt",
+     "toms-rx5700"
+    ]
+   },
+   "Radeon RX 5700": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 180,
+    "psu": 600,
+    "fuentes_psu": [
+     "amd-rx5700"
+    ],
+    "ref": [
+     1,
+     1,
+     0
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-np-rx5700",
+     "amd-rx5700",
+     "toms-rx5700"
+    ]
+   },
+   "Radeon RX 5600 XT": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 150,
+    "psu": 550,
+    "fuentes_psu": [
+     "amd-rx5600xt"
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-np-rx5600",
+     "amd-rx5600xt",
+     "anandtech-rx5600xt"
+    ]
+   },
+   "Radeon RX 5500 XT": {
+    "marca": "AMD",
+    "pcie": [
+     4,
+     8
+    ],
+    "consumo": 130,
+    "psu": 450,
+    "fuentes_psu": [
+     "amd-rx5500xt"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-np-rx5500",
+     "amd-rx5500xt",
+     "toms-rx5500xt"
+    ]
+   },
+   "Radeon RX 590": {
+    "marca": "AMD",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 225,
+    "fuentes": [
+     "wiki-lista-amd",
+     "toms-rx590",
+     "amd-rx590",
+     "anandtech-rx590"
+    ]
+   },
+   "Radeon RX 580": {
+    "marca": "AMD",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 185,
+    "psu": 500,
+    "fuentes_psu": [
+     "amd-rx580"
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-rx580",
+     "anandtech-rx580-rx570",
+     "toms-rx580"
+    ]
+   },
+   "Radeon RX 570": {
+    "marca": "AMD",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 150,
+    "psu": 450,
+    "fuentes_psu": [
+     "amd-rx570"
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-rx570",
+     "anandtech-rx580-rx570",
+     "toms-rx570"
+    ]
+   },
+   "Radeon RX 560": {
+    "marca": "AMD",
+    "pcie": [
+     3,
+     8
+    ],
+    "consumo": 80,
+    "psu": 450,
+    "fuentes_psu": [
+     "amd-rx560"
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-rx560",
+     "toms-rx560"
+    ]
+   },
+   "Radeon RX 550": {
+    "marca": "AMD",
+    "pcie": [
+     3,
+     8
+    ],
+    "consumo": 50,
+    "psu": 400,
+    "fuentes_psu": [
+     "amd-rx550"
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-rx550",
+     "toms-rx550"
+    ]
+   },
+   "Radeon RX 480": {
+    "marca": "AMD",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 150,
+    "psu": 500,
+    "fuentes_psu": [
+     "amd-rx480"
+    ],
+    "ref": [
+     1,
+     0,
+     0
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-rx480",
+     "pcper-rx480",
+     "hothardware-rx480"
+    ]
+   },
+   "Radeon RX 470": {
+    "marca": "AMD",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 120,
+    "psu": 450,
+    "fuentes_psu": [
+     "amd-rx470"
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-rx470",
+     "toms-rx570"
+    ]
+   },
+   "Radeon RX 460": {
+    "marca": "AMD",
+    "pcie": [
+     3,
+     8
+    ],
+    "consumo": 70,
+    "psu": 400,
+    "fuentes_psu": [
+     "amd-rx460"
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "toms-rx460",
+     "amd-rx460"
+    ]
+   },
+   "Radeon RX Vega 64": {
+    "marca": "AMD",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 295,
+    "psu": 750,
+    "fuentes_psu": [
+     "amd-vega64"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-vega64",
+     "toms-vega64",
+     "hexus-vega"
+    ]
+   },
+   "Radeon RX Vega 56": {
+    "marca": "AMD",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 210,
+    "psu": 650,
+    "fuentes_psu": [
+     "amd-vega56"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-vega56",
+     "hexus-vega"
+    ]
+   },
+   "Radeon VII": {
+    "marca": "AMD",
+    "pcie": [
+     3,
+     16
+    ],
+    "consumo": 300,
+    "psu": 750,
+    "fuentes_psu": [
+     "amd-radeon-vii"
+    ],
+    "ref": [
+     0,
+     2,
+     0
+    ],
+    "fuentes": [
+     "wiki-lista-amd",
+     "amd-radeon-vii",
+     "anandtech-radeon-vii"
+    ]
+   },
+   "Arc B580": {
+    "marca": "Intel",
+    "pcie": [
+     4,
+     8
+    ],
+    "consumo": 190,
+    "psu": 600,
+    "fuentes_psu": [
+     "intel-b580",
+     "intel-guia-escritorio"
+    ],
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "rebar": true,
+    "fuentes": [
+     "intel-b580",
+     "intel-guia-escritorio"
+    ]
+   },
+   "Arc B570": {
+    "marca": "Intel",
+    "pcie": [
+     4,
+     8
+    ],
+    "consumo": 150,
+    "rebar": true,
+    "fuentes": [
+     "intel-b570",
+     "intel-guia-escritorio",
+     "intel-lanzamiento-serie-b"
+    ]
+   },
+   "Arc A770": {
+    "marca": "Intel",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 225,
+    "psu": 600,
+    "fuentes_psu": [
+     "intel-guia-escritorio",
+     "intel-integracion-serie-a"
+    ],
+    "ref": [
+     1,
+     1,
+     0
+    ],
+    "rebar": true,
+    "fuentes": [
+     "intel-a770",
+     "intel-guia-escritorio",
+     "intel-integracion-serie-a",
+     "intel-conectores-le",
+     "intel-rebar-serie-a"
+    ]
+   },
+   "Arc A750": {
+    "marca": "Intel",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 225,
+    "psu": 600,
+    "fuentes_psu": [
+     "intel-guia-escritorio",
+     "intel-integracion-serie-a"
+    ],
+    "ref": [
+     1,
+     1,
+     0
+    ],
+    "rebar": true,
+    "fuentes": [
+     "intel-a750",
+     "intel-guia-escritorio",
+     "intel-integracion-serie-a",
+     "intel-conectores-le",
+     "intel-rebar-serie-a"
+    ]
+   },
+   "Arc A580": {
+    "marca": "Intel",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 185,
+    "rebar": true,
+    "fuentes": [
+     "intel-a580",
+     "intel-guia-escritorio",
+     "intel-nota-a580",
+     "intel-rebar-serie-a"
+    ]
+   },
+   "Arc A380": {
+    "marca": "Intel",
+    "pcie": [
+     4,
+     8
+    ],
+    "consumo": 75,
+    "ref": [
+     0,
+     0,
+     0
+    ],
+    "rebar": true,
+    "fuentes": [
+     "intel-a380",
+     "intel-datasheet-a380-a310",
+     "intel-guia-a380",
+     "intel-guia-escritorio",
+     "intel-rebar-serie-a"
+    ]
+   },
+   "Arc A310": {
+    "marca": "Intel",
+    "pcie": [
+     4,
+     8
+    ],
+    "consumo": 75,
+    "ref": [
+     0,
+     0,
+     0
+    ],
+    "rebar": true,
+    "fuentes": [
+     "intel-a310",
+     "intel-datasheet-a380-a310",
+     "intel-rebar-serie-a"
+    ]
+   },
+   "Arc Pro B60": {
+    "marca": "Intel",
+    "pcie": [
+     5,
+     8
+    ],
+    "consumo": 200,
+    "rebar": true,
+    "fuentes": [
+     "intel-pro-b60",
+     "intel-datasheet-pro-b60",
+     "intel-guia-pro"
+    ]
+   },
+   "Arc Pro B50": {
+    "marca": "Intel",
+    "pcie": [
+     5,
+     8
+    ],
+    "consumo": 70,
+    "psu": 280,
+    "fuentes_psu": [
+     "intel-pro-b50",
+     "intel-guia-pro"
+    ],
+    "ref": [
+     0,
+     0,
+     0
+    ],
+    "rebar": true,
+    "fuentes": [
+     "intel-pro-b50",
+     "intel-datasheet-pro-b50",
+     "intel-guia-pro"
+    ]
+   },
+   "Arc Pro B70": {
+    "marca": "Intel",
+    "pcie": [
+     5,
+     16
+    ],
+    "consumo": 230,
+    "ref": [
+     0,
+     1,
+     0
+    ],
+    "fuentes": [
+     "intel-pro-b70",
+     "intel-datasheet-pro-b70",
+     "storagereview-pro-b70"
+    ]
+   },
+   "Arc Pro A60": {
+    "marca": "Intel",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 130,
+    "psu": 600,
+    "fuentes_psu": [
+     "intel-guia-pro"
+    ],
+    "ref": [
+     1,
+     0,
+     0
+    ],
+    "rebar": true,
+    "fuentes": [
+     "intel-pro-a60",
+     "intel-guia-pro"
+    ]
+   },
+   "Arc Pro A50": {
+    "marca": "Intel",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 75,
+    "psu": 350,
+    "fuentes_psu": [
+     "intel-guia-pro"
+    ],
+    "ref": [
+     0,
+     0,
+     0
+    ],
+    "rebar": true,
+    "fuentes": [
+     "intel-pro-a50",
+     "intel-guia-pro"
+    ]
+   },
+   "Arc Pro A40": {
+    "marca": "Intel",
+    "pcie": [
+     4,
+     16
+    ],
+    "consumo": 50,
+    "psu": 350,
+    "fuentes_psu": [
+     "intel-guia-pro"
+    ],
+    "ref": [
+     0,
+     0,
+     0
+    ],
+    "rebar": true,
+    "fuentes": [
+     "intel-pro-a40",
+     "intel-guia-pro"
+    ]
+   }
+  },
+  "compatible": {
+   "fuentes": [
+    "toms-pcie"
+   ]
+  },
+  "potencia": {
+   "fuentes": [
+    "intel-conectores-le",
+    "intel_atx31",
+    "nvidia_workstation_power",
+    "hwbusters_atx31"
+   ]
+  },
+  "adaptador": {
+   "texto": "Para el adaptador, NVIDIA pide cables de 8 pines independientes, no un cable con dos conectores. Seasonic lo recomienda en las gráficas de más de 225 W; Corsair dice que en sus fuentes un cable doble aguanta.",
+   "fuentes": [
+    "nv-ug-5090",
+    "seasonic_rtx40",
+    "corsair_native_vs_8pin"
+   ]
+  },
+  "cable16": {
+   "texto": "Mira que el cable de 16 pines de la fuente sea de 600 W: no todos lo son (el de la Corsair RM650e, por ejemplo, da 450 W). Los cables 12VHPWR y 12V-2x6 son el mismo; lo que cambió es el conector de la placa.",
+   "fuentes": [
+    "corsair_native_vs_8pin",
+    "hwbusters_12v2x6",
+    "intel_atx31"
+   ]
+  },
+  "margen": {
+   "texto": "Lo que pide el fabricante es para el equipo entero y ya lleva margen: con un procesador que gaste poco puede ir, pero vas sin colchón para los picos de consumo de la gráfica.",
+   "fuentes": [
+    "seasonic_calculadoras",
+    "igorslab_transitorios",
+    "intel_atx31"
+   ]
+  },
+  "rebar": {
+   "familias": [
+    "matisse",
+    "vermeer",
+    "cezanne",
+    "raphael",
+    "phoenix",
+    "granite",
+    "comet",
+    "rocket",
+    "alder",
+    "raptor",
+    "raptor_r",
+    "arrow",
+    "arrow_r"
+   ],
+   "texto_pide": "Las Arc necesitan Resizable BAR para rendir lo que deben. Intel pide un Core de 10.ª generación o más nuevo, o un Ryzen 3000 (salvo los 3000G) o más nuevo, con Resizable BAR activado en la BIOS, arranque UEFI y CSM desactivado.",
+   "texto_si": "Las Arc necesitan Resizable BAR para rendir lo que deben, y este procesador lo admite: actívalo en la BIOS, con arranque UEFI y CSM desactivado. En placas de 2020 y 2021, mira que su BIOS lo traiga.",
+   "texto_no": "Las Arc necesitan Resizable BAR para rendir lo que deben, y con este procesador no lo hay oficialmente. En una prueba, la A770 sin él rindió entre un 20 y un 24 % menos, con tirones.",
+   "fuentes": [
+    "intel-guia-escritorio",
+    "intel-arc-rebar-necesario",
+    "toms-a770-rebar",
+    "amd-smart-tech"
+   ]
+  },
+  "rendimiento": [
+   {
+    "hasta": 4,
+    "tipo": "aviso",
+    "texto": "Con tan poco ancho de banda (el de PCIe 3.0 x4) se pierde mucho: en las pruebas, la RX 6500 XT rinde de media un 23-25 % menos en PCIe 3.0 que en 4.0 a 1080p, y hasta un 50 % menos en algunos juegos.",
+    "fuentes": [
+     "computerbase-6500xt",
+     "pla-toms-6500xt",
+     "techspot-6500xt"
+    ]
+   },
+   {
+    "hasta": 8,
+    "gb_max": 8,
+    "tipo": "aviso",
+    "texto": "Con el ancho de banda de PCIe 3.0 x8 (o 4.0 x4), las gráficas de 8 GB pierden poco en muchos juegos y mucho en los que les llenan la memoria: en las pruebas, la RTX 5060 Ti de 8 GB perdió hasta un 68 % en Spider-Man 2 a 1440p.",
+    "fuentes": [
+     "ts-5060ti-pcie",
+     "tech4gamers-4060ti"
+    ]
+   },
+   {
+    "hasta": 8,
+    "tipo": "info",
+    "texto": "Con el ancho de banda de PCIe 3.0 x8 (o 4.0 x4) se pierde algo de rendimiento; donde más, en los juegos que llenan la memoria de la gráfica.",
+    "fuentes": [
+     "ts-5060ti-pcie"
+    ]
+   },
+   {
+    "hasta": 16,
+    "gb_max": 8,
+    "tipo": "info",
+    "texto": "Con el ancho de banda de PCIe 4.0 x8 (o 3.0 x16), las gráficas de 8 GB pueden perder en los juegos que les llenan la memoria: la RTX 5060 Ti de 8 GB rinde de media un 6 % menos en PCIe 4.0 que en 5.0 a 1440p, y hasta un 30 % menos en algunos juegos.",
+    "fuentes": [
+     "toms-5060ti-8gb"
+    ]
+   },
+   {
+    "hasta": 999,
+    "tipo": "info",
+    "texto": "La diferencia medida es pequeña: la RTX 4090 en PCIe 3.0 x16 rinde de media menos de un 3 % por debajo que en 4.0, y la RTX 5090 en PCIe 3.0 x16, entre un 1 y un 4 % por debajo que en 5.0.",
+    "fuentes": [
+     "chip-pl-4090",
+     "gn-5090"
+    ]
+   }
+  ]
+ },
+ "cpu_consumo": {
+  "amd_factor": 1.35,
+  "fuentes_amd": [
+   "toms_am5_ppt",
+   "techpowerup_amd_ppt"
+  ],
+  "intel": [
+   {
+    "familias": [
+     "raptor",
+     "raptor_r"
+    ],
+    "gamas": [
+     "i5"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 154,
+    "fuentes": [
+     "ark-i5-13500",
+     "ark_13600",
+     "intel_deck_14gen_65_35"
+    ],
+    "modelos": [
+     "13500",
+     "13600",
+     "14500",
+     "14600"
+    ]
+   },
+   {
+    "familias": [
+     "raptor",
+     "raptor_r"
+    ],
+    "gamas": [
+     "i5"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 148,
+    "fuentes": [
+     "ark_13400",
+     "intel_deck_14gen_65_35"
+    ],
+    "modelos": [
+     "13400",
+     "14400"
+    ]
+   },
+   {
+    "familias": [
+     "raptor",
+     "raptor_r"
+    ],
+    "gamas": [
+     "i5"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 92,
+    "fuentes": [
+     "ark_13500t",
+     "intel_deck_14gen_65_35"
+    ],
+    "modelos": [
+     "13500",
+     "13600",
+     "14500",
+     "14600"
+    ]
+   },
+   {
+    "familias": [
+     "raptor",
+     "raptor_r"
+    ],
+    "gamas": [
+     "i5"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 82,
+    "fuentes": [
+     "ark_13400t",
+     "intel_deck_14gen_65_35"
+    ],
+    "modelos": [
+     "13400",
+     "14400"
+    ]
+   },
+   {
+    "familias": [
+     "alder"
+    ],
+    "gamas": [
+     "i9"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 241,
+    "fuentes": [
+     "ark_12900k"
+    ]
+   },
+   {
+    "familias": [
+     "alder"
+    ],
+    "gamas": [
+     "i9"
+    ],
+    "sufijos": [
+     "KS"
+    ],
+    "pl2": 241,
+    "fuentes": [
+     "ark_12900ks"
+    ]
+   },
+   {
+    "familias": [
+     "alder"
+    ],
+    "gamas": [
+     "i7"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 190,
+    "fuentes": [
+     "ark_12700k"
+    ]
+   },
+   {
+    "familias": [
+     "alder"
+    ],
+    "gamas": [
+     "i5"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 150,
+    "fuentes": [
+     "ark_12600k"
+    ]
+   },
+   {
+    "familias": [
+     "alder"
+    ],
+    "gamas": [
+     "i9"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 202,
+    "fuentes": [
+     "ark_12900"
+    ]
+   },
+   {
+    "familias": [
+     "alder"
+    ],
+    "gamas": [
+     "i7"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 180,
+    "fuentes": [
+     "ark_12700"
+    ]
+   },
+   {
+    "familias": [
+     "alder"
+    ],
+    "gamas": [
+     "i5"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 117,
+    "fuentes": [
+     "ark_12600",
+     "ark_12400"
+    ]
+   },
+   {
+    "familias": [
+     "alder"
+    ],
+    "gamas": [
+     "i3"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 89,
+    "fuentes": [
+     "ark_12100"
+    ]
+   },
+   {
+    "familias": [
+     "alder"
+    ],
+    "gamas": [
+     "i9"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 106,
+    "fuentes": [
+     "ark_12900t"
+    ]
+   },
+   {
+    "familias": [
+     "alder"
+    ],
+    "gamas": [
+     "i7"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 99,
+    "fuentes": [
+     "ark_12700t"
+    ]
+   },
+   {
+    "familias": [
+     "alder"
+    ],
+    "gamas": [
+     "i5"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 74,
+    "fuentes": [
+     "ark_12600t"
+    ]
+   },
+   {
+    "familias": [
+     "alder"
+    ],
+    "gamas": [
+     "i3"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 69,
+    "fuentes": [
+     "ark_12100t"
+    ]
+   },
+   {
+    "familias": [
+     "raptor",
+     "raptor_r"
+    ],
+    "gamas": [
+     "i9"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 253,
+    "fuentes": [
+     "ark_13900k",
+     "ark_14900k",
+     "intel_qrg_14gen"
+    ]
+   },
+   {
+    "familias": [
+     "raptor",
+     "raptor_r"
+    ],
+    "gamas": [
+     "i9"
+    ],
+    "sufijos": [
+     "KS"
+    ],
+    "pl2": 253,
+    "fuentes": [
+     "ark_13900ks",
+     "ark_14900ks"
+    ]
+   },
+   {
+    "familias": [
+     "raptor",
+     "raptor_r"
+    ],
+    "gamas": [
+     "i7"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 253,
+    "fuentes": [
+     "ark_13700k",
+     "intel_qrg_14gen"
+    ]
+   },
+   {
+    "familias": [
+     "raptor",
+     "raptor_r"
+    ],
+    "gamas": [
+     "i5"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 181,
+    "fuentes": [
+     "ark_13600k",
+     "intel_qrg_14gen"
+    ]
+   },
+   {
+    "familias": [
+     "raptor",
+     "raptor_r"
+    ],
+    "gamas": [
+     "i9"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 219,
+    "fuentes": [
+     "ark_13900",
+     "intel_deck_14gen_65_35"
+    ]
+   },
+   {
+    "familias": [
+     "raptor",
+     "raptor_r"
+    ],
+    "gamas": [
+     "i7"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 219,
+    "fuentes": [
+     "ark_13700f",
+     "intel_deck_14gen_65_35"
+    ]
+   },
+   {
+    "familias": [
+     "raptor",
+     "raptor_r"
+    ],
+    "gamas": [
+     "i3"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 110,
+    "fuentes": [
+     "ark_13100",
+     "ark_13100f",
+     "intel_deck_14gen_65_35"
+    ]
+   },
+   {
+    "familias": [
+     "raptor",
+     "raptor_r"
+    ],
+    "gamas": [
+     "i9"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 106,
+    "fuentes": [
+     "ark_13900t",
+     "intel_deck_14gen_65_35"
+    ]
+   },
+   {
+    "familias": [
+     "raptor",
+     "raptor_r"
+    ],
+    "gamas": [
+     "i7"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 106,
+    "fuentes": [
+     "ark_13700t",
+     "intel_deck_14gen_65_35"
+    ]
+   },
+   {
+    "familias": [
+     "raptor_r"
+    ],
+    "gamas": [
+     "i3"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 69,
+    "fuentes": [
+     "intel_deck_14gen_65_35"
+    ]
+   },
+   {
+    "familias": [
+     "raptor"
+    ],
+    "gamas": [
+     "i3"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 69,
+    "fuentes": [
+     "ark_12100t",
+     "intel_deck_14gen_65_35"
+    ],
+    "estimacion": true
+   },
+   {
+    "familias": [
+     "arrow"
+    ],
+    "gamas": [
+     "u9"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 250,
+    "fuentes": [
+     "intel_qrg_200s"
+    ]
+   },
+   {
+    "familias": [
+     "arrow"
+    ],
+    "gamas": [
+     "u7"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 250,
+    "fuentes": [
+     "intel_qrg_200s"
+    ]
+   },
+   {
+    "familias": [
+     "arrow"
+    ],
+    "gamas": [
+     "u5"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 159,
+    "fuentes": [
+     "intel_qrg_200s"
+    ]
+   },
+   {
+    "familias": [
+     "arrow"
+    ],
+    "gamas": [
+     "u9"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 182,
+    "fuentes": [
+     "intel_qrg_200s",
+     "ark_ultra9_285"
+    ]
+   },
+   {
+    "familias": [
+     "arrow"
+    ],
+    "gamas": [
+     "u7"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 182,
+    "fuentes": [
+     "intel_qrg_200s"
+    ]
+   },
+   {
+    "familias": [
+     "arrow"
+    ],
+    "gamas": [
+     "u5"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 121,
+    "fuentes": [
+     "intel_qrg_200s"
+    ]
+   },
+   {
+    "familias": [
+     "arrow"
+    ],
+    "gamas": [
+     "u9"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 112,
+    "fuentes": [
+     "ark_ultra9_285t"
+    ]
+   },
+   {
+    "familias": [
+     "arrow"
+    ],
+    "gamas": [
+     "u7"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 112,
+    "fuentes": [
+     "toms_200s_nok_t"
+    ]
+   },
+   {
+    "familias": [
+     "arrow"
+    ],
+    "gamas": [
+     "u5"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 114,
+    "fuentes": [
+     "ark_ultra5_245t",
+     "toms_200s_nok_t"
+    ]
+   },
+   {
+    "familias": [
+     "arrow_r"
+    ],
+    "gamas": [
+     "u7"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 250,
+    "fuentes": [
+     "intel-200s-plus-guia"
+    ]
+   },
+   {
+    "familias": [
+     "arrow_r"
+    ],
+    "gamas": [
+     "u5"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 159,
+    "fuentes": [
+     "intel-200s-plus-guia"
+    ]
+   },
+   {
+    "familias": [
+     "rocket"
+    ],
+    "gamas": [
+     "i9"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 251,
+    "fuentes": [
+     "intel_ds_11gen"
+    ]
+   },
+   {
+    "familias": [
+     "rocket"
+    ],
+    "gamas": [
+     "i7"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 251,
+    "fuentes": [
+     "intel_ds_11gen"
+    ]
+   },
+   {
+    "familias": [
+     "rocket"
+    ],
+    "gamas": [
+     "i5"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 251,
+    "fuentes": [
+     "intel_ds_11gen"
+    ]
+   },
+   {
+    "familias": [
+     "rocket"
+    ],
+    "gamas": [
+     "i9"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 224,
+    "fuentes": [
+     "intel_ds_11gen"
+    ]
+   },
+   {
+    "familias": [
+     "rocket"
+    ],
+    "gamas": [
+     "i7"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 224,
+    "fuentes": [
+     "intel_ds_11gen"
+    ]
+   },
+   {
+    "familias": [
+     "rocket"
+    ],
+    "gamas": [
+     "i5"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 154,
+    "fuentes": [
+     "intel_ds_11gen"
+    ]
+   },
+   {
+    "familias": [
+     "rocket"
+    ],
+    "gamas": [
+     "i9"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 115,
+    "fuentes": [
+     "intel_ds_11gen"
+    ]
+   },
+   {
+    "familias": [
+     "rocket"
+    ],
+    "gamas": [
+     "i7"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 115,
+    "fuentes": [
+     "intel_ds_11gen"
+    ]
+   },
+   {
+    "familias": [
+     "rocket"
+    ],
+    "gamas": [
+     "i5"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 84,
+    "fuentes": [
+     "intel_ds_11gen"
+    ]
+   },
+   {
+    "familias": [
+     "comet"
+    ],
+    "gamas": [
+     "i9"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 250,
+    "fuentes": [
+     "toms_10gen_pl"
+    ]
+   },
+   {
+    "familias": [
+     "comet"
+    ],
+    "gamas": [
+     "i7"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 229,
+    "fuentes": [
+     "toms_10gen_pl"
+    ]
+   },
+   {
+    "familias": [
+     "comet"
+    ],
+    "gamas": [
+     "i5"
+    ],
+    "sufijos": [
+     "K"
+    ],
+    "pl2": 182,
+    "fuentes": [
+     "toms_10gen_pl"
+    ]
+   },
+   {
+    "familias": [
+     "comet"
+    ],
+    "gamas": [
+     "i9"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 224,
+    "fuentes": [
+     "toms_10gen_pl"
+    ]
+   },
+   {
+    "familias": [
+     "comet"
+    ],
+    "gamas": [
+     "i7"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 224,
+    "fuentes": [
+     "toms_10gen_pl"
+    ]
+   },
+   {
+    "familias": [
+     "comet"
+    ],
+    "gamas": [
+     "i5"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 134,
+    "fuentes": [
+     "toms_10gen_pl"
+    ]
+   },
+   {
+    "familias": [
+     "comet"
+    ],
+    "gamas": [
+     "i3"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 90,
+    "fuentes": [
+     "toms_10gen_pl"
+    ]
+   },
+   {
+    "familias": [
+     "comet"
+    ],
+    "gamas": [
+     "pentium",
+     "celeron"
+    ],
+    "sufijos": [
+     ""
+    ],
+    "pl2": 58,
+    "fuentes": [
+     "toms_10gen_pl"
+    ]
+   },
+   {
+    "familias": [
+     "comet"
+    ],
+    "gamas": [
+     "i9"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 123,
+    "fuentes": [
+     "toms_10gen_pl"
+    ]
+   },
+   {
+    "familias": [
+     "comet"
+    ],
+    "gamas": [
+     "i7"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 123,
+    "fuentes": [
+     "toms_10gen_pl"
+    ]
+   },
+   {
+    "familias": [
+     "comet"
+    ],
+    "gamas": [
+     "i5"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 92,
+    "fuentes": [
+     "toms_10gen_pl"
+    ]
+   },
+   {
+    "familias": [
+     "comet"
+    ],
+    "gamas": [
+     "i3"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 55,
+    "fuentes": [
+     "toms_10gen_pl"
+    ]
+   },
+   {
+    "familias": [
+     "comet"
+    ],
+    "gamas": [
+     "pentium",
+     "celeron"
+    ],
+    "sufijos": [
+     "T"
+    ],
+    "pl2": 42,
+    "fuentes": [
+     "toms_10gen_pl"
+    ]
+   }
+  ],
+  "intel_factor": [
+   {
+    "familias": [
+     "coffee",
+     "coffee_r"
+    ],
+    "factor": 1.25,
+    "fuentes": [
+     "intel_ds_8_9gen"
+    ],
+    "estimacion": false
+   },
+   {
+    "familias": [
+     "skylake",
+     "kaby"
+    ],
+    "factor": 1.25,
+    "fuentes": [
+     "intel_ds_6gen",
+     "intel_ds_8_9gen"
+    ],
+    "estimacion": true
+   }
+  ]
+ },
+ "cajas": {
+  "sfx_en_atx": {
+   "texto": "Hace falta un soporte adaptador de SFX a ATX: algunas fuentes lo traen (las Corsair SF, por ejemplo) y si no, se vende suelto.",
+   "fuentes": [
+    "corsair_sf750",
+    "silverstone_sx500lg",
+    "sff_pp08"
+   ]
+  },
+  "ranuras": {
+   "fuentes": [
+    "thomaskrenn_ranuras",
+    "asus_edgeup_gpu"
+   ]
+  }
+ },
+ "disipadores": {
+  "grupos": [
+   {
+    "zocalos": [
+     "LGA 1700",
+     "LGA 1851"
+    ],
+    "texto": "Intel y Noctua confirman que LGA 1700 y LGA 1851 tienen el mismo anclaje: los disipadores de uno valen en el otro.",
+    "fuentes": [
+     "intel_1851_termica",
+     "intel_1851_incompat",
+     "noctua_1851_guia",
+     "noctua_1700_1851_faq"
+    ]
+   },
+   {
+    "zocalos": [
+     "LGA 115x",
+     "LGA 1151",
+     "LGA 1200"
+    ],
+    "texto": "Noctua y ARCTIC confirman que LGA 1200 tiene el mismo anclaje que LGA 1150, 1151, 1155 y 1156.",
+    "fuentes": [
+     "techpowerup_noctua_1200",
+     "cdrinfo_noctua_1200",
+     "noctua_nm_i115x",
+     "arctic_lf3",
+     "noctua_nm_m1_mp78"
+    ]
+   }
+  ],
+  "am4_en_am5": {
+   "texto": "AMD mantuvo en AM5 el anclaje de AM4, y Noctua, Fractal y be quiet! confirman que sus disipadores de AM4 valen. La excepción son los que en AM4 cambian la placa trasera de AMD por una propia: en AM5 no se puede quitar.",
+   "fuentes": [
+    "fractal_am5",
+    "noctua_am5_guia",
+    "noctua_am5_nota",
+    "noctua_am5_faq",
+    "bequiet_am5",
+    "noctua_nm_m1_mp78"
+   ]
+  },
+  "am5_en_am4": {
+   "texto": "AM4 y AM5 tienen el mismo anclaje, así que debería valer, pero ningún fabricante lo da como regla general: mira que el disipador diga AM4 en su web.",
+   "fuentes": [
+    "fractal_am5",
+    "noctua_am5_guia",
+    "noctua_am5_nota",
+    "noctua_am5_faq",
+    "bequiet_am5",
+    "noctua_nm_m1_mp78"
+   ]
+  },
+  "kit": {
+   "texto": "Entre LGA 1200 y LGA 1700 cambió el anclaje: hace falta el kit del fabricante del disipador (algunos lo regalan).",
+   "fuentes": [
+    "techpowerup_lga1700",
+    "igorslab_lga1700",
+    "noctua_nm_i17xx_mp78",
+    "hwcooling_bequiet_1700",
+    "arctic_lf3"
    ]
   }
  }

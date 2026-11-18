@@ -1,0 +1,24 @@
+{
+ "opendb_id": "g3",
+ "metadata": {
+  "name": "Gigabyte AORUS MASTER GeForce RTX 4090 24GB GDDR6X",
+  "manufacturer": "Gigabyte"
+ },
+ "identifiers": {
+  "version": 1,
+  "identifiers": []
+ },
+ "chipset": "GeForce RTX 4090",
+ "chipset_manufacturer": "NVIDIA",
+ "memory": 24,
+ "length": 357,
+ "total_slot_width": 4,
+ "tdp": 450,
+ "interface": "PCIe 4.0 x16",
+ "power_connectors": {
+  "pcie_6_pin": 0,
+  "pcie_8_pin": 0,
+  "pcie_12VHPWR": 1,
+  "pcie_12V_2x6": 0
+ }
+}
