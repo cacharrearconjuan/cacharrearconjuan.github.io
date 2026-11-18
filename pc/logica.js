@@ -530,8 +530,8 @@
     const F = familia(R, cpu.familia);
     if (gpu) {
       // con tarjeta, la imagen sale de ella: la integrada solo sirve de repuesto
-      if (cpu.igpu === false) return {estado: 'si', texto: `No tiene gráfica integrada${F && F.igpu_nota ? ' (' + F.igpu_nota + ')' : ''}, pero no la necesitas: la imagen sale de la tarjeta gráfica. Conecta el monitor a la tarjeta.`};
-      if (cpu.igpu === true) return {estado: 'si', texto: `Sí: ${(F && F.igpu_modelo) || cpu.igpu_modelo || 'gráfica integrada'}. Con la tarjeta gráfica, conecta el monitor a la tarjeta, no a la placa. La integrada te sirve para tener imagen si la tarjeta falla.`};
+      if (cpu.igpu === false) return {estado: 'ok', texto: `No tiene gráfica integrada${F && F.igpu_nota ? ' (' + F.igpu_nota + ')' : ''}, pero no la necesitas: la imagen sale de la tarjeta gráfica. Conecta el monitor a la tarjeta.`};
+      if (cpu.igpu === true) return {estado: 'ok', texto: `Sí: ${(F && F.igpu_modelo) || cpu.igpu_modelo || 'gráfica integrada'}. Con la tarjeta gráfica, conecta el monitor a la tarjeta, no a la placa. La integrada te sirve para tener imagen si la tarjeta falla.`};
     }
     if (cpu.igpu === true) {
       const modelo = (F && F.igpu_modelo) || cpu.igpu_modelo || 'gráfica integrada';
@@ -634,41 +634,93 @@
     return t ? nota(t.tipo || 'info', t.texto, t.fuentes) : null;
   }
 
+  // quién deja la gráfica más lenta, y si el verbo va en plural («el procesador y la placa la dejan»)
   function quienLimita(e, placa) {
-    if (e.porCpu && e.porPlaca) return `el procesador y la placa${placa && placa.chipset ? ' (' + placa.chipset + ')' : ''}`;
-    if (e.porPlaca) return `la placa${placa && placa.chipset ? ' (chipset ' + placa.chipset + ')' : ''}`;
-    return 'el procesador';
+    if (e.porCpu && e.porPlaca) return {quien: `el procesador y la placa${placa && placa.chipset ? ' (' + placa.chipset + ')' : ''}`, plural: true};
+    if (e.porPlaca) return {quien: `la placa${placa && placa.chipset ? ' (chipset ' + placa.chipset + ')' : ''}`, plural: false};
+    return {quien: 'el procesador', plural: false};
   }
 
+  // «ryzen-5-8500g» -> «Ryzen 5 8500G» (los modelos sueltos de las reglas van por su id)
+  function nombreModelo(id) {
+    return id.split('-').map((w) => (/^\d/.test(w) ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1))).join(' ');
+  }
+
+  // Sin procesador elegido: los que admite la placa con los que la gráfica iría más lenta que sin ellos.
+  // [{quien: «los Ryzen 4000G…» o «el Athlon 3000G», enlace}], de lo más nuevo a lo más viejo.
+  function cpusQueLimitan(R, gpu, placa) {
+    const ch = reglasChipset(R, placa);
+    const soporte = (ch && ch.soporte) || {};
+    const base = enlaceGrafica(R, gpu, placa, null);
+    if (!base) return [];
+    const b0 = banda(base.gen, base.carriles);
+    const salida = [];
+    for (const k of familiasEnOrden(R).slice().reverse()) {
+      const F = familia(R, k);
+      if (!soporte[k] || soporte[k] === 'no' || !F || !F.grafica) continue;
+      const general = enlaceGrafica(R, gpu, placa, {familia: k, id: ''});
+      if (general && banda(general.gen, general.carriles) < b0) salida.push({quien: 'los ' + F.nombre, enlace: general});
+      // los modelos que van distinto del resto de su familia (los Athlon con x4, el 8500G…)
+      for (const id of Object.keys(F.grafica.por_modelo || {})) {
+        const e = enlaceGrafica(R, gpu, placa, {familia: k, id: id});
+        if (e && banda(e.gen, e.carriles) < b0 && !(general && e.gen === general.gen && e.carriles === general.carriles)) {
+          salida.push({quien: 'el ' + nombreModelo(id), enlace: e});
+        }
+      }
+    }
+    return salida;
+  }
+
+  // La gráfica en la placa (o, sin placa, con el procesador): si entra y a qué velocidad irá.
   function graficaEnPlacaSinFicha(R, gpu, placa, cpu) {
     const r = {estado: 'si', texto: '', notas: [], fuentes: []};
     const G = reglasGraficas(R);
-    if (placa.x16 === 0) {
+    if (placa && placa.x16 === 0) {
       r.estado = 'depende';
       r.texto = 'La ficha de esta placa no trae ninguna ranura PCIe x16: míralo en el manual antes de comprar la gráfica.';
       return r;
     }
     const e = enlaceGrafica(R, gpu, placa, cpu);
-    r.fuentes = (G.compatible || {}).fuentes || [];
+    r.fuentes = ((G.compatible || {}).fuentes || []).slice();
     if (!e) {
-      r.texto = 'Sí: entra en la ranura PCIe x16 de la placa (PCIe funciona entre versiones). No tengo comprobada la interfaz de este chip, así que no sé si irá a toda su velocidad.';
-      return r;
-    }
-    r.fuentes = r.fuentes.concat(e.fuentes);
-    const max = enlaceTexto(e.max[0], e.max[1]);
-    const real = enlaceTexto(e.gen, e.carriles);
-    const pleno = banda(e.gen, e.carriles) >= banda(e.max[0], e.max[1]);
-    if (pleno) {
-      r.texto = `Sí: entra en la ranura x16 y va a toda su velocidad (${max}).`;
+      r.texto = placa
+        ? 'Sí: entra en la ranura PCIe x16 de la placa (PCIe funciona entre versiones). No tengo comprobada la interfaz de este chip, así que no sé si irá a toda su velocidad.'
+        : 'Sí: va con cualquier procesador (PCIe funciona entre versiones). No tengo comprobada la interfaz de este chip, así que no sé si irá a toda su velocidad.';
     } else {
-      const quien = quienLimita(e, placa);
-      const duda = e.genDuda ? ` (o a ${enlaceTexto(e.genDuda, e.carriles)} si la placa tiene la ranura PCIe ${e.genDuda}.0: míralo en su ficha)` : '';
-      const nr = notaRendimiento(R, e, gpu);
-      // con poco ancho de banda se pierde rendimiento de verdad: no es un «sí» sin más
-      r.estado = nr && nr.tipo === 'aviso' ? 'depende' : 'si';
-      r.texto = `Sí, entra, pero no va a toda su velocidad: la gráfica es ${max} y ${quien} la deja en ${real}${duda}.`;
-      if (nr) r.notas.push(nr.texto);
-      if (nr) r.fuentes = r.fuentes.concat(nr.fuentes);
+      r.fuentes = r.fuentes.concat(e.fuentes);
+      const max = enlaceTexto(e.max[0], e.max[1]);
+      const real = enlaceTexto(e.gen, e.carriles);
+      const pleno = banda(e.gen, e.carriles) >= banda(e.max[0], e.max[1]);
+      // con placa y sin procesador: los procesadores de esa placa que la dejarían más lenta
+      const limitan = placa && !cpu ? cpusQueLimitan(R, gpu, placa) : [];
+      if (pleno) {
+        if (!placa) r.texto = `Sí: con este procesador puede ir a toda su velocidad (${max}). Falta la placa: elígela y miro su ranura.`;
+        else if (limitan.length) r.texto = `Sí: entra en la ranura x16 y va a toda su velocidad (${max}), salvo con los procesadores de la nota.`;
+        else r.texto = `Sí: entra en la ranura x16 y va a toda su velocidad (${max}).`;
+      } else {
+        const q = quienLimita(e, placa);
+        const duda = e.genDuda ? ` (o a ${enlaceTexto(e.genDuda, e.carriles)} si la placa tiene la ranura PCIe ${e.genDuda}.0: míralo en su ficha)` : '';
+        const nr = notaRendimiento(R, e, gpu);
+        // con poco ancho de banda se pierde rendimiento de verdad: no es un «sí» sin más
+        r.estado = nr && nr.tipo === 'aviso' ? 'depende' : 'si';
+        r.texto = `${placa ? 'Sí, entra, pero no va' : 'Va, pero no'} a toda su velocidad: la gráfica es ${max} y ${q.quien} la ${q.plural ? 'dejan' : 'deja'} en ${real}${duda}.`;
+        if (nr) {
+          r.notas.push(nr.texto);
+          r.fuentes = r.fuentes.concat(nr.fuentes);
+        }
+      }
+      if (limitan.length) {
+        // los que dejan la gráfica igual van juntos: «con los A o el B, a PCIe 3.0 x8»
+        const porEnlace = [];
+        for (const x of limitan) {
+          const t = enlaceTexto(x.enlace.gen, x.enlace.carriles);
+          const g = porEnlace.find((y) => y.t === t) || (porEnlace[porEnlace.length] = {t: t, quienes: []});
+          g.quienes.push(x.quien);
+        }
+        const partes = porEnlace.map((g) => `con ${listaO(g.quienes)}, a ${g.t}`);
+        r.notas.push(`Depende del procesador: ${partes.join('; ')}. Elige el procesador y te digo cómo va.`);
+        for (const x of limitan) r.fuentes = r.fuentes.concat(x.enlace.fuentes);
+      }
     }
     const rb = notaRebar(R, gpu, cpu);
     if (rb) {
@@ -676,9 +728,9 @@
       r.notas.push(rb.texto);
       r.fuentes = r.fuentes.concat(rb.fuentes);
     }
-    if (placa.notas_grafica && placa.notas_grafica.length) {
+    if (placa && placa.notas_grafica && placa.notas_grafica.length) {
       r.notas = r.notas.concat(placa.notas_grafica);
-      if (placa.fuente) r.fuentes.push(placa.fuente);
+      if (placa.fuente && corregido(placa, 'notas_grafica')) r.fuentes.push(placa.fuente);
     }
     return r;
   }
@@ -759,9 +811,85 @@
     return cosas.length > 1 ? cosas.slice(0, -1).join(', ') + ' y ' + cosas[cosas.length - 1] : cosas.join('');
   }
 
+  function listaO(cosas) {
+    return cosas.length > 1 ? cosas.slice(0, -1).join(', ') + ' o ' + cosas[cosas.length - 1] : cosas.join('');
+  }
+
   function conMarca(R, gpu) {
     const ch = chipGrafica(R, gpu);
     return ch && ch.marca ? ch.marca : gpu.marca || 'el fabricante';
+  }
+
+  // ¿Se corrigió a mano ese dato de la pieza, con su ficha? (pc/correcciones.json)
+  function corregido(p, campo) {
+    return !!(p && p.corregidos && p.corregidos.indexOf(campo) >= 0);
+  }
+
+  // «2 conectores de 6+2 pines y uno de 16 pines» (los PCIe de una fuente: [6+2, 16 pines])
+  function textoFuente(pcie) {
+    const trozos = [];
+    if (pcie[0]) trozos.push(`${pcie[0] === 1 ? 'un conector' : pcie[0] + ' conectores'} de 6+2 pines`);
+    if (pcie[1]) {
+      trozos.push(trozos.length ? `${pcie[1] === 1 ? 'uno' : pcie[1]} de 16 pines`
+        : `${pcie[1] === 1 ? 'un conector' : pcie[1] + ' conectores'} de 16 pines y ninguno de 6+2`);
+    }
+    return listaY(trozos);
+  }
+
+  // ¿Llegan los conectores de la fuente ([6+2, 16 pines]) para los de la gráfica ([6, 8, 16 pines])?
+  // Los de 16 pines van a los nativos de la fuente y, si no quedan, al adaptador de la gráfica (de «adaptador» × 8 pines).
+  function encaja(n, pcie, adaptador) {
+    let ocho = pcie[0];
+    let dieciseis = pcie[1];
+    const r = {falta: false, sinDato: false, adaptador: 0, nativo: 0};
+    for (let i = 0; i < n[2]; i++) {
+      if (dieciseis > 0) {
+        dieciseis--;
+        r.nativo++;
+      } else if (adaptador) {
+        if (ocho >= adaptador) {
+          ocho -= adaptador;
+          r.adaptador += adaptador;
+        } else {
+          r.falta = true;
+        }
+      } else {
+        r.sinDato = true;
+      }
+    }
+    if (ocho < n[0] + n[1]) r.falta = true;
+    return r;
+  }
+
+  // Los conectores distintos que llevan las tarjetas de cada chip en la lista (las de marca), para no fiarse
+  // solo de la de referencia: la página lo guarda en R._conectoresChip al cargar las gráficas.
+  function conectoresPorChip(gpus) {
+    const por = {};
+    for (const g of gpus) {
+      if (!g.chip || !g.conectores) continue;
+      const l = por[g.chip] || (por[g.chip] = []);
+      if (!l.some((c) => c[0] === g.conectores[0] && c[1] === g.conectores[1] && c[2] === g.conectores[2])) l.push(g.conectores);
+    }
+    return por;
+  }
+
+  // El procesador de la lista que menos gasta en pico: el suelo de la cuenta mientras no se elige uno
+  // (la página lo guarda en R._picoMinimo al cargar los procesadores).
+  function picoMinimo(R, cpus) {
+    let min = null;
+    for (const c of cpus) {
+      const p = consumoCpu(R, c);
+      if (p && (!min || p.w < min.w)) min = {w: p.w, nombre: c.nombre, fuentes: p.fuentes};
+    }
+    return min;
+  }
+
+  function sumaConectores(n) {
+    return n[0] + n[1] + n[2];
+  }
+
+  function textoLleva(sujeto, n) {
+    return sumaConectores(n) ? `${sujeto} lleva ${textoConectores(n)}` : `${sujeto} no lleva conector de corriente`;
   }
 
   function graficaConFuenteSinFicha(R, gpu, psu, cpu) {
@@ -773,24 +901,36 @@
     const pico = consumoCpu(R, cpu);
     const pide = ch && ch.psu ? ch.psu : null;
     const marca = conMarca(R, gpu);
+    // lo que gasta el resto del equipo (placa, memoria, discos y ventiladores): estimación con fuentes
+    const resto = G.resto || {min: 50, max: 100, fuentes: []};
+    const minimo = !cpu && R._picoMinimo ? R._picoMinimo : null;
     // --- potencia
     let ePot = 'nose';
     let tPot = '';
+    let segunMarca = '';  // «NVIDIA pide…»: el «Sí:» de delante depende de cómo acabe todo
     if (c && psu.vatios < c.w + (cpuW || 0)) {
       ePot = 'no';
       tPot = cpuW
         ? `No llega: la gráfica gasta hasta ${c.w} W y el procesador tiene ${cpuW} W de TDP. Ya suman ${c.w + cpuW} W sin contar el resto, y la fuente es de ${psu.vatios} W.`
         : `No llega: solo la gráfica gasta hasta ${c.w} W y la fuente es de ${psu.vatios} W.`;
       r.fuentes = r.fuentes.concat(c.fuentes);
+    } else if (c && minimo && psu.vatios < c.w + minimo.w + resto.min && !(pide && psu.vatios >= pide)) {
+      // sin procesador elegido: ni con el que menos gasta de la lista llega
+      ePot = 'no';
+      tPot = `No llega: la gráfica gasta hasta ${c.w} W, el procesador que menos gasta de la lista (${minimo.nombre}) llega a unos ${minimo.w} W y el resto del equipo, a ${resto.min} W como poco. Ya son ${c.w + minimo.w + resto.min} W, y la fuente es de ${psu.vatios} W.`;
+      r.fuentes = r.fuentes.concat(c.fuentes, minimo.fuentes, resto.fuentes || []);
     } else if (pide && psu.vatios >= pide) {
       ePot = 'si';
-      tPot = `Sí: ${marca} pide una fuente de ${pide} W para esta gráfica y esta es de ${psu.vatios} W.`;
+      segunMarca = `${marca} pide una fuente de ${pide} W para esta gráfica y esta es de ${psu.vatios} W.`;
       r.fuentes = r.fuentes.concat(ch.fuentes_psu || ch.fuentes || []);
     } else if (pide) {
       ePot = 'depende';
-      tPot = `Justa: ${marca} pide una fuente de ${pide} W para esta gráfica y esta es de ${psu.vatios} W.`;
+      const justa = psu.vatios >= pide * 0.9;
+      tPot = justa
+        ? `Justa: ${marca} pide una fuente de ${pide} W para esta gráfica y esta es de ${psu.vatios} W.`
+        : `Se queda corta según ${marca}: pide una fuente de ${pide} W para esta gráfica y esta es de ${psu.vatios} W.`;
       r.fuentes = r.fuentes.concat(ch.fuentes_psu || ch.fuentes || []);
-      if (G.margen) {
+      if (justa && G.margen) {
         r.notas.push(G.margen.texto);
         r.fuentes = r.fuentes.concat(G.margen.fuentes || []);
       }
@@ -805,12 +945,12 @@
     if (c && ePot !== 'no') {
       const cpuPico = pico ? pico.w : null;
       if (cpuPico) {
-        const bajo = c.w + cpuPico + 50;
-        const alto = c.w + cpuPico + 100;
+        const bajo = c.w + cpuPico + resto.min;
+        const alto = c.w + cpuPico + resto.max;
         const veredicto = psu.vatios < bajo ? ' La fuente se queda por debajo de ese pico: busca una más potente.'
           : psu.vatios < alto ? ' La fuente va justa: mejor una con algo de margen.' : '';
-        r.notas.push(`Estimación: en pico, el equipo puede llegar a unos ${bajo}-${alto} W. La gráfica, ${c.w} W; el procesador, hasta ${cpuPico} W (${pico.base}), y el resto, entre 50 y 100 W.${veredicto}`);
-        r.fuentes = r.fuentes.concat(pico.fuentes);
+        r.notas.push(`Estimación: en pico, el equipo puede llegar a unos ${bajo}-${alto} W. La gráfica, ${c.w} W; el procesador, hasta ${cpuPico} W (${pico.base}), y el resto del equipo (placa, memoria, discos y ventiladores), entre ${resto.min} y ${resto.max} W.${veredicto}`);
+        r.fuentes = r.fuentes.concat(pico.fuentes, resto.fuentes || []);
         if (psu.vatios < bajo) {
           if (ePot === 'depende' && pide) {
             // el fabricante y la cuenta coinciden: no llega
@@ -818,7 +958,12 @@
             tPot = `No llega: ${marca} pide una fuente de ${pide} W para esta gráfica y esta es de ${psu.vatios} W. Con este procesador, el equipo puede pasar de ${bajo} W en pico.`;
           } else if (ePot === 'si') {
             ePot = 'depende';
+            tPot = `${marca} pide una fuente de ${pide} W para esta gráfica y esta es de ${psu.vatios} W, pero con este procesador puede quedarse corta.`;
+            segunMarca = '';
           }
+        } else if (ePot === 'depende' && pide && psu.vatios >= alto && G.margen && r.notas.indexOf(G.margen.texto) < 0) {
+          r.notas.push(G.margen.texto);
+          r.fuentes = r.fuentes.concat(G.margen.fuentes || []);
         }
       } else if (!cpu) {
         r.notas.push('Elige el procesador y afino la cuenta: lo que gasta cambia mucho de uno a otro.');
@@ -828,70 +973,78 @@
     let eCon = 'si';
     let tCon = '';
     const need = conectoresGrafica(R, gpu);
-    const total = need ? need.n[0] + need.n[1] + need.n[2] : 0;
+    const ref = !!need && need.de === 'referencia';
+    const a = ch && ch.adaptador ? ch.adaptador : 0;
+    // con la de referencia, también las de marca de ese chip que llevan otros conectores
+    const otras = ref ? (((R._conectoresChip || {})[gpu.chip]) || []).filter((v) => !(v[0] === need.n[0] && v[1] === need.n[1] && v[2] === need.n[2])) : [];
     if (!need) {
       eCon = 'nose';
       tCon = 'No sé qué conectores de corriente lleva esta gráfica: míralo en su ficha.';
-    } else if (!total) {
+    } else if (!sumaConectores(need.n) && !otras.some(sumaConectores)) {
       tCon = need.de === 'ranura'
         ? 'Gasta 75 W o menos, lo que da la ranura: muchas no llevan conector de corriente, pero algunas versiones con más frecuencia llevan uno de 6 u 8 pines. Mira la tuya.'
-        : 'No lleva conector de corriente: se alimenta de la ranura.';
+        : ref ? 'La de referencia no lleva conector de corriente: se alimenta de la ranura.' : 'No lleva conector de corriente: se alimenta de la ranura.';
       r.fuentes = r.fuentes.concat((G.potencia || {}).fuentes || []);
     } else if (!psu.pcie) {
       eCon = 'depende';
-      tCon = `La ficha de la fuente no dice cuántos conectores PCIe trae. Esta gráfica lleva ${textoConectores(need.n)}${need.de === 'referencia' ? ' (lo de la tarjeta de referencia; las de marca pueden llevar otros)' : ''}: míralo antes de comprar.`;
+      tCon = `No sé seguro cuántos conectores PCIe trae la fuente: su ficha no lo dice o no cuadra. ${ref ? textoLleva('La de referencia de esta gráfica', need.n) + ' (las de marca pueden llevar otros)' : textoLleva('Esta gráfica', need.n)}: míralo antes de comprar.`;
     } else {
-      let ocho = psu.pcie[0];
-      let dieciseis = psu.pcie[1];
-      let adaptador = 0;
-      let nativo = 0;
-      let sinDato = false;
-      let falta = false;
-      for (let i = 0; i < need.n[2]; i++) {
-        if (dieciseis > 0) {
-          dieciseis--;
-          nativo++;
-        } else if (ch && ch.adaptador) {
-          if (ocho >= ch.adaptador) {
-            ocho -= ch.adaptador;
-            adaptador += ch.adaptador;
-          } else {
-            falta = true;
-          }
+      const res = encaja(need.n, psu.pcie, a);
+      const trae = `la fuente trae ${textoFuente(psu.pcie)}`;
+      const pideAdaptador = a && need.n[2] > psu.pcie[1] ? ` El adaptador de 16 pines pide ${a} de 8 pines.` : '';
+      if (ref) {
+        const intro = `No sé qué conectores lleva tu modelo. ${textoLleva('La de referencia', need.n)} y ${trae}`;
+        const malas = otras.filter((v) => {
+          const x = encaja(v, psu.pcie, a);
+          return x.falta || x.sinDato;
+        });
+        if (res.falta || res.sinDato) {
+          eCon = 'depende';
+          // si alguna de marca lleva otros con los que sí llega, se dice cuáles
+          const buenas = otras.filter((v) => {
+            const x = encaja(v, psu.pcie, a);
+            return !x.falta && !x.sinDato;
+          });
+          const peso = (v) => v[0] + v[1] + v[2] * (a || 1);
+          const conOtros = buenas.length ? ` Con los de algunas de marca (${textoConectores(buenas.reduce((x, y) => (peso(y) < peso(x) ? y : x)))}), sí.` : '';
+          tCon = `${intro}: con esos no llegarían.${pideAdaptador}${conOtros} Mira los de tu modelo.`;
+        } else if (malas.length) {
+          eCon = 'depende';
+          const peso = (v) => v[0] + v[1] + v[2] * (a || 1);
+          const peorV = malas.reduce((x, y) => (peso(y) > peso(x) ? y : x));
+          tCon = `${intro}: con esos llegan, pero hay versiones de marca con ${textoConectores(peorV)} y con esas no. Mira los de tu modelo.`;
         } else {
-          sinDato = true;
+          tCon = `${intro}: llegan${res.adaptador ? `, con el adaptador que trae la gráfica (pide ${res.adaptador} de 8 pines)` : ''}${otras.length ? ', y también con los que llevan las versiones de marca de la lista' : ''}.`;
         }
-      }
-      if (ocho < need.n[0] + need.n[1]) falta = true;
-      const lleva = `La gráfica lleva ${textoConectores(need.n)}${need.de === 'referencia' ? ' (lo de la tarjeta de referencia; las de marca pueden llevar otros)' : ''}`;
-      const trozos = [];
-      if (psu.pcie[0]) trozos.push(`${psu.pcie[0] === 1 ? 'un conector' : psu.pcie[0] + ' conectores'} de 6+2 pines`);
-      if (psu.pcie[1]) {
-        trozos.push(trozos.length ? `${psu.pcie[1] === 1 ? 'uno' : psu.pcie[1]} de 16 pines`
-          : `${psu.pcie[1] === 1 ? 'un conector' : psu.pcie[1] + ' conectores'} de 16 pines y ninguno de 6+2`);
-      }
-      const trae = `la fuente trae ${listaY(trozos)}`;
-      if (falta) {
-        eCon = 'no';
-        tCon = `${lleva} y ${trae}: no llegan.${adaptador || (ch && ch.adaptador && need.n[2]) ? ` El adaptador de 16 pines pide ${ch.adaptador} de 8 pines.` : ''}`;
-      } else if (sinDato) {
+      } else if (res.falta) {
+        // los conectores de BuildCores fallan a veces: un «no» solo si los dos están comprobados a mano
+        if (corregido(gpu, 'conectores') && corregido(psu, 'pcie')) {
+          eCon = 'no';
+          tCon = `${textoLleva('La gráfica', need.n)} y ${trae}: no llegan.${pideAdaptador}`;
+        } else {
+          eCon = 'depende';
+          tCon = `${textoLleva('La gráfica', need.n)} y ${trae}: según sus fichas, no llegan.${pideAdaptador} Míralo en las fichas de tus modelos antes de comprar: si es así, esta fuente no te vale.`;
+        }
+      } else if (res.sinDato) {
         eCon = 'depende';
-        tCon = `${lleva} y ${trae}, sin conector de 16 pines: hace falta el adaptador que trae la gráfica. Mira cuántos de 8 pines pide.`;
+        tCon = `${textoLleva('La gráfica', need.n)} y ${trae}, sin conector de 16 pines: hace falta el adaptador que trae la gráfica. Mira cuántos de 8 pines pide.`;
       } else {
-        tCon = `${lleva} y ${trae}: llegan${adaptador ? `, con el adaptador que trae la gráfica (pide ${adaptador} de 8 pines)` : ''}.`;
+        tCon = `${textoLleva('La gráfica', need.n)} y ${trae}: llegan${res.adaptador ? `, con el adaptador que trae la gráfica (pide ${res.adaptador} de 8 pines)` : ''}.`;
       }
-      if (adaptador && G.adaptador) {
+      if (res.adaptador && G.adaptador) {
         r.notas.push(G.adaptador.texto);
         r.fuentes = r.fuentes.concat(G.adaptador.fuentes || []);
       }
       // los cables de 16 pines pueden ser de 450 W: a una gráfica que gasta más no le basta
-      if (nativo && c && c.w > 450 && G.cable16 && !falta) {
+      if (res.nativo && c && c.w > 450 && G.cable16 && !res.falta) {
         r.notas.push(G.cable16.texto);
         r.fuentes = r.fuentes.concat(G.cable16.fuentes || []);
       }
       r.fuentes = r.fuentes.concat((G.potencia || {}).fuentes || []);
     }
     r.estado = peor([ePot, eCon]);
+    // el «Sí:» solo si todo encaja; si los conectores fallan, la potencia va aparte
+    if (segunMarca) tPot = (r.estado === 'si' ? 'Sí: ' : 'De potencia, bien: ') + segunMarca;
     r.texto = tPot + (tCon ? ' ' + tCon : '');
     return r;
   }
@@ -927,6 +1080,10 @@
       if (huecos > caja.ranuras) {
         eAncho = 'no';
         partes.push(`Y es demasiado gruesa: ocupa ${huecos} ranuras y la caja tiene ${caja.ranuras}.`);
+        r.fuentes = r.fuentes.concat(((R.cajas || {}).ranuras || {}).fuentes || []);
+      } else if (huecos >= caja.ranuras - 1) {
+        // en muchas placas la ranura de la gráfica es la segunda: entonces cabe una menos
+        r.notas.push(`De grosor va justa: ocupa ${huecos} ranuras y la caja tiene ${caja.ranuras}. Si en tu placa la ranura de la gráfica no es la primera, mira que le queden ${huecos} libres por debajo.`);
         r.fuentes = r.fuentes.concat(((R.cajas || {}).ranuras || {}).fuentes || []);
       }
     }
@@ -973,7 +1130,7 @@
         r.estado = 'no';
         r.texto = `No cabe: la fuente mide ${psu.largo} mm y la caja admite fuentes de hasta ${caja.psu_max} mm.`;
       } else if (r.estado === 'si') {
-        r.texto += ` Mide ${psu.largo} mm y caben hasta ${caja.psu_max}.`;
+        r.texto += ` Mide ${psu.largo} mm y caben hasta ${caja.psu_max} mm.`;
       }
     }
     if (caja.incluida) r.notas.push(`Ojo: esta caja ya trae una fuente de ${caja.incluida} W. Con la que has elegido, una de las dos sobra.`);
@@ -1016,7 +1173,7 @@
     } else {
       r.estado = 'no';
       const vale2 = dis.zocalos.filter((z) => z !== 'LGA 115x');
-      r.texto = `No trae anclaje para ${zocalo}${vale2.length ? ' (vale para ' + listaY(vale2) + ')' : ''}. Algunos fabricantes venden o regalan el kit de anclaje: míralo en su web.`;
+      r.texto = `No: su ficha no trae anclaje para ${zocalo}${vale2.length ? ' (vale para ' + listaY(vale2) + ')' : ''}. Algunos fabricantes venden o regalan el kit de anclaje: míralo en su web.`;
       // de LGA 1200 a LGA 1700 (o al revés) cambió el anclaje: lo explica el kit
       const nuevo = (z) => z === 'LGA 1700' || z === 'LGA 1851';
       const viejo = (z) => z === 'LGA 1200' || z === 'LGA 1151' || z === 'LGA 115x';
@@ -1043,7 +1200,7 @@
         r.texto = `No cabe: el disipador mide ${dis.alto} mm de alto y en la caja caben hasta ${caja.disipador_max} mm.`;
       } else {
         r.texto = `Cabe: mide ${dis.alto} mm de alto y en la caja caben hasta ${caja.disipador_max} mm.`;
-        if (caja.disipador_max - dis.alto < 5) r.notas.push(`Va justo (le sobran ${caja.disipador_max - dis.alto} mm): con la tapa de cristal puesta no hay margen.`);
+        if (caja.disipador_max - dis.alto < 5) r.notas.push(`Va justo: le sobran ${caja.disipador_max - dis.alto} mm.`);
       }
     } else {
       r.estado = 'nose';
@@ -1055,38 +1212,46 @@
 
   // ------------------------------------------------------------ fichas comprobadas a mano
 
-  // si los datos de una pieza se comprobaron a mano con su ficha, esa ficha va con las fuentes
-  function conFicha(r, piezas) {
-    for (const p of piezas) if (p && p.fuente && r.fuentes.indexOf(p.fuente) < 0) r.fuentes.push(p.fuente);
+  // Si un dato que usa la comprobación se corrigió a mano con la ficha de la pieza, esa ficha va con las fuentes.
+  // usos: [[pieza, [campos que usa]], …]. Se hace una lista nueva: las de las reglas no se tocan.
+  function conFicha(r, usos) {
+    const mas = [];
+    for (const [p, campos] of usos) {
+      if (p && p.fuente && campos.some((c) => corregido(p, c)) && r.fuentes.indexOf(p.fuente) < 0 && mas.indexOf(p.fuente) < 0) mas.push(p.fuente);
+    }
+    if (mas.length) r.fuentes = r.fuentes.concat(mas);
     return r;
   }
 
+  // (la interfaz y el consumo de la tarjeta solo cuentan si su chip no tiene regla)
   function graficaEnPlaca(R, gpu, placa, cpu) {
-    return conFicha(graficaEnPlacaSinFicha(R, gpu, placa, cpu), [gpu]);
+    const ch = chipGrafica(R, gpu);
+    return conFicha(graficaEnPlacaSinFicha(R, gpu, placa, cpu), [[gpu, ch && ch.pcie ? [] : ['pcie']], [placa, ['x16', 'notas_grafica']]]);
   }
 
   function graficaConFuente(R, gpu, psu, cpu) {
-    return conFicha(graficaConFuenteSinFicha(R, gpu, psu, cpu), [gpu, psu]);
+    const ch = chipGrafica(R, gpu);
+    return conFicha(graficaConFuenteSinFicha(R, gpu, psu, cpu), [[gpu, ['conectores'].concat(ch && ch.consumo ? [] : ['tdp'])], [psu, ['vatios', 'pcie']]]);
   }
 
   function graficaEnCaja(R, gpu, caja) {
-    return conFicha(graficaEnCajaSinFicha(R, gpu, caja), [gpu, caja]);
+    return conFicha(graficaEnCajaSinFicha(R, gpu, caja), [[gpu, ['largo', 'ranuras']], [caja, ['gpu_max', 'ranuras']]]);
   }
 
   function placaEnCaja(R, placa, caja) {
-    return conFicha(placaEnCajaSinFicha(R, placa, caja), [placa, caja]);
+    return conFicha(placaEnCajaSinFicha(R, placa, caja), [[placa, ['formato']], [caja, ['placas']]]);
   }
 
   function fuenteEnCaja(R, psu, caja) {
-    return conFicha(fuenteEnCajaSinFicha(R, psu, caja), [psu, caja]);
+    return conFicha(fuenteEnCajaSinFicha(R, psu, caja), [[psu, ['formato', 'largo']], [caja, ['psu', 'psu_max', 'incluida']]]);
   }
 
   function disipadorEnZocalo(R, dis, zocalo) {
-    return conFicha(disipadorEnZocaloSinFicha(R, dis, zocalo), [dis]);
+    return conFicha(disipadorEnZocaloSinFicha(R, dis, zocalo), [[dis, ['zocalos']]]);
   }
 
   function disipadorEnCaja(R, dis, caja) {
-    return conFicha(disipadorEnCajaSinFicha(R, dis, caja), [dis, caja]);
+    return conFicha(disipadorEnCajaSinFicha(R, dis, caja), [[dis, ['alto', 'liquida', 'radiador']], [caja, ['disipador_max']]]);
   }
   // ------------------------------------------------------------ dónde comprarlo
 
@@ -1104,6 +1269,16 @@
     {tienda: 'Alternate', url: (q) => 'https://www.alternate.es/listing.xhtml?q=' + encodeURIComponent(q)},
     {tienda: 'Neobyte', url: (q) => 'https://www.neobyte.es/busqueda?controller=search&s=' + encodeURIComponent(q)},
   ];
+
+  // Corta un nombre en la primera palabra de relleno, pero nunca antes de la marca y el modelo (dos palabras).
+  function cortarTrasModelo(t, re) {
+    const m = /^\S+\s+\S+/.exec(t);
+    const desde = m ? m[0].length : t.length;
+    const i = t.slice(desde).search(re);
+    return i >= 0 ? t.slice(0, desde + i) : t;
+  }
+
+  const COLORES = /\s(Black|White|Silver|Gray|Grey|Pink|Blue|Red|Green|Orange|Yellow|Gold|Purple)(?=\s|\/|$)/gi;
 
   // Lo que se escribe en el buscador de una tienda: el modelo, sin el relleno de la ficha.
   function textoBusqueda(tipo, pieza) {
@@ -1128,18 +1303,26 @@
     } else if (tipo === 'fuentes') {
       // «Corsair RM750 (2019) Black ATX 750W Fully Modular 80+ Gold» -> «Corsair RM750 750W»
       t = t.replace(/\s*\([^)]*\)/g, '');
-      const corte = t.search(/\s(Black|White|ATX|SFX-L|SFX|TFX|Flex ATX|Fully Modular|Semi-Modular|Non-Modular|80\+|\d{3,4}\s?W)(?=\s|$)/i);
-      if (corte > 0) t = t.slice(0, corte);
+      t = cortarTrasModelo(t, /\s(Black|White|ATX|SFX-L|SFX|TFX|Flex ATX|Fully Modular|Semi-Modular|Non-Modular|80\+|\d{3,4}\s?W)(?=\s|$)/i);
       if (pieza.vatios && !/\d\s?W\b/i.test(t)) t += ' ' + pieza.vatios + 'W';
     } else if (tipo === 'cajas') {
       // «NZXT H5 Flow (2022) ATX Mid Tower Black with Tempered Glass Side Panel» -> «NZXT H5 Flow»
+      const relleno = /\s(E-?ATX|ATX|Micro[- ]?ATX|mATX|Mini[- ]?ITX|ITX|HTPC|Mid[- ]Tower|Full[- ]Tower|Mini[- ]Tower|Black|White|with|Tempered Glass|Case)(?=\s|$)/i;
+      const sinRelleno = (x) => x.replace(new RegExp(relleno.source, 'gi'), ' ').replace(COLORES, ' ').trim();
       t = t.replace(/\s*\([^)]*\)/g, '');
-      const corte = t.search(/\s(E-?ATX|ATX|Micro[- ]?ATX|mATX|Mini[- ]?ITX|ITX|Mid Tower|Full Tower|Mini Tower|Black|White|with|Tempered Glass|Case)(?=\s|$)/i);
-      if (corte > 0) t = t.slice(0, corte);
+      let corto = cortarTrasModelo(t.split(' - ')[0], relleno);
+      if (sinRelleno(corto).split(/\s+/).length < 2) {
+        // solo queda la marca («Rosewill ATX»): el modelo tras el guion del final («… - SPECTRA C100») o el nombre sin relleno
+        const tras = / - ([^-]+)$/.exec(t);
+        corto = tras && tras[1].trim().split(/\s+/).length <= 4 ? t.split(/\s+/)[0] + ' ' + tras[1].trim()
+          : sinRelleno(t).split(/\s+/).slice(0, 4).join(' ');
+      }
+      t = corto;
     } else if (tipo === 'disipadores') {
       // «Thermalright Peerless Assassin 120 SE 66.17 CFM CPU Cooler» -> «Thermalright Peerless Assassin 120 SE»
-      const corte = t.search(/\s(\d+(?:[.,]\d+)?\s?CFM|Water|Liquid CPU Cooler|CPU Cooler|Black|White|\d+(?:[.,]\d+)?\s?mm)(?=\s|$)/i);
-      if (corte > 0) t = t.slice(0, corte);
+      t = cortarTrasModelo(t, /\s(\d+(?:[.,]\d+)?\s?CFM|(?:Water|Air)(?=\s+\d+(?:[.,]\d+)?\s?(?:mm|CFM))|Liquid CPU Cooler|CPU Cooler|Black|White|\d+(?:[.,]\d+)?\s?mm)(?=\s|$)/i);
+      // «EK AIO»: con tan poco, mejor con la medida del radiador
+      if (t.length < 8 && pieza.radiador) t += ' ' + pieza.radiador;
     }
     if (tipo === 'graficas' || tipo === 'cajas' || tipo === 'disipadores') {
       // el color del final no ayuda a buscar (y a veces la tienda lo escribe de otra forma)
@@ -1219,69 +1402,87 @@
   }
 
   // Piezas para las que una prueba da «si» o «depende», en grupos: primero las de «si».
-  // grupo(p) da el título del grupo; orden(a, b) ordena los títulos dentro de cada estado.
-  function agrupar(lista, prueba, grupo, orden) {
+  // grupo(p) da el título del grupo; orden(a, b) ordena los grupos dentro de cada estado.
+  // extra(p), si se da, es el estado de la pieza con lo demás que ya se ha elegido: cuenta el peor.
+  function agrupar(lista, prueba, grupo, orden, extra) {
     const grupos = {};
     for (const p of lista) {
-      const e = prueba(p);
+      let e = prueba(p);
+      if (e !== 'si' && e !== 'depende') continue;
+      if (extra) e = peor([e, extra(p) || 'si']);
+      if (e === 'bios') e = 'depende';
       if (e !== 'si' && e !== 'depende') continue;
       const titulo = grupo(p) || 'Otras';
       const k = e + '|' + titulo;
       (grupos[k] || (grupos[k] = {estado: e, titulo: titulo, piezas: []})).piezas.push(p);
     }
     return Object.keys(grupos).map((k) => grupos[k])
-      .sort((a, b) => (a.estado === b.estado ? 0 : a.estado === 'si' ? -1 : 1) || orden(a.titulo, b.titulo));
+      .sort((a, b) => (a.estado === b.estado ? 0 : a.estado === 'si' ? -1 : 1) || orden(a, b));
   }
 
-  // lo más nuevo primero: «GeForce RTX 5090» antes que «GeForce RTX 4090» y que «GeForce GTX 1080»
-  function ordenChips(a, b) {
-    return a < b ? 1 : a > b ? -1 : 0;
+  // los chips en el orden de las reglas (por marca, de lo más nuevo a lo más viejo); los que no tienen regla, al final
+  function ordenChips(R) {
+    const pos = {};
+    Object.keys(reglasGraficas(R).chips || {}).forEach((k, i) => { pos[k] = i; });
+    const en = (t) => (t in pos ? pos[t] : 1e6);
+    return (a, b) => en(a.titulo) - en(b.titulo) || porTexto(a, b);
+  }
+
+  // por el primer número del título: «De 90 a 99 mm» antes que «De 100 a 109 mm»
+  function numeroDe(t) {
+    const m = /\d+/.exec(t);
+    return m ? Number(m[0]) : 0;
   }
 
   function porNumero(a, b) {
-    return (parseInt(a, 10) || 0) - (parseInt(b, 10) || 0) || (a < b ? -1 : a > b ? 1 : 0);
+    return numeroDe(a.titulo) - numeroDe(b.titulo) || porTexto(a, b);
   }
 
   function porTexto(a, b) {
-    return a < b ? -1 : a > b ? 1 : 0;
+    return a.titulo < b.titulo ? -1 : a.titulo > b.titulo ? 1 : 0;
   }
 
-  function graficasParaCaja(R, gpus, caja) {
-    return agrupar(gpus, (g) => graficaEnCaja(R, g, caja).estado, (g) => g.chip, ordenChips);
+  // fuentes: las que valen, de la más pequeña a la más grande; las de «ojo», al revés (primero las que más se acercan)
+  function porVatios(a, b) {
+    return a.estado === 'depende' ? porNumero(b, a) : porNumero(a, b);
   }
 
-  function graficasParaFuente(R, gpus, psu, cpu) {
-    return agrupar(gpus, (g) => graficaConFuente(R, g, psu, cpu).estado, (g) => g.chip, ordenChips);
+  function graficasParaCaja(R, gpus, caja, extra) {
+    return agrupar(gpus, (g) => graficaEnCaja(R, g, caja).estado, (g) => g.chip, ordenChips(R), extra);
   }
 
-  function graficasParaPlaca(R, gpus, placa, cpu) {
-    return agrupar(gpus, (g) => graficaEnPlaca(R, g, placa, cpu).estado, (g) => g.chip, ordenChips);
+  function graficasParaFuente(R, gpus, psu, cpu, extra) {
+    return agrupar(gpus, (g) => graficaConFuente(R, g, psu, cpu).estado, (g) => g.chip, ordenChips(R), extra);
   }
 
-  function fuentesParaGrafica(R, psus, gpu, cpu) {
-    return agrupar(psus, (p) => graficaConFuente(R, gpu, p, cpu).estado, (p) => p.vatios + ' W', porNumero);
+  function graficasParaPlaca(R, gpus, placa, cpu, extra) {
+    return agrupar(gpus, (g) => graficaEnPlaca(R, g, placa, cpu).estado, (g) => g.chip, ordenChips(R), extra);
   }
 
-  function cajasParaGrafica(R, cajas, gpu) {
-    return agrupar(cajas, (c) => graficaEnCaja(R, gpu, c).estado, (c) => c.formato, porTexto);
+  function fuentesParaGrafica(R, psus, gpu, cpu, extra) {
+    return agrupar(psus, (p) => graficaConFuente(R, gpu, p, cpu).estado, (p) => p.vatios + ' W', porVatios, extra);
   }
 
-  function cajasParaPlaca(R, cajas, placa) {
-    return agrupar(cajas, (c) => placaEnCaja(R, placa, c).estado, (c) => c.formato, porTexto);
+  function cajasParaGrafica(R, cajas, gpu, extra) {
+    return agrupar(cajas, (c) => graficaEnCaja(R, gpu, c).estado, (c) => c.formato, porTexto, extra);
   }
 
-  function cajasParaDisipador(R, cajas, dis) {
-    return agrupar(cajas, (c) => disipadorEnCaja(R, dis, c).estado, (c) => c.formato, porTexto);
+  function cajasParaPlaca(R, cajas, placa, extra) {
+    return agrupar(cajas, (c) => placaEnCaja(R, placa, c).estado, (c) => c.formato, porTexto, extra);
   }
 
-  function disipadoresParaZocalo(R, diss, zocalo) {
+  function cajasParaDisipador(R, cajas, dis, extra) {
+    return agrupar(cajas, (c) => disipadorEnCaja(R, dis, c).estado, (c) => c.formato, porTexto, extra);
+  }
+
+  function disipadoresParaZocalo(R, diss, zocalo, extra) {
     return agrupar(diss, (d) => disipadorEnZocalo(R, d, zocalo).estado,
-      (d) => (d.liquida ? 'De refrigeración líquida' : 'De aire'), porTexto);
+      (d) => (d.liquida ? 'De refrigeración líquida' : 'De aire'), porTexto, extra);
   }
 
-  function disipadoresParaCaja(R, diss, caja) {
+  function disipadoresParaCaja(R, diss, caja, extra) {
     return agrupar(diss, (d) => disipadorEnCaja(R, d, caja).estado,
-      (d) => (d.alto ? 'De ' + Math.floor(d.alto / 10) * 10 + ' a ' + (Math.floor(d.alto / 10) * 10 + 9) + ' mm de alto' : 'Otros'), porNumero);
+      (d) => (d.alto ? 'De ' + Math.floor(d.alto / 10) * 10 + ' a ' + (Math.floor(d.alto / 10) * 10 + 9) + ' mm de alto' : 'Otros'), porNumero, extra);
   }
 
   // ------------------------------------------------------------ resumen del equipo
@@ -1315,6 +1516,7 @@
     const dis = piezas.disipador || null;
     const fila = (que, r) => filas.push({que: que, estado: r.estado, texto: r.texto, notas: r.notas || [], fuentes: r.fuentes || []});
     if (gpu && placa) fila('Gráfica y placa', graficaEnPlaca(R, gpu, placa, cpu));
+    else if (gpu && cpu) fila('Gráfica y procesador', graficaEnPlaca(R, gpu, null, cpu));
     if (gpu && psu) fila('Gráfica y fuente', graficaConFuente(R, gpu, psu, cpu));
     if (gpu && caja) fila('Gráfica y caja', graficaEnCaja(R, gpu, caja));
     if (placa && caja) fila('Placa y caja', placaEnCaja(R, placa, caja));
@@ -1379,6 +1581,12 @@
     cajasParaDisipador: cajasParaDisipador,
     disipadoresParaZocalo: disipadoresParaZocalo,
     disipadoresParaCaja: disipadoresParaCaja,
+    corregido: corregido,
+    textoFuente: textoFuente,
+    encaja: encaja,
+    conectoresPorChip: conectoresPorChip,
+    picoMinimo: picoMinimo,
+    cpusQueLimitan: cpusQueLimitan,
   };
 
   if (typeof module === 'object' && module.exports) module.exports = PC;

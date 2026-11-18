@@ -22,13 +22,22 @@ Qué se queda fuera, a propósito:
 - Los huecos M.2 de una placa cuando su ficha es la plantilla repetida de
   BuildCores o dice algo imposible para su chipset (p. ej. PCIe 4.0 en una Z270).
 - Medidas imposibles (una gráfica de 0 mm, una caja con 0 ranuras…): se quedan sin dato.
+  Las medidas con decimales se redondean hacia el lado prudente: las de las piezas hacia
+  arriba (lo que ocupan) y los máximos de las cajas hacia abajo (lo que cabe).
 - Conectores «a cero»: en BuildCores salen así gráficas de 320 W y fuentes de 1300 W,
   así que «0» no prueba que no tenga ninguno. Se guardan como «sin dato».
+- Conectores imposibles: fuentes con solo conectores de 16 pines o con un solo 6+2 en
+  750 W o más, y gráficas con uno de 16 pines y además de 8, o con dos de 6 y dos de 8.
+  También «sin dato». El de 16 pines de las gráficas se cuenta una vez aunque
+  BuildCores lo ponga con sus dos nombres (12VHPWR y 12V-2x6).
+- Las correcciones a mano (pc/correcciones.json) se comprueban antes de aplicarlas: un
+  valor imposible para la herramienta para la conversión en vez de colarse.
 """
 
 import argparse
 import hashlib
 import json
+import math
 import os
 import re
 import subprocess
@@ -128,6 +137,25 @@ def cuenta(v):
 def en_rango(v, minimo, maximo):
     """La medida si es creíble; si no (0 mm, 9999 W…), sin dato."""
     return v if v is not None and minimo <= v <= maximo else None
+
+
+def medida(v, minimo, maximo, hacia):
+    """Una medida en mm que puede traer decimales (220,5 mm), en entero y por el lado prudente.
+
+    hacia="arriba" para lo que ocupa una pieza (220,5 -> 221) y "abajo" para lo que cabe en
+    una caja (180,5 -> 180): así un redondeo nunca hace caber lo que no cabe.
+    """
+    n = numero(v)
+    if n is None:
+        return None
+    n = math.ceil(n - 1e-6) if hacia == "arriba" else math.floor(n + 1e-6)
+    return en_rango(n, minimo, maximo)
+
+
+def redondo(v):
+    """Un número (vatios) redondeado al entero más cercano, o None."""
+    n = numero(v)
+    return int(math.floor(n + 0.5)) if n is not None else None
 
 
 def leer_categoria(opendb, categoria, avisos):
@@ -713,16 +741,21 @@ def preparar_graficas(piezas, avisos):
         if not chip or chip.lower() == "none":
             avisos("gráfica: sin chip, fuera")
             continue
-        largo = en_rango(entero(g.get("length")), 60, 450)
+        largo = medida(g.get("length"), 60, 450, "arriba")
         if g.get("length") and largo is None:
             avisos("gráfica: largo imposible, sin dato")
         pc = g.get("power_connectors") if isinstance(g.get("power_connectors"), dict) else {}
         n6, n8 = cuenta(pc.get("pcie_6_pin")), cuenta(pc.get("pcie_8_pin"))
-        n16 = cuenta(pc.get("pcie_12VHPWR")) + cuenta(pc.get("pcie_12V_2x6"))
+        # 12VHPWR y 12V-2x6 son el mismo conector con dos nombres: BuildCores a veces rellena los dos
+        n16 = max(cuenta(pc.get("pcie_12VHPWR")), cuenta(pc.get("pcie_12V_2x6")))
         # todo a cero no prueba que no lleve ninguno: la lógica lo decide con el consumo del chip
         conectores = [n6, n8, n16] if n6 + n8 + n16 else None
         if not conectores:
             avisos("gráfica: conectores sin dato")
+        elif (n16 and (n6 or n8)) or (n6 >= 2 and n8 >= 2):
+            # una gráfica con 16 pines y además de 8, o con dos de 6 y dos de 8: la ficha está mal
+            avisos("gráfica: conectores imposibles, sin dato")
+            conectores = None
         m = RX_PCIE_FICHA.search(g.get("interface") or "")
         reg = {
             "uuid": g.get("opendb_id"),
@@ -733,7 +766,7 @@ def preparar_graficas(piezas, avisos):
             "gb": en_rango(entero(g.get("memory")), 1, 192),
             "largo": largo,
             "ranuras": en_rango(numero(g.get("total_slot_width")), 1, 5),
-            "tdp": en_rango(entero(g.get("tdp")), 10, 1000),
+            "tdp": en_rango(redondo(g.get("tdp")), 10, 1000),
             "conectores": conectores,
             "pcie": [int(m.group(1)), int(m.group(2))] if m else None,
             "fuente": "",
@@ -748,6 +781,22 @@ FORMATOS_FUENTE = {"ATX": "ATX", "ATX/EPS": "ATX", "SFX": "SFX", "SFX-L": "SFX-L
 MODULAR = {"Full": "total", "Semi-Modular": "semi", "Non-Modular": "no"}
 
 
+def conectores_creibles(vatios, n8, n16):
+    """¿Se puede creer lo que dice BuildCores de los conectores PCIe de una fuente?
+
+    Ninguna fuente de PC trae solo conectores de 16 pines (las ATX 3.x siguen trayendo de 6+2),
+    más de 2 de 16 pines solo los traen algunas de 1600 W o más, y una de 750 W o más con un
+    solo 6+2 no se ve: en esos casos la ficha está mal.
+    """
+    if n16 and not n8:
+        return False
+    if n16 > 2 and vatios < 1600:
+        return False
+    if vatios >= 750 and n8 < 2:
+        return False
+    return True
+
+
 def preparar_fuentes(piezas, avisos):
     grupos = {}
     for p in piezas:
@@ -759,6 +808,11 @@ def preparar_fuentes(piezas, avisos):
         n8, n16 = cuenta(c.get("pcie_6_plus_2_pin")), cuenta(c.get("pcie_12vhpwr"))
         if not (n8 or n16):
             avisos("fuente: conectores PCIe sin dato")
+        elif not conectores_creibles(vatios, n8, n16):
+            # fichas de BuildCores como «4 de 16 pines y ninguno de 6+2» en una fuente de 2018:
+            # mejor «no lo sé» que un «no» (o un «sí») falso
+            avisos("fuente: conectores PCIe imposibles, sin dato")
+            n8 = n16 = 0
         efic = p.get("efficiency_rating")
         reg = {
             "uuid": p.get("opendb_id"),
@@ -766,7 +820,7 @@ def preparar_fuentes(piezas, avisos):
             "nombre": nombre_pieza(p),
             "vatios": vatios,
             "formato": FORMATOS_FUENTE.get(p.get("form_factor")),  # «Mini-ITX» no es un formato de fuente: sin dato
-            "largo": en_rango(entero(p.get("length")), 80, 300),
+            "largo": medida(p.get("length"), 80, 300, "arriba"),
             "pcie": [n8, n16] if (n8 or n16) else None,  # [conectores 6+2, conectores de 16 pines]
             "modular": MODULAR.get(p.get("modular")),
             "eficiencia": efic if isinstance(efic, str) and efic.startswith("80+") else None,
@@ -799,9 +853,9 @@ def preparar_cajas(piezas, avisos):
             "formato": limpiar(c.get("form_factor") or "") or None,
             "placas": placas,
             "psu": [f for f in FORMATOS_FUENTE_CAJA if f in dice_psu] or None,
-            "gpu_max": en_rango(entero(c.get("max_video_card_length")), 100, 600),
-            "disipador_max": en_rango(entero(c.get("max_cpu_cooler_height")), 20, 250),
-            "psu_max": en_rango(entero(c.get("max_psu_length")), 80, 400),
+            "gpu_max": medida(c.get("max_video_card_length"), 100, 600, "abajo"),
+            "disipador_max": medida(c.get("max_cpu_cooler_height"), 20, 250, "abajo"),
+            "psu_max": medida(c.get("max_psu_length"), 80, 400, "abajo"),
             "ranuras": en_rango(entero(c.get("expansion_slots")), 1, 12),
             "incluida": entero(incluida.group(1)) if incluida else None,  # vatios de la fuente que trae
             "fuente": "",
@@ -833,9 +887,9 @@ def preparar_disipadores(piezas, avisos):
             "nombre": nombre_pieza(k),
             "zocalos": [z for z in ORDEN_ZOCALOS if z in dice],
             # en las de líquida la altura de la ficha es la de la bomba: lo que cuenta es el radiador
-            "alto": None if liquida else en_rango(entero(k.get("height")), 20, 220),
+            "alto": None if liquida else medida(k.get("height"), 20, 220, "arriba"),
             "liquida": 1 if liquida else 0,
-            "radiador": en_rango(entero(k.get("radiator_size")), 80, 480) if liquida else None,
+            "radiador": en_rango(redondo(k.get("radiator_size")), 80, 480) if liquida else None,
             "fuente": "",
         }
         grupos.setdefault(reg["nombre"].lower(), []).append(reg)
@@ -847,13 +901,16 @@ def preparar_disipadores(piezas, avisos):
 CAMPOS = {
     "cpu": ["id", "nombre", "zocalo", "familia", "igpu", "igpu_modelo", "nucleos", "hilos", "boost", "tdp", "ram", "anio", "amazon"],
     "placas": ["id", "nombre", "zocalo", "chipset", "formato", "ram", "ranuras", "max_gb", "m2", "m2_nota",
-               "video", "flashback", "revisada", "anio", "amazon", "notas_m2", "fuente", "x16", "notas_grafica"],
+               "video", "flashback", "revisada", "anio", "amazon", "notas_m2", "fuente", "x16", "notas_grafica",
+               "corregidos"],
     "ram": ["id", "nombre", "tipo", "velocidad", "cl", "modulos", "gb", "perfil", "amazon"],
     "ssd": ["id", "nombre", "largo", "gen", "carriles", "protocolo", "gb", "disipador", "amazon"],
-    "graficas": ["id", "nombre", "chip", "marca", "gb", "largo", "ranuras", "tdp", "conectores", "pcie", "amazon", "fuente"],
-    "fuentes": ["id", "nombre", "vatios", "formato", "largo", "pcie", "modular", "eficiencia", "amazon", "fuente"],
-    "cajas": ["id", "nombre", "formato", "placas", "psu", "gpu_max", "disipador_max", "psu_max", "ranuras", "incluida", "amazon", "fuente"],
-    "disipadores": ["id", "nombre", "zocalos", "alto", "liquida", "radiador", "amazon", "fuente"],
+    "graficas": ["id", "nombre", "chip", "marca", "gb", "largo", "ranuras", "tdp", "conectores", "pcie", "amazon", "fuente",
+                 "corregidos"],
+    "fuentes": ["id", "nombre", "vatios", "formato", "largo", "pcie", "modular", "eficiencia", "amazon", "fuente", "corregidos"],
+    "cajas": ["id", "nombre", "formato", "placas", "psu", "gpu_max", "disipador_max", "psu_max", "ranuras", "incluida", "amazon",
+              "fuente", "corregidos"],
+    "disipadores": ["id", "nombre", "zocalos", "alto", "liquida", "radiador", "amazon", "fuente", "corregidos"],
 }
 
 
@@ -910,14 +967,87 @@ CAMPOS_CORREGIBLES = {
     "cajas": ("placas", "psu", "gpu_max", "disipador_max", "psu_max", "ranuras", "incluida"),
     "disipadores": ("zocalos", "alto", "liquida", "radiador"),
 }
-NOMBRE_PIEZA = {"placas": "placa", "graficas": "gráfica", "fuentes": "fuente", "cajas": "caja", "disipadores": "disipador"}
+CORREGIDA = {"placas": "placa: corregida a mano", "graficas": "gráfica: corregida a mano", "fuentes": "fuente: corregida a mano",
+             "cajas": "caja: corregida a mano", "disipadores": "disipador: corregido a mano"}
+
+
+def _num(minimo, maximo, decimales=False, vacio=True):
+    tipos = (int, float) if decimales else (int,)
+    return lambda v: (v is None and vacio) or (isinstance(v, tipos) and not isinstance(v, bool) and minimo <= v <= maximo)
+
+
+def _textos(v):
+    return v is None or (isinstance(v, list) and all(isinstance(x, str) and x.strip() for x in v))
+
+
+def _de(valores, vacio=True, lleno=False):
+    """Una lista con valores de la lista dada (lleno: con alguno)."""
+    return lambda v: (v is None and vacio) or (isinstance(v, list) and (v or not lleno) and all(x in valores for x in v))
+
+
+def _hueco_m2(h):
+    return (isinstance(h, list) and len(h) == 4 and isinstance(h[0], str)
+            and all(x in LONGITUDES_M2 for x in h[0].split(",")) and h[1] in (0, 2, 3, 4, 5)
+            and h[2] in (0, 1, 2, 4, 8, 16) and h[3] in ("p", "ps", "s", "?"))
+
+
+# lo que puede valer cada campo corregido: una errata («Micro-ATX») no se cuela en los datos
+VALIDO = {
+    "placas": {
+        "m2": lambda v: isinstance(v, list) and all(_hueco_m2(h) for h in v),
+        "video": _de(set(CONECTORES_VIDEO.values())),
+        "flashback": lambda v: v in (True, False, None),
+        "max_gb": _num(4, 1024, vacio=False),
+        "notas_m2": _textos,
+        "x16": lambda v: v in (0, 1, None),
+        "formato": lambda v: v in FORMATOS_PLACA or v == "Thin Mini-ITX",
+        "notas_grafica": _textos,
+    },
+    "graficas": {
+        "largo": _num(60, 450),
+        "ranuras": _num(1, 5, decimales=True),
+        "conectores": lambda v: v is None or (isinstance(v, list) and len(v) == 3
+                                              and all(isinstance(x, int) and 0 <= x <= 4 for x in v)),
+        "pcie": lambda v: v is None or (isinstance(v, list) and len(v) == 2 and v[0] in (1, 2, 3, 4, 5)
+                                        and v[1] in (1, 4, 8, 16)),
+        "tdp": _num(10, 1000),
+    },
+    "fuentes": {
+        "vatios": _num(100, 3000, vacio=False),
+        "formato": lambda v: v is None or v in set(FORMATOS_FUENTE.values()),
+        "largo": _num(80, 300),
+        "pcie": lambda v: v is None or (isinstance(v, list) and len(v) == 2 and sum(v) > 0
+                                        and all(isinstance(x, int) and 0 <= x <= 12 for x in v)),
+        "modular": lambda v: v is None or v in set(MODULAR.values()),
+    },
+    "cajas": {
+        "placas": _de(FORMATOS_PLACA, vacio=False, lleno=True),
+        "psu": _de(FORMATOS_FUENTE_CAJA, lleno=True),
+        "gpu_max": _num(100, 600),
+        "disipador_max": _num(20, 250),
+        "psu_max": _num(80, 400),
+        "ranuras": _num(1, 12),
+        "incluida": _num(100, 3000),
+    },
+    "disipadores": {
+        "zocalos": _de(ORDEN_ZOCALOS, vacio=False),
+        "alto": _num(20, 220),
+        "liquida": lambda v: v in (0, 1),
+        "radiador": _num(80, 480),
+    },
+}
 
 
 def aplicar_correcciones(tablas, ruta, avisos):
     """Datos revisados a mano con la ficha del fabricante (pc/correcciones.json): mandan sobre BuildCores.
 
     tablas: {"placas": [...], "graficas": [...], ...}; cada corrección va por el nombre exacto de la pieza.
+    Cada pieza corregida guarda la ficha («fuente») y qué campos cambió («corregidos»), para citar
+    esa ficha solo donde se usa un dato que sale de ella. Un valor imposible para la conversión.
     """
+    for tabla in CAMPOS_CORREGIBLES:
+        for p in tablas.get(tabla) or []:
+            p["corregidos"] = None
     if not ruta or not os.path.exists(ruta):
         return 0
     with open(ruta, encoding="utf-8") as f:
@@ -930,20 +1060,35 @@ def aplicar_correcciones(tablas, ruta, avisos):
         por_nombre = {p["nombre"].lower(): p for p in tablas[tabla]}
         hechas = 0
         for c in lista:
-            pieza = por_nombre.get(str(c.get("nombre", "")).lower())
+            nombre = str(c.get("nombre", ""))
+            if not str(c.get("fuente") or "").startswith("https://"):
+                raise SystemExit(f"correcciones: «{nombre}» no dice de dónde sale (falta «fuente»).")
+            for campo in c:
+                if campo not in ("nombre", "fuente") and campo not in campos:
+                    raise SystemExit(f"correcciones: «{nombre}» trae «{campo}», que no se puede corregir en {tabla}.")
+                if campo in campos and not VALIDO[tabla][campo](c[campo]):
+                    raise SystemExit(f"correcciones: «{nombre}» trae un valor imposible en «{campo}»: {c[campo]!r}.")
+            pieza = por_nombre.get(nombre.lower())
             if not pieza:
-                avisos(f"correcciones: «{c.get('nombre')}» ya no está en BuildCores")
+                avisos(f"correcciones: «{nombre}» ya no está en BuildCores")
                 continue
-            for campo in campos:
-                if campo in c:
-                    pieza[campo] = c[campo]
+            cambiados = [campo for campo in campos if campo in c]
+            for campo in cambiados:
+                pieza[campo] = c[campo]
             if tabla == "placas" and "m2" in c:
                 pieza["m2_nota"] = ""
-            pieza["fuente"] = c.get("fuente") or ""
+            pieza["fuente"] = c["fuente"]
+            pieza["corregidos"] = cambiados
             hechas += 1
         if hechas:
-            avisos.cuenta[f"{NOMBRE_PIEZA[tabla]}: corregida a mano con la ficha del fabricante"] = hechas
+            avisos.cuenta[CORREGIDA[tabla]] = hechas
         total += hechas
+    # un disipador que, según su ficha, no vale para ningún zócalo de la herramienta, fuera (como en BuildCores)
+    if tablas.get("disipadores"):
+        sin = [d for d in tablas["disipadores"] if not d["zocalos"]]
+        for _ in sin:
+            avisos("disipador: según su ficha, sin zócalos que cubra la herramienta, fuera")
+        tablas["disipadores"] = [d for d in tablas["disipadores"] if d["zocalos"]]
     return total
 
 
@@ -975,7 +1120,7 @@ def preparar(opendb, salida, ruta_reglas, anterior=None, ruta_correcciones=None)
         "url": "https://github.com/buildcores/buildcores-open-db",
         "licencia": "CC BY-NC-SA 4.0",
         "licencia_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es",
-        "cambios": "Adaptado: menos campos, nombres limpios, sin Xeon, EPYC, placas de servidor, SO-DIMM ni ECC, sin los huecos M.2 de plantilla o imposibles, sin medidas imposibles ni conectores «a cero» (que no prueban nada), y con algunas placas corregidas a mano con la ficha del fabricante.",
+        "cambios": "Adaptado: menos campos, nombres limpios, sin Xeon, EPYC, placas de servidor, SO-DIMM ni ECC, sin los huecos M.2 de plantilla o imposibles, sin medidas imposibles ni conectores «a cero» o imposibles (que no prueban nada), con las medidas redondeadas hacia el lado prudente, y con algunas placas, gráficas, fuentes, cajas y disipadores corregidos a mano con su ficha.",
         "commit": sha,
         "fecha": fecha,
         "piezas": cuentas,
@@ -994,7 +1139,7 @@ def main(argv=None):
     ap.add_argument("--reglas", default=os.path.join(RAIZ, "pc", "reglas.json"))
     ap.add_argument("--anterior", help="carpeta con los datos anteriores: si ahora salen muchas menos piezas, no se escribe nada")
     ap.add_argument("--correcciones", default=os.path.join(RAIZ, "pc", "correcciones.json"),
-                    help="placas revisadas a mano (vacío para no aplicar ninguna)")
+                    help="piezas corregidas a mano: placas, gráficas, fuentes, cajas y disipadores (vacío para no aplicar ninguna)")
     a = ap.parse_args(argv)
     meta = preparar(a.opendb, a.salida, a.reglas, a.anterior, a.correcciones)
     p = meta["piezas"]

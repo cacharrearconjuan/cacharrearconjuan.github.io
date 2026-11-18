@@ -637,7 +637,7 @@ def prueba_datos_pc():
                   and b5.get("fuente") == "https://www.msi.com/x" and b5.get("m2_nota") == "", "correcciones: mandan sobre la ficha")
         with open(os.path.join(salida2, "meta.json"), encoding="utf-8") as f:
             avisos2 = json.load(f)["avisos"]
-        comprobar(avisos2.get("placa: corregida a mano con la ficha del fabricante") == 1
+        comprobar(avisos2.get("placa: corregida a mano") == 1
                   and any("ya no está" in k for k in avisos2), f"correcciones: cuenta las hechas y avisa de las que no casan ({avisos2})")
         comprobar(b5.get("notas_grafica") == ["Ranura de prueba."], "correcciones: notas de la ranura de la gráfica")
         g2 = {x["nombre"]: x for x in leer_tabla(os.path.join(salida2, "graficas.json")).values()}.get("Sapphire PULSE Radeon RX 6500 XT 4GB", {})
@@ -648,8 +648,72 @@ def prueba_datos_pc():
                   and f2.get("pcie") == [4, 0] and f2.get("formato") == "ATX" and k2.get("disipador_max") == 180 and k2.get("psu_max") == 220
                   and d2.get("alto") == 150 and d2.get("fuente") == "https://example.com/d",
                   "correcciones: también gráficas, fuentes, cajas y disipadores")
-        comprobar(all(avisos2.get(f"{p}: corregida a mano con la ficha del fabricante") == 1 for p in ("gráfica", "fuente", "caja", "disipador")),
+        comprobar(all(avisos2.get(k) == 1 for k in ("gráfica: corregida a mano", "fuente: corregida a mano", "caja: corregida a mano",
+                                                     "disipador: corregido a mano")),
                   "correcciones: cuenta las de cada tipo")
+        comprobar(b5.get("corregidos") == ["m2", "video", "flashback", "notas_m2", "notas_grafica"] and g2.get("corregidos") == ["largo", "conectores"]
+                  and d2.get("corregidos") == ["alto"], "correcciones: guarda qué datos se corrigieron")
+        otra = next((p for n, p in placas2.items() if n != "MSI MAG B550 TOMAHAWK"), {})
+        comprobar("corregidos" in otra and otra["corregidos"] is None, "correcciones: las demás piezas, sin datos corregidos")
+
+        # una corrección con un valor imposible (o sin fuente) para la conversión: no se cuela en los datos
+        def falla_con(correccion, que):
+            ruta = os.path.join(t, "correcciones-malas.json")
+            with open(ruta, "w", encoding="utf-8") as f:
+                json.dump(correccion, f)
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    dpc.main(["--opendb", OPENDB, "--salida", os.path.join(t, "datos-malos"), "--reglas", reglas, "--correcciones", ruta])
+            except SystemExit as e:
+                return que in str(e)
+            return False
+        comprobar(falla_con({"cajas": [{"nombre": "Lian Li LANCOOL 216 ATX Mid Tower Black", "fuente": "https://x", "placas": ["Micro-ATX"]}]}, "imposible"),
+                  "correcciones: un formato con errata para")
+        comprobar(falla_con({"disipadores": [{"nombre": "Otro Disipador 1151v2", "fuente": "https://x", "zocalos": ["AM3"]}]}, "imposible"),
+                  "correcciones: un zócalo que no existe para")
+        comprobar(falla_con({"graficas": [{"nombre": "x", "fuente": "https://x", "pcie": [4, 6]}]}, "imposible"),
+                  "correcciones: una interfaz imposible para")
+        comprobar(falla_con({"fuentes": [{"nombre": "x", "pcie": [2, 0]}]}, "fuente"), "correcciones: sin fuente, para")
+        comprobar(falla_con({"fuentes": [{"nombre": "x", "fuente": "https://x", "colores": 3}]}, "no se puede corregir"),
+                  "correcciones: un campo que no se corrige para")
+
+        # un disipador que, corregido, no vale para ningún zócalo de la herramienta, fuera
+        corr3 = os.path.join(t, "correcciones3.json")
+        with open(corr3, "w", encoding="utf-8") as f:
+            json.dump({"disipadores": [{"nombre": "Otro Disipador 1151v2", "fuente": "https://example.com/d", "zocalos": []}]}, f)
+        salida3 = os.path.join(t, "datos3")
+        with contextlib.redirect_stdout(io.StringIO()):
+            dpc.main(["--opendb", OPENDB, "--salida", salida3, "--reglas", reglas, "--correcciones", corr3])
+        dis3 = {x["nombre"] for x in leer_tabla(os.path.join(salida3, "disipadores.json")).values()}
+        comprobar("Otro Disipador 1151v2" not in dis3 and dis3, "correcciones: disipador sin zócalos, fuera")
+
+        # medidas con decimales: las de las piezas hacia arriba, los máximos de las cajas hacia abajo
+        comprobar(dpc.medida(220.5, 60, 450, "arriba") == 221 and dpc.medida("357.6", 60, 450, "arriba") == 358
+                  and dpc.medida(455.7, 100, 600, "abajo") == 455 and dpc.medida(180.5, 20, 250, "abajo") == 180
+                  and dpc.medida(180, 20, 250, "abajo") == 180 and dpc.medida(0, 20, 250, "abajo") is None
+                  and dpc.medida(9999, 20, 250, "arriba") is None, "medidas con decimales: redondeo prudente")
+        comprobar(dpc.redondo(114.5) == 115 and dpc.redondo("220") == 220 and dpc.redondo(None) is None, "vatios: redondeo")
+        av = dpc.Avisos()
+        base_g = {"chipset": "GeForce RTX 4060", "metadata": {"name": "Prueba", "manufacturer": "Prueba"}}
+        gs = {x["nombre"]: x for x in dpc.preparar_graficas([
+            dict(base_g, opendb_id="g1", metadata={"name": "Uno", "manufacturer": "Prueba"}, length=220.5,
+                 power_connectors={"pcie_12VHPWR": 1, "pcie_12V_2x6": 1}),
+            dict(base_g, opendb_id="g2", metadata={"name": "Dos", "manufacturer": "Prueba"}, power_connectors={"pcie_8_pin": 1, "pcie_12VHPWR": 1}),
+            dict(base_g, opendb_id="g3", metadata={"name": "Tres", "manufacturer": "Prueba"}, power_connectors={"pcie_6_pin": 2, "pcie_8_pin": 2}),
+            dict(base_g, opendb_id="g4", metadata={"name": "Cuatro", "manufacturer": "Prueba"}, power_connectors={"pcie_8_pin": 4}),
+        ], av)}
+        comprobar(gs["Prueba Uno"]["conectores"] == [0, 0, 1] and gs["Prueba Uno"]["largo"] == 221,
+                  "gráfica: el de 16 pines con sus dos nombres cuenta una vez, y el largo con decimales se queda")
+        comprobar(gs["Prueba Dos"]["conectores"] is None and gs["Prueba Tres"]["conectores"] is None and gs["Prueba Cuatro"]["conectores"] == [0, 4, 0]
+                  and av.cuenta.get("gráfica: conectores imposibles, sin dato") == 2, "gráfica: conectores imposibles, sin dato (las de 4 de 8 existen)")
+        av = dpc.Avisos()
+        fs = {x["nombre"]: x for x in dpc.preparar_fuentes([
+            {"opendb_id": f"f{i}", "wattage": w, "metadata": {"name": f"F{i}", "manufacturer": "Prueba"},
+             "connectors": {"pcie_6_plus_2_pin": a, "pcie_12vhpwr": b}}
+            for i, (w, a, b) in enumerate([(750, 0, 4), (750, 1, 0), (650, 1, 0), (1000, 1, 1), (1000, 4, 1), (1600, 6, 3), (1000, 6, 3)])], av)}
+        pc = [fs[f"Prueba F{i}"]["pcie"] for i in range(7)]
+        comprobar(pc == [None, None, [1, 0], None, [4, 1], [6, 3], None] and av.cuenta.get("fuente: conectores PCIe imposibles, sin dato") == 4,
+                  f"fuente: conectores imposibles, sin dato ({pc})")
 
         av = dpc.Avisos()
         raros = {x["nombre"]: x for x in dpc.preparar_ssd([

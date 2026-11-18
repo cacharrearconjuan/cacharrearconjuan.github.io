@@ -582,7 +582,7 @@ function pruebaPiezasNuevas() {
   r = PC.graficaEnPlaca(RG, g6500, b450, r3600);
   comprobar(r.estado === 'depende' && /PCIe 3\.0 x4/.test(r.texto) && r.fuentes.indexOf('f-x4') >= 0, 'RX 6500 XT en B450: depende (x4 en PCIe 3.0)');
   r = PC.graficaEnPlaca(RG, g4090, a520, r5600g);
-  comprobar(r.estado === 'si' && /el procesador y la placa \(A520\)/.test(r.texto) && /PCIe 3\.0 x16/.test(r.texto), 'RTX 4090 con 5600G en A520: limitan los dos');
+  comprobar(r.estado === 'si' && /el procesador y la placa \(A520\) la dejan en PCIe 3\.0 x16/.test(r.texto), 'RTX 4090 con 5600G en A520: limitan los dos (y «la dejan»)');
   r = PC.graficaEnPlaca(RG, g4060, b650, r8500g);
   comprobar(/PCIe 4\.0 x4/.test(r.texto) && /el procesador/.test(r.texto), '8500G: la gráfica va a x4');
   r = PC.graficaEnPlaca(RG, g5060, b650, r7800x3d);
@@ -603,11 +603,18 @@ function pruebaPiezasNuevas() {
   comprobar(r.estado === 'si' && /NVIDIA pide una fuente de 550 W/.test(r.texto) && /llegan/.test(r.texto), 'RTX 4060 con 550 W y dos 6+2: sí');
   comprobar(r.notas.some((n) => /Estimación: en pico, el equipo puede llegar a unos 253-303 W/.test(n)) && r.fuentes.indexOf('f-ppt') >= 0, 'estimación del pico con el PPT de AMD');
   r = PC.graficaConFuente(RG, g4060, psu('450', 450, [1, 0]), r5600x);
-  comprobar(r.estado === 'depende' && /Justa/.test(r.texto), 'RTX 4060 con 450 W: justa');
+  comprobar(r.estado === 'depende' && /^Se queda corta según NVIDIA: pide una fuente de 550 W/.test(r.texto), 'RTX 4060 con 450 W: se queda corta según NVIDIA');
+  r = PC.graficaConFuente(RG, g4060, psu('500', 500, [1, 0]), r5600x);
+  comprobar(r.estado === 'depende' && /^Justa: NVIDIA pide/.test(r.texto) && r.notas.indexOf('Ya lleva margen.') >= 0, 'RTX 4060 con 500 W (más del 90 %): justa, con el margen');
   r = PC.graficaConFuente(RG, g4090, psu('850', 850, [4, 0]), r7800x3d);
   comprobar(r.estado === 'si' && /adaptador/.test(r.texto) && r.notas.indexOf('Usa cables separados.') >= 0, 'RTX 4090 con 850 W y cuatro 6+2: sí, con adaptador');
   r = PC.graficaConFuente(RG, g4090, psu('1000', 1000, [2, 0]), r7800x3d);
-  comprobar(r.estado === 'no' && /no llegan/.test(r.texto) && /pide 3 de 8 pines/.test(r.texto), 'RTX 4090 con dos 6+2: no llegan para el adaptador');
+  comprobar(r.estado === 'depende' && /según sus fichas, no llegan/.test(r.texto) && /pide 3 de 8 pines/.test(r.texto) && /^De potencia, bien: NVIDIA/.test(r.texto),
+    'RTX 4090 con dos 6+2 (sin comprobar a mano): según las fichas no llegan, y el «Sí» no va delante');
+  r = PC.graficaConFuente(RG, Object.assign({}, g4090, {fuente: 'https://x/g', corregidos: ['conectores']}),
+    psu('1000 comprobada', 1000, [2, 0], {fuente: 'https://x/f', corregidos: ['pcie']}), r7800x3d);
+  comprobar(r.estado === 'no' && /: no llegan\./.test(r.texto) && /^De potencia, bien:/.test(r.texto) && r.fuentes.indexOf('https://x/g') >= 0 && r.fuentes.indexOf('https://x/f') >= 0,
+    'RTX 4090 con dos 6+2, las dos comprobadas a mano: no llegan, citando sus fichas');
   r = PC.graficaConFuente(RG, g4090, psu('850 nativa', 850, [2, 1]), r7800x3d);
   comprobar(r.estado === 'si' && !/adaptador/.test(r.texto), 'RTX 4090 con conector de 16 pines: sin adaptador');
   r = PC.graficaConFuente(RG, g4090, psu('400', 400, [2, 0]), r7800x3d);
@@ -624,11 +631,24 @@ function pruebaPiezasNuevas() {
   r = PC.graficaConFuente(RG, g1030, psu('300', 300, null), i12400);
   comprobar(r.estado === 'si' && /75 W o menos/.test(r.texto), 'GT 1030: sin conector, con la ranura vale');
   r = PC.graficaConFuente(RG, g4060, psu('sin dato', 650, null), r5600x);
-  comprobar(r.estado === 'depende' && /no dice cuántos conectores PCIe/.test(r.texto), 'fuente sin conectores en la ficha: depende');
+  comprobar(r.estado === 'depende' && /No sé seguro cuántos conectores PCIe trae la fuente/.test(r.texto), 'fuente sin conectores en la ficha: depende');
   r = PC.graficaConFuente(RG, rara, psu('750', 750, [2, 0]), r5600x);
   comprobar(r.estado === 'nose' && /No sé qué conectores/.test(r.texto), 'chip sin regla ni conectores: sin comprobar');
   r = PC.graficaConFuente(RG, g6500, psu('400', 400, [1, 0]), r5600x);
-  comprobar(r.estado === 'si' && /tarjeta de referencia/.test(r.texto), 'sin conectores en la ficha: los de la referencia, avisando');
+  comprobar(r.estado === 'si' && /No sé qué conectores lleva tu modelo\. La de referencia lleva un conector de 6 pines y la fuente trae un conector de 6\+2 pines: llegan\./.test(r.texto),
+    'sin conectores en la ficha: los de la referencia, avisando');
+  // con la de referencia, también las de marca de la lista
+  RG._conectoresChip = {'Radeon RX 6500 XT': [[1, 0, 0], [0, 1, 0]], 'GeForce RTX 4090': [[0, 0, 1], [0, 0, 2]]};
+  r = PC.graficaConFuente(RG, g6500, psu('400', 400, [1, 0]), r5600x);
+  comprobar(r.estado === 'si' && /también con los que llevan las versiones de marca/.test(r.texto), 'referencia: llegan también para las de marca');
+  RG._conectoresChip['Radeon RX 6500 XT'].push([0, 2, 0]);
+  r = PC.graficaConFuente(RG, g6500, psu('400', 400, [1, 0]), r5600x);
+  comprobar(r.estado === 'depende' && /con esos llegan, pero hay versiones de marca con 2 conectores de 8 pines y con esas no/.test(r.texto),
+    'referencia: si alguna de marca pide más, depende');
+  r = PC.graficaConFuente(RG, gpu('4090 sin ficha', 'GeForce RTX 4090'), psu('1000', 1000, [2, 0]), r7800x3d);
+  comprobar(r.estado === 'depende' && /con esos no llegarían/.test(r.texto) && /Mira los de tu modelo/.test(r.texto),
+    'referencia que no llega: depende, no «no» (falta el dato de la tarjeta)');
+  delete RG._conectoresChip;
   r = PC.graficaConFuente(RG, g4060, psu('650', 650, [2, 0]), null);
   comprobar(r.notas.some((n) => /Elige el procesador/.test(n)), 'sin procesador: pide elegirlo para afinar');
   comprobar(PC.consumoCpu(RG, i13600k).w === 181 && PC.consumoCpu(RG, i13400).w === 148 && PC.consumoCpu(RG, i13400).fuentes[0] === 'f-ark',
@@ -682,7 +702,7 @@ function pruebaPiezasNuevas() {
   r = PC.disipadorConCpu(RG, viejo, r7800x3d);
   comprobar(r.estado === 'depende' && /AMD dice que valen/.test(r.texto), 'disipador de AM4 en AM5: seguramente sí');
   r = PC.disipadorConCpu(RG, viejo, i12400);
-  comprobar(r.estado === 'no' && /No trae anclaje para LGA 1700/.test(r.texto) && !/115x/.test(r.texto)
+  comprobar(r.estado === 'no' && /No: su ficha no trae anclaje para LGA 1700/.test(r.texto) && !/115x/.test(r.texto)
     && r.notas.indexOf('Hace falta el kit.') >= 0 && r.fuentes.indexOf('f-kit') >= 0, 'disipador de LGA 1200 en LGA 1700: no, con el kit');
   r = PC.disipadorEnZocalo(RG, disipador('Solo AM5', ['AM5']), 'AM4');
   comprobar(r.estado === 'depende' && /Debería valer/.test(r.texto), 'disipador de AM5 en AM4: puede que sí');
@@ -696,18 +716,19 @@ function pruebaPiezasNuevas() {
   comprobar(PC.disipadorEnCaja(RG, moderno, caja('Sin dato', {disipador_max: null})).estado === 'nose', 'caja sin altura de disipador: sin comprobar');
 
   // --- gráfica integrada con tarjeta
-  comprobar(PC.grafica(RG, i12400f, z790, g4060).estado === 'si', 'F con tarjeta: no le hace falta gráfica integrada');
+  comprobar(PC.grafica(RG, i12400f, z790, g4060).estado === 'ok', 'F con tarjeta: no le hace falta gráfica integrada (bien, no «sí»)');
   comprobar(/conecta el monitor a la tarjeta/.test(PC.grafica(RG, i12400, z790, g4060).texto), 'con tarjeta: el monitor a la tarjeta');
 
   // --- listas en los dos sentidos
   const gpus = [g4060, g4090, g6500, g1030];
   const enCaja = PC.graficasParaCaja(RG, gpus, caja('Caja'));
   comprobar(enCaja.every((x) => x.estado === 'si') && enCaja.reduce((s, x) => s + x.piezas.length, 0) === 3, 'gráficas que caben: todas menos la de 340 mm');
-  comprobar(enCaja.map((x) => x.titulo).join('|') === 'Radeon RX 6500 XT|GeForce RTX 4060|GeForce GT 1030', 'gráficas por chip: lo más nuevo primero');
-  const fuentes = PC.fuentesParaGrafica(RG, [psu('a', 650, [2, 0]), psu('b', 450, [2, 0]), psu('c', 300, [2, 0])], g4060, r5600x);
-  comprobar(fuentes.length === 3 && fuentes[0].estado === 'si' && fuentes[0].titulo === '650 W'
-    && fuentes[1].titulo === '300 W' && fuentes[1].estado === 'depende' && fuentes[2].titulo === '450 W',
-    'fuentes para una gráfica: primero las que le valen, luego las justas por potencia');
+  comprobar(enCaja.map((x) => x.titulo).join('|') === 'GeForce RTX 4060|Radeon RX 6500 XT|GeForce GT 1030', 'gráficas por chip: en el orden de las reglas');
+  const sinRegla = PC.graficasParaCaja(RG, [g4060, gpu('Rara', 'Chip desconocido', {largo: 200})], caja('Caja'));
+  comprobar(sinRegla[sinRegla.length - 1].titulo === 'Chip desconocido', 'gráficas por chip: las que no tienen regla, al final');
+  const fuentes = PC.fuentesParaGrafica(RG, [psu('a', 650, [2, 0]), psu('b', 450, [2, 0]), psu('c', 300, [2, 0]), psu('d', 750, [2, 0])], g4060, r5600x);
+  comprobar(fuentes.map((x) => x.estado + ' ' + x.titulo).join('|') === 'si 650 W|si 750 W|depende 450 W|depende 300 W',
+    'fuentes para una gráfica: las que valen de menor a mayor; las de «ojo», de la más cercana a la más lejana');
   r = PC.graficaConFuente(RG, g4060, psu('250', 250, [2, 0]), r5600x);
   comprobar(r.estado === 'no' && r.notas.some((n) => /por debajo de ese pico/.test(n)), 'fuente por debajo de lo que pide y del pico: no, y lo dice');
   const zocalo = PC.disipadoresParaZocalo(RG, [moderno, viejo, disipador('Solo Intel', ['LGA 1200'])], 'AM5');
@@ -716,13 +737,89 @@ function pruebaPiezasNuevas() {
   comprobar(['Gráfica y placa', 'Gráfica y fuente', 'Gráfica y caja', 'Placa y caja', 'Fuente y caja', 'Disipador y procesador', 'Disipador y caja']
     .every((q) => filas.some((f) => f.que === q)), 'veredicto: las siete comprobaciones nuevas');
   comprobar(PC.peor(['si', 'depende', 'si']) === 'depende' && PC.peor(['si', 'no', 'nose']) === 'no', 'peor de varios estados');
-  const comprobada = Object.assign({}, g4060, {fuente: 'https://www.asus.com/ficha'});
+  const comprobada = Object.assign({}, g4060, {fuente: 'https://www.asus.com/ficha', corregidos: ['largo', 'conectores']});
   comprobar(PC.graficaEnCaja(RG, comprobada, caja('Caja')).fuentes.indexOf('https://www.asus.com/ficha') >= 0
     && PC.graficaConFuente(RG, comprobada, psu('650', 650, [2, 0]), r5600x).fuentes.indexOf('https://www.asus.com/ficha') >= 0
     && PC.graficaEnCaja(RG, g4060, caja('Caja')).fuentes.indexOf('https://www.asus.com/ficha') < 0, 'piezas comprobadas a mano: su ficha va en las fuentes');
+  const soloGrosor = Object.assign({}, g4060, {fuente: 'https://www.asus.com/ficha', corregidos: ['ranuras']});
+  comprobar(PC.graficaConFuente(RG, soloGrosor, psu('650', 650, [2, 0]), r5600x).fuentes.indexOf('https://www.asus.com/ficha') < 0
+    && PC.graficaEnCaja(RG, soloGrosor, caja('Caja')).fuentes.indexOf('https://www.asus.com/ficha') >= 0,
+    'la ficha corregida solo se cita donde se usa un dato corregido');
+  const conTdp = Object.assign({}, g4060, {fuente: 'https://www.asus.com/ficha', corregidos: ['tdp']});
+  comprobar(PC.graficaConFuente(RG, conTdp, psu('650', 650, [2, 0]), r5600x).fuentes.indexOf('https://www.asus.com/ficha') < 0,
+    'el consumo corregido de la tarjeta no se cita si manda el del chip');
+
+  // --- revisión de código (18-11-2026)
+  // sin procesador: los de la placa que dejarían la gráfica más lenta, y una fila «Gráfica y procesador» sin placa
+  r = PC.graficaEnPlaca(RG, g4060, b550, null);
+  comprobar(r.estado === 'si' && /salvo con los procesadores de la nota/.test(r.texto)
+    && r.notas.some((n) => /^Depende del procesador: con los Ryzen 5000G y Ryzen 5500\/5700 \(Cezanne\)/.test(n) && /a PCIe 3\.0 x8/.test(n)),
+    'placa sin procesador: no dice «a toda su velocidad» sin más');
+  r = PC.graficaEnPlaca(RG, g4060, b650, null);
+  comprobar(r.notas.some((n) => /con el Ryzen 5 8500G, a PCIe 4\.0 x4/.test(n)), 'sin procesador: nombra el modelo suelto que va distinto (8500G)');
+  r = PC.graficaEnPlaca(RG, g4060, b550, r5600x);
+  comprobar(!r.notas.some((n) => /Depende del procesador/.test(n)), 'con procesador, sin la nota de los que limitan');
+  let filasCpu = PC.comprobar(RG, {cpu: r8500g, gpu: g4060});
+  comprobar(filasCpu.length === 1 && filasCpu[0].que === 'Gráfica y procesador' && /el procesador la deja en PCIe 4\.0 x4/.test(filasCpu[0].texto),
+    'gráfica y procesador sin placa: se comprueba el enlace');
+  filasCpu = PC.comprobar(RG, {cpu: r5600x, gpu: g4060});
+  comprobar(filasCpu[0].estado === 'si' && /Falta la placa/.test(filasCpu[0].texto), 'gráfica y procesador a toda velocidad: falta la placa');
+  // las fuentes de las reglas no se tocan al citar la ficha de una pieza
+  const antes = JSON.stringify(RG.graficas.compatible);
+  PC.graficaEnPlaca(RG, gpu('Sin interfaz', 'Chip desconocido', {fuente: 'https://x/970', corregidos: ['pcie']}), b550, r5600x);
+  comprobar(JSON.stringify(RG.graficas.compatible) === antes, 'citar una ficha corregida no cambia las reglas');
+  // sin procesador: suelo con el que menos gasta de la lista
+  RG._picoMinimo = {w: 44, nombre: 'Intel Core i3-7100T', fuentes: ['f-ark']};
+  RG.graficas.resto = {min: 50, max: 100, fuentes: ['f-resto']};
+  r = PC.graficaConFuente(RG, g4090, psu('500', 500, [4, 0]), null);
+  comprobar(r.estado === 'no' && /el procesador que menos gasta de la lista \(Intel Core i3-7100T\) llega a unos 44 W/.test(r.texto) && /Ya son 544 W/.test(r.texto)
+    && r.fuentes.indexOf('f-resto') >= 0, 'sin procesador, muy por debajo: no llega ni con el que menos gasta');
+  r = PC.graficaConFuente(RG, g4090, psu('650', 650, [4, 0]), null);
+  comprobar(r.estado === 'depende' && /^Se queda corta según NVIDIA/.test(r.texto) && r.notas.indexOf('Ya lleva margen.') < 0,
+    'sin procesador, lejos de lo que pide: se queda corta, sin la nota del margen');
+  r = PC.graficaConFuente(RG, g4090, psu('800', 800, [4, 0]), null);
+  comprobar(r.estado === 'depende' && /^Justa:/.test(r.texto) && r.notas.indexOf('Ya lleva margen.') >= 0, 'sin procesador, cerca de lo que pide: justa');
+  r = PC.graficaConFuente(RG, g4060, psu('550', 550, [2, 0]), r5600x);
+  comprobar(r.notas.some((n) => /el resto del equipo \(placa, memoria, discos y ventiladores\), entre 50 y 100 W/.test(n)) && r.fuentes.indexOf('f-resto') >= 0,
+    'la estimación dice qué es «el resto» y cita de dónde sale');
+  delete RG._picoMinimo;
+  r = PC.graficaConFuente(RG, g4090, psu('500', 500, [4, 0]), null);
+  comprobar(r.estado === 'depende', 'sin la lista de procesadores, no hay suelo: depende');
+  delete RG.graficas.resto;
+  // «Sí:» solo si todo encaja
+  r = PC.graficaConFuente(RG, g4090, psu('1000', 1000, [2, 0]), r7800x3d);
+  comprobar(!/^Sí:/.test(r.texto) && /^De potencia, bien:/.test(r.texto), 'conectores que no llegan: el texto no empieza por «Sí:»');
+  // utilidades nuevas
+  comprobar(PC.encaja([0, 0, 1], [3, 0], 3).adaptador === 3 && PC.encaja([0, 0, 1], [2, 0], 3).falta && PC.encaja([0, 0, 1], [0, 1], 3).nativo === 1
+    && PC.encaja([0, 0, 1], [4, 0], null).sinDato && PC.encaja([1, 1, 0], [2, 0], null).falta === false, 'encaja: nativos, adaptador, sin dato');
+  comprobar(PC.textoFuente([0, 2]) === '2 conectores de 16 pines y ninguno de 6+2' && PC.textoFuente([3, 1]) === '3 conectores de 6+2 pines y uno de 16 pines',
+    'texto de los conectores de una fuente');
+  const porChip = PC.conectoresPorChip([g4060, gpu('Otra 4060', 'GeForce RTX 4060', {conectores: [0, 1, 0]}), gpu('4060 rara', 'GeForce RTX 4060', {conectores: [1, 1, 0]}), g6500]);
+  comprobar(porChip['GeForce RTX 4060'].length === 2 && !porChip['Radeon RX 6500 XT'], 'conectores por chip: distintos y solo con dato');
+  const pm = PC.picoMinimo(RG, [r5600x, i13400, cpu('core-i3-8100t', 'Intel Core i3-8100T', 'LGA 1151', 'coffee', true, {tdp: 35})]);
+  comprobar(pm && pm.nombre === 'Intel Core i3-8100T' && pm.w === 44, 'el procesador que menos gasta de la lista');
+  // caja: grosor que llena la caja; textos con su unidad
+  r = PC.graficaEnCaja(RG, gpu('Gruesa', 'GeForce RTX 4090', {conectores: [0, 0, 1], largo: 300, ranuras: 3.5}), caja('Cuatro', {gpu_max: 350, ranuras: 4}));
+  comprobar(r.estado === 'si' && r.notas.some((n) => /De grosor va justa: ocupa 4 ranuras y la caja tiene 4/.test(n)), 'gráfica que llena las ranuras de la caja: aviso');
+  r = PC.graficaEnCaja(RG, gpu('Gruesa', 'GeForce RTX 4090', {conectores: [0, 0, 1], largo: 300, ranuras: 3.5}), caja('Siete', {gpu_max: 350, ranuras: 7}));
+  comprobar(!r.notas.length, 'con ranuras de sobra, sin aviso');
+  comprobar(/caben hasta 200 mm\./.test(PC.fuenteEnCaja(RG, psu('Corta', 750, [2, 0], {largo: 150}), caja('Caja')).texto), 'fuente en caja: «hasta 200 mm»');
+  r = PC.disipadorEnCaja(RG, disipador('Justo', ['AM4'], {alto: 162}), caja('Caja'));
+  comprobar(r.notas.indexOf('Va justo: le sobran 3 mm.') >= 0, 'disipador justo: sin suponer nada de la tapa');
+  // listas: lo demás elegido cuenta, y orden por número
+  const conExtra = PC.disipadoresParaZocalo(RG, [moderno, viejo], 'AM5', (d) => (d === moderno ? 'no' : 'si'));
+  comprobar(conExtra.length === 1 && conExtra[0].piezas[0] === viejo && conExtra[0].estado === 'depende', 'listas: lo que no encaja con lo demás, fuera');
+  const altos = PC.disipadoresParaCaja(RG, [disipador('Bajo', ['AM4'], {alto: 95}), disipador('Alto', ['AM4'], {alto: 158})], caja('Caja'));
+  comprobar(altos.map((x) => x.titulo).join('|') === 'De 90 a 99 mm de alto|De 150 a 159 mm de alto', 'grupos por altura: por número, no como texto');
 
   // --- dónde comprarlo
   const busca = (t, nombre, extra) => PC.textoBusqueda(t, Object.assign({nombre: nombre}, extra || {}));
+  comprobar(busca('cajas', 'GameMax Black Diamond ARGB ATX Mid Tower Black with Tempered Glass Side Panel') === 'GameMax Black Diamond ARGB', 'buscar caja: «Black» del modelo se queda');
+  comprobar(busca('cajas', 'Rosewill ATX Mid Tower Gaming PC Computer Case with Dual Ring Blue LED Fans - SPECTRA C100') === 'Rosewill SPECTRA C100', 'buscar caja: el modelo tras el guion');
+  comprobar(busca('cajas', 'Corsair 4000D AIRFLOW Tempered Glass Mid-Tower ATX Case - Black') === 'Corsair 4000D AIRFLOW', 'buscar caja: sin el color tras el guion');
+  comprobar(busca('disipadores', 'Thermaltake Water 3.0 Riing Red Water 140mm 40.6 CFM Black / Red') === 'Thermaltake Water 3.0 Riing', 'buscar líquida: «Water» del modelo se queda');
+  comprobar(busca('disipadores', 'Cooler Master Hyper 212 Air 163mm LED Turbo 66.3 CFM Red') === 'Cooler Master Hyper 212', 'buscar disipador: sin «Air» ni medida');
+  comprobar(busca('disipadores', 'Alpenföhn BLACK RIDGE Air 47.1 CFM Black') === 'Alpenföhn BLACK RIDGE', 'buscar disipador: «BLACK» del modelo se queda');
   comprobar(busca('graficas', 'Asus DUAL EVO GeForce RTX 4060 8GB GDDR6 Black') === 'Asus DUAL EVO GeForce RTX 4060 8GB', 'buscar gráfica: sin GDDR ni color');
   comprobar(busca('graficas', 'MSI GeForce RTX 4070 VENTUS 2X 12G OC White') === 'MSI GeForce RTX 4070 VENTUS 2X 12G OC', 'buscar gráfica: sin color al final');
   comprobar(busca('fuentes', 'Corsair RM750 (2019) Black ATX 750W Fully Modular 80+ Gold', {vatios: 750}) === 'Corsair RM750 750W', 'buscar fuente: modelo y vatios');

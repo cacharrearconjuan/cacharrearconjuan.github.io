@@ -1430,6 +1430,14 @@
    "titulo": "Tom's Hardware: What Is PCIe? A Basic Definition (la tarjeta va a la generación más baja presente)",
    "url": "https://www.tomshardware.com/reviews/pcie-definition,5754.html"
   },
+  "cgdirector-placa": {
+   "titulo": "CG Director: How Many Watts Does a PC's Motherboard Use? (una placa actual, de 25 a 80 W)",
+   "url": "https://www.cgdirector.com/motherboard-power-consumption/"
+  },
+  "crucial-memoria": {
+   "titulo": "Crucial: How Much Power Does Memory Use? (para calcular la fuente, unos 5 W por módulo)",
+   "url": "https://eu.crucial.com/eur/en/how-much-power-does-memory-use"
+  },
   "toms_am5_ppt": {
    "titulo": "Tom's Hardware – AMD Corrects Socket AM5 for Ryzen 7000 Power Specs: 230W Peak Power, 170W TDP",
    "url": "https://www.tomshardware.com/news/amd-corrects-socket-am5-for-ryzen-7000-power-specs-230w-peak-power-170w-tdp"
@@ -7386,6 +7394,14 @@
     "toms-pcie"
    ]
   },
+  "resto": {
+   "min": 50,
+   "max": 100,
+   "fuentes": [
+    "cgdirector-placa",
+    "crucial-memoria"
+   ]
+  },
   "potencia": {
    "fuentes": [
     "intel-conectores-le",
@@ -7434,9 +7450,9 @@
     "arrow",
     "arrow_r"
    ],
-   "texto_pide": "Las Arc necesitan Resizable BAR para rendir lo que deben. Intel pide un Core de 10.ª generación o más nuevo, o un Ryzen 3000 (salvo los 3000G) o más nuevo, con Resizable BAR activado en la BIOS, arranque UEFI y CSM desactivado.",
+   "texto_pide": "Las Arc necesitan Resizable BAR para rendir lo que deben. Intel lo da por bueno con los Core de 10.ª generación o más nuevos y con los Ryzen 3000 (salvo los 3000G), 5000, 7000, 8000 y 9000, con Resizable BAR activado en la BIOS, arranque UEFI y CSM desactivado.",
    "texto_si": "Las Arc necesitan Resizable BAR para rendir lo que deben, y este procesador lo admite: actívalo en la BIOS, con arranque UEFI y CSM desactivado. En placas de 2020 y 2021, mira que su BIOS lo traiga.",
-   "texto_no": "Las Arc necesitan Resizable BAR para rendir lo que deben, y con este procesador no lo hay oficialmente. En una prueba, la A770 sin él rindió entre un 20 y un 24 % menos, con tirones.",
+   "texto_no": "Las Arc necesitan Resizable BAR para rendir lo que deben, e Intel no incluye este procesador en su lista: mira si tu placa permite activarlo. En una prueba, la A770 sin él rindió entre un 20 y un 24 % menos, con tirones.",
    "fuentes": [
     "intel-guia-escritorio",
     "intel-arc-rebar-necesario",
