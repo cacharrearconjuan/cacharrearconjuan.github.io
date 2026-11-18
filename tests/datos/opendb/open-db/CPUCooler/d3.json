@@ -1,0 +1,17 @@
+{
+ "opendb_id": "d3",
+ "metadata": {
+  "name": "Disipador de AM3",
+  "manufacturer": "Viejo"
+ },
+ "identifiers": {
+  "version": 1,
+  "identifiers": []
+ },
+ "height": 140,
+ "water_cooled": false,
+ "cpu_sockets": [
+  "AM3",
+  "LGA 775"
+ ]
+}

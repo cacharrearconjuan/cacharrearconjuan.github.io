@@ -1,0 +1,29 @@
+{
+ "opendb_id": "11111111-0000-4000-8000-000000000011",
+ "socket": "LGA 1151",
+ "metadata": {
+  "name": "Intel Celeron G3930",
+  "releaseYear": 2022
+ },
+ "cores": {
+  "total": 2,
+  "threads": 2
+ },
+ "clocks": {
+  "performance": {
+   "boost": 4.6
+  }
+ },
+ "specifications": {
+  "tdp": 65,
+  "integratedGraphics": {
+   "model": "Intel HD Graphics 610"
+  },
+  "memory": {
+   "types": [
+    "DDR4",
+    "DDR3"
+   ]
+  }
+ }
+}

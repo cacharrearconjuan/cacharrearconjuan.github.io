@@ -10,6 +10,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 import contextlib
@@ -19,6 +20,7 @@ from html.parser import HTMLParser
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(RAIZ, "web"))
 import generar as g  # noqa: E402
+import datos_pc as dpc  # noqa: E402
 
 DATOS = os.path.join(RAIZ, "tests", "datos")
 U = "cacharrearconjuan"
@@ -34,13 +36,16 @@ def comprobar(cond, texto):
         print("  FALLA:", texto)
 
 
-def generar(salida, datos="basico", ahora="2026-10-29", carpeta_datos=None, guias=None, enlaces=None, sitio=None, notas=None):
+def generar(salida, datos="basico", ahora="2026-10-29", carpeta_datos=None, guias=None, enlaces=None, sitio=None, notas=None,
+            pc_datos=None):
     notas = notas or os.path.join(DATOS, "notas")
     args = ["--salida", salida, "--datos", carpeta_datos or os.path.join(DATOS, datos), "--ahora", ahora,
             "--guias", guias or os.path.join(DATOS, "guias"),
             "--enlaces", enlaces or os.path.join(os.path.dirname(salida), "enlaces.json")]
     if sitio:
         args += ["--sitio", sitio]
+    if pc_datos:
+        args += ["--pc-datos", pc_datos]
     args += ["--notas", notas]
     with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()) as err:
         codigo = g.main(args)
@@ -227,9 +232,14 @@ def prueba_web():
         comprobar(pay.count("https://cacharrearconjuan.github.io/mis-payloads-ps5/payloads.json") == 1, "payloads: dirección una sola vez")
         comprobar("Manage Sources" in pay, "payloads: texto de la nota")
         comprobar("17 payloads" in pay, "payloads: caja")
+        comprobar(pay.count('class="payload-fecha"') == 17 and 'Actualizado el <time datetime="2026-10-19">19 de octubre de 2026</time>' in pay,
+                  "payloads: la fecha de cada uno")
+        fechas = "Actualizados el 29 de octubre de 2026 · analizados por última vez el 18 de noviembre de 2026, a las 9:02."
+        comprobar(f'<p class="catalogo-fechas">{fechas}</p>' in pay, "payloads: cuándo se actualizó la lista y cuándo se analizó (hora de Madrid)")
 
         desc = leer(salida, "descargas/index.html")
         comprobar(desc.count('class="descarga"') == 4, "descargas: 4 proyectos")
+        comprobar(f"17 payloads para Payload Manager. {fechas}" in desc, "descargas: los payloads con sus dos fechas")
         comprobar("cosa con espacios.zip" in desc and "5,1 MB" in desc, "descargas: archivo de la beta")
 
         nf = leer(salida, "404.html")
@@ -243,7 +253,7 @@ def prueba_web():
         comprobar(len(entradas) == 8 and len(set(ids)) == 8, f"feed: 8 entradas únicas ({len(entradas)})")
         comprobar(entradas[0].find("a:title", ns).text == "Lanzador de scrcpy v1.0.0", "feed: lo último primero")
         mapa = ET.fromstring(leer(salida, "sitemap.xml"))
-        comprobar(len(mapa) == 7, "sitemap: 7 páginas")
+        comprobar(len(mapa) == 8, "sitemap: 8 páginas")
 
         guia = leer(salida, "guias/guia-prueba/index.html")
         comprobar('href="guias/guia-prueba/"' in portada and 'id="guias"' in portada, "portada: sección de guías")
@@ -257,7 +267,10 @@ def prueba_web():
         comprobar("2 apartados" in portada, "portada: número de apartados")
 
         for ruta in paginas_html(salida):
-            r = revisar_html(leer(salida, ruta))
+            texto = leer(salida, ruta)
+            comprobar(texto.count('class="enlace-pc"') == 1 and "¿Qué le va a mi PC?" in texto.split("</header>", 1)[0],
+                      f"{ruta}: enlace a la herramienta del PC arriba")
+            r = revisar_html(texto)
             comprobar(not r.errores and not r.pila, f"{ruta}: etiquetas equilibradas ({r.errores[:3]} {r.pila[:3]})")
             comprobar(len(r.ids) == len(set(r.ids)), f"{ruta}: ids únicos")
             if ruta == "404.html":
@@ -398,6 +411,369 @@ def prueba_error():
         comprobar(os.path.exists(os.path.join(salida, "testigo")), "error de la API: no borra la web anterior")
 
 
+# ------------------------------------------------------------ ¿Qué le va a mi PC?
+
+OPENDB = os.path.join(DATOS, "opendb")
+
+
+def prueba_pc_web():
+    print("¿Qué le va a mi PC? en la web")
+    with tempfile.TemporaryDirectory() as t:
+        salida = os.path.join(t, "web")
+        codigo, err = generar(salida)
+        comprobar(codigo == 0, f"genera con la herramienta ({err.strip()[:200]})")
+        if codigo:
+            return
+        portada = leer(salida, "index.html")
+        cab = portada.split("</header>", 1)[0]
+        comprobar('<div class="cabecera-izquierda">' in cab and cab.index('class="marca"') < cab.index('class="enlace-pc"') < cab.index("<nav"),
+                  "portada: el enlace va arriba a la izquierda, junto al nombre")
+        comprobar('<a class="enlace-pc" href="pc/">' in portada, "portada: enlace relativo a pc/")
+        comprobar('<a class="enlace-pc" href="../../pc/">' in leer(salida, "proyectos/lanzador-scrcpy/index.html"), "proyecto: enlace a ../../pc/")
+        comprobar('href="https://cacharrearconjuan.github.io/pc/"' in leer(salida, "404.html"), "404: enlace absoluto a la herramienta")
+        comprobar('id="proyectos"' in portada and 'href="proyectos/lanzador-scrcpy/"' in portada, "la portada sigue en su sitio")
+        pc = leer(salida, "pc/index.html")
+        comprobar("<title>¿Qué le va a mi PC? | Cacharrear con Juan</title>" in pc, "pc: título")
+        comprobar('<link rel="canonical" href="https://cacharrearconjuan.github.io/pc/">' in pc, "pc: dirección canónica")
+        comprobar('<a class="enlace-pc" href="../pc/" aria-current="page">' in pc, "pc: el enlace marcado como página actual")
+        comprobar('id="pc-app"' in pc and pc.index('src="logica.js"') < pc.index('src="app.js"'), "pc: contenedor y scripts en orden")
+        comprobar("BuildCores OpenDB" in pc and "CC BY-NC-SA 4.0" in pc, "pc: créditos y licencia sin necesidad de JavaScript")
+        for f in g.ARCHIVOS_PC:
+            comprobar(os.path.exists(os.path.join(salida, "pc", f)), f"pc: copia {f}")
+        for f in g.DATOS_PC:
+            ruta = os.path.join(salida, "pc", "datos", f)
+            try:
+                with open(ruta, encoding="utf-8") as fh:
+                    datos = json.load(fh)
+                bien = "campos" in datos and len(datos["datos"]) > 10 if f != "meta.json" else datos.get("licencia") == "CC BY-NC-SA 4.0"
+            except (OSError, ValueError):
+                bien = False
+            comprobar(bien, f"pc: datos {f}")
+        comprobar("https://cacharrearconjuan.github.io/pc/" in leer(salida, "sitemap.xml"), "sitemap: /pc/")
+        comprobar("<script" not in leer(salida, "descargas/index.html"), "descargas: sigue sin scripts")
+        # sin las piezas, error claro y no se borra la web anterior
+        huella = leer(salida, "huella.txt")
+        codigo, err = generar(salida, pc_datos=os.path.join(t, "no-existe"))
+        comprobar(codigo == 1 and "datos del PC" in err, "sin piezas del PC: error claro")
+        comprobar(leer(salida, "huella.txt") == huella, "sin piezas del PC: la web anterior se queda")
+        roto = os.path.join(t, "roto")
+        shutil.copytree(os.path.join(RAIZ, "datos-pc"), roto)
+        with open(os.path.join(roto, "cpu.json"), "w", encoding="utf-8") as f:
+            f.write("{roto")
+        codigo, err = generar(salida, pc_datos=roto)
+        comprobar(codigo == 1 and "no es un JSON" in err, "piezas rotas: error claro")
+
+
+def leer_tabla(ruta):
+    with open(ruta, encoding="utf-8") as f:
+        d = json.load(f)
+    return {r[0]: dict(zip(d["campos"], r)) for r in d["datos"]}
+
+
+def prueba_datos_pc():
+    print("Piezas desde BuildCores (datos_pc.py)")
+    with tempfile.TemporaryDirectory() as t:
+        salida = os.path.join(t, "datos")
+        reglas = os.path.join(RAIZ, "pc", "reglas.json")
+        with contextlib.redirect_stdout(io.StringIO()):
+            codigo = dpc.main(["--opendb", OPENDB, "--salida", salida, "--reglas", reglas, "--correcciones", ""])
+        comprobar(codigo == 0, "convierte la copia de prueba")
+        cpus = leer_tabla(os.path.join(salida, "cpu.json"))
+        comprobar(set(cpus) == {"ryzen-5-7500f", "core-i5-12400f", "core-i5-12400", "ryzen-5-5600g", "ryzen-7-5700",
+                                "core-ultra-7-270k-plus", "celeron-g3930", "ryzen-5-3600", "core-i9-14900k", "core-ultra-5-999x"},
+                  f"cpu: los que tocan, sin Xeon, EPYC ni AM3+ ({sorted(cpus)})")
+        c = cpus.get("ryzen-5-7500f", {})
+        comprobar(c.get("nombre") == "AMD Ryzen 5 7500F" and c.get("familia") == "raphael" and c.get("igpu") is False,
+                  "cpu: 7500F limpio («™» y OEM fuera), sin gráfica aunque la ficha diga «0»")
+        comprobar(cpus.get("ryzen-5-3600", {}).get("nombre") == "AMD Ryzen 5 3600", "cpu: «3600 OEM/Tray» se queda en 3600")
+        comprobar(cpus.get("core-i5-12400f", {}).get("igpu") is False and cpus.get("core-i5-12400", {}).get("igpu_modelo") == "Intel UHD Graphics 730",
+                  "cpu: la F sin gráfica; «UHD 730» arreglado")
+        comprobar(cpus.get("ryzen-5-5600g", {}).get("familia") == "cezanne" and cpus.get("ryzen-7-5700", {}).get("familia") == "cezanne"
+                  and cpus["ryzen-7-5700"]["igpu"] is False, "cpu: 5600G y 5700 son Cezanne; el 5700, sin gráfica")
+        comprobar(cpus.get("core-ultra-7-270k-plus", {}).get("familia") == "arrow_r", "cpu: los Plus son Arrow Lake Refresh")
+        comprobar(cpus.get("celeron-g3930", {}).get("familia") == "kaby", "cpu: Celeron G3930 es Kaby Lake")
+        comprobar(cpus.get("core-i9-14900k", {}).get("zocalo") == "LGA 1700", "cpu: zócalo mal en la ficha, manda la familia")
+        nuevo = cpus.get("core-ultra-5-999x", {})
+        comprobar(nuevo.get("zocalo") == "LGA 1954" and nuevo.get("familia") is None, "cpu: zócalo nuevo entra solo, sin familia")
+
+        placas = {p["nombre"]: p for p in leer_tabla(os.path.join(salida, "placas.json")).values()}
+        comprobar(set(placas) == {"MSI MAG B550 TOMAHAWK", "MSI Z270 MORTAR DDR4 Micro ATX", "Gigabyte B450 AORUS ELITE",
+                                  "ASRock B365M Pro4 DDR4", "ASUS PRIME Z990-P", "ASUS TUF GAMING X570-PLUS"},
+                  f"placas: sin servidor ni AM3+, con el fabricante delante ({sorted(placas)})")
+        b550 = placas.get("MSI MAG B550 TOMAHAWK", {})
+        comprobar(b550.get("m2") == [["2242,2260,2280,22110", 4, 4, "p"], ["2242,2260,2280", 3, 4, "ps"]],
+                  f"placas: huecos M.2 leídos, «2242-2280» incluye 2260 y sin el de Wi-Fi ({b550.get('m2')})")
+        comprobar(b550.get("revisada") == "2026-04-27" and b550.get("flashback") is True and b550.get("video") == ["HDMI", "DisplayPort"],
+                  "placas: revisada, Flashback y salidas de vídeo")
+        comprobar(placas.get("MSI Z270 MORTAR DDR4 Micro ATX", {}).get("m2_nota") == "plantilla", "placas: M.2 de plantilla fuera")
+        comprobar(placas.get("Gigabyte B450 AORUS ELITE", {}).get("m2_nota") == "imposible", "placas: PCIe 4.0 en una B450, fuera")
+        b365 = placas.get("ASRock B365M Pro4 DDR4", {})
+        comprobar(b365.get("zocalo") == "LGA 1151" and b365.get("ram") == "DDR4" and b365.get("m2_nota") == "sin_datos",
+                  "placas: 1151v2 es 1151 y el DDR4 del nombre manda")
+        comprobar(placas.get("ASUS TUF GAMING X570-PLUS", {}).get("chipset") == "X570"
+                  and placas["ASUS TUF GAMING X570-PLUS"]["m2"][1][3] == "s", "placas: «570X» es X570; hueco solo SATA")
+        comprobar(placas.get("ASUS PRIME Z990-P", {}).get("zocalo") == "LGA 1954", "placas: zócalo nuevo entra solo")
+
+        ram = {r["nombre"]: r for r in leer_tabla(os.path.join(salida, "ram.json")).values()}
+        comprobar(len(ram) == 3, f"ram: sin SO-DIMM, DDR3 ni ECC ({sorted(ram)})")
+        z5 = ram.get("G.Skill Trident Z5 Neo DDR5-6000 CL30 32GB (2x16GB)", {})
+        comprobar(z5.get("tipo") == "DDR5" and z5.get("velocidad") == 6000 and z5.get("cl") == 30 and z5.get("modulos") == 2
+                  and z5.get("gb") == 16 and z5.get("perfil") == "XMP+EXPO", "ram: kit DDR5 bien leído")
+        ssd = {x["nombre"]: x for x in leer_tabla(os.path.join(salida, "ssd.json")).values()}
+        comprobar(len(ssd) == 4 and not any("2.5" in n for n in ssd), "ssd: solo M.2")
+        comprobar(ssd.get("Crucial MX500 1TB M.2-2280 SATA", {}).get("protocolo") == "sata"
+                  and ssd.get("Crucial T705 2TB M.2-2280 PCIe 5.0 X4 NVME", {}).get("gen") == 5
+                  and ssd.get("WD Black SN770M 1TB M.2-2230 PCIe 4.0 X4 NVME", {}).get("largo") == "2230", "ssd: SATA, PCIe 5.0 y 2230")
+        with open(os.path.join(salida, "meta.json"), encoding="utf-8") as f:
+            meta = json.load(f)
+        comprobar(meta["licencia"] == "CC BY-NC-SA 4.0" and meta["piezas"] == {"cpu": 10, "placas": 6, "ram": 3, "ssd": 4, "graficas": 3,
+                                                                                "fuentes": 2, "cajas": 2, "disipadores": 3},
+                  f"meta: licencia y cuentas ({meta['piezas']})")
+
+        # gráficas: la ficha más completa de cada nombre, sin medidas imposibles ni «conectores a cero»
+        gpus = {x["nombre"]: x for x in leer_tabla(os.path.join(salida, "graficas.json")).values()}
+        comprobar(set(gpus) == {"Asus DUAL GeForce RTX 4060 8GB", "Gigabyte AORUS MASTER GeForce RTX 4090 24GB GDDR6X",
+                                "Sapphire PULSE Radeon RX 6500 XT 4GB"}, f"gráficas: sin la que no tiene chip ({sorted(gpus)})")
+        g4060 = gpus.get("Asus DUAL GeForce RTX 4060 8GB", {})
+        comprobar(g4060.get("largo") == 227 and g4060.get("ranuras") == 2.5 and g4060.get("conectores") == [0, 1, 0]
+                  and g4060.get("amazon") == "B0C7W1HNNX" and g4060.get("pcie") is None,
+                  f"gráficas: de dos fichas iguales, la completa (con el código de Amazon de la otra) ({g4060})")
+        g4090 = gpus.get("Gigabyte AORUS MASTER GeForce RTX 4090 24GB GDDR6X", {})
+        comprobar(g4090.get("conectores") == [0, 0, 1] and g4090.get("pcie") == [4, 16] and g4090.get("chip") == "GeForce RTX 4090",
+                  "gráficas: 16 pines e interfaz con versión y carriles")
+        g6500 = gpus.get("Sapphire PULSE Radeon RX 6500 XT 4GB", {})
+        comprobar(g6500.get("conectores") is None and g6500.get("largo") is None and g6500.get("pcie") == [4, 4],
+                  "gráficas: conectores a cero y largo 0, sin dato")
+        fuentes = {x["nombre"]: x for x in leer_tabla(os.path.join(salida, "fuentes.json")).values()}
+        comprobar(set(fuentes) == {"Corsair RM750e 750W 80+ Gold Fully Modular ATX", "Montech APX 750W Non-Modular"},
+                  f"fuentes: sin la de 0 W ({sorted(fuentes)})")
+        rm = fuentes.get("Corsair RM750e 750W 80+ Gold Fully Modular ATX", {})
+        comprobar(rm.get("vatios") == 750 and rm.get("pcie") == [3, 1] and rm.get("formato") == "ATX" and rm.get("modular") == "total"
+                  and rm.get("eficiencia") == "80+ Gold" and rm.get("amazon") == "B0CGXRYNDK", f"fuentes: bien leída ({rm})")
+        apx = fuentes.get("Montech APX 750W Non-Modular", {})
+        comprobar(apx.get("pcie") is None and apx.get("formato") is None and apx.get("largo") is None and apx.get("eficiencia") is None,
+                  "fuentes: conectores a cero, formato «Mini-ITX» y largo 0, sin dato")
+        cajas = {x["nombre"]: x for x in leer_tabla(os.path.join(salida, "cajas.json")).values()}
+        comprobar(set(cajas) == {"Lian Li LANCOOL 216 ATX Mid Tower Black", "Genérica Caja Micro con fuente"}, f"cajas: sin la que no tiene formatos ({sorted(cajas)})")
+        lc = cajas.get("Lian Li LANCOOL 216 ATX Mid Tower Black", {})
+        comprobar(lc.get("placas") == ["Mini-ITX", "Micro ATX", "ATX", "EATX"] and lc.get("psu") == ["ATX"] and lc.get("gpu_max") == 392
+                  and lc.get("disipador_max") == 180 and lc.get("psu_max") is None and lc.get("ranuras") == 7 and lc.get("incluida") is None,
+                  f"cajas: bien leída, largo de fuente 0 sin dato ({lc})")
+        mc = cajas.get("Genérica Caja Micro con fuente", {})
+        comprobar(mc.get("incluida") == 500 and mc.get("gpu_max") is None and mc.get("ranuras") is None and mc.get("psu") is None,
+                  "cajas: con fuente de 500 W; 0 mm y 0 ranuras, sin dato")
+        dis = {x["nombre"]: x for x in leer_tabla(os.path.join(salida, "disipadores.json")).values()}
+        comprobar(set(dis) == {"Thermalright Peerless Assassin 120 SE 66.17 CFM CPU Cooler", "ARCTIC Liquid Freezer III 360 A-RGB 48.82 CFM Water 360mm Black",
+                               "Otro Disipador 1151v2"}, f"disipadores: sin el que solo vale para zócalos viejos ({sorted(dis)})")
+        pa = dis.get("Thermalright Peerless Assassin 120 SE 66.17 CFM CPU Cooler", {})
+        comprobar(pa.get("zocalos") == ["AM5", "AM4", "LGA 1851", "LGA 1700", "LGA 1200", "LGA 1151", "LGA 115x"] and pa.get("alto") == 155
+                  and pa.get("liquida") == 0 and pa.get("radiador") is None, f"disipadores: zócalos en orden y 1150 como 115x ({pa})")
+        lf = dis.get("ARCTIC Liquid Freezer III 360 A-RGB 48.82 CFM Water 360mm Black", {})
+        comprobar(lf.get("liquida") == 1 and lf.get("radiador") == 360 and lf.get("alto") is None, "disipadores: líquida, con radiador y sin altura")
+        comprobar(dis.get("Otro Disipador 1151v2", {}).get("zocalos") == ["LGA 1151"] and dis["Otro Disipador 1151v2"]["alto"] is None,
+                  "disipadores: 1151v2 es 1151; altura 0, sin dato")
+        comprobar(all(p.get("x16") is None for p in placas.values()), "placas: sin ranuras en la ficha, x16 sin dato")
+        with open(os.path.join(OPENDB, "open-db", "Motherboard", "p1.json"), encoding="utf-8") as f:
+            base_x16 = json.load(f)
+        reglas_plat = dpc.leer_reglas(reglas)
+        con = dict(base_x16, pcie_slots=[{"gen": "4.0", "lanes": 16, "quantity": 1}, {"gen": "3.0", "lanes": 1, "quantity": 2}])
+        sin = dict(base_x16, pcie_slots=[{"gen": "3.0", "lanes": 1, "quantity": 2}])
+        comprobar(dpc.preparar_placas([con], reglas_plat, dpc.Avisos())[0]["x16"] == 1
+                  and dpc.preparar_placas([sin], reglas_plat, dpc.Avisos())[0]["x16"] == 0, "placas: con ranura x16 (1) y sin ella (0)")
+
+        # salidas de vídeo: las que hay, ninguna (solo si BuildCores lo confirma) o no se sabe
+        comprobar(dpc.salidas_video({"back_panel_ports": ["1x HDMI port", "1x Display port", "2x USB 2.0"]}) == ["HDMI", "DisplayPort"],
+                  "vídeo: salidas leídas de los puertos")
+        lista_sin_video = ["2 x USB 10Gbps ports", "2 x USB 5Gbps ports", "4 x USB 2.0 ports", "1 x Wi-Fi Module",
+                           "1 x Realtek 2.5Gb Ethernet port", "3 x Audio jacks"]
+        comprobar(dpc.salidas_video({"back_panel_ports": lista_sin_video}) is None,
+                  "vídeo: si la lista no trae ninguna, no se sabe (la B650M-AYW WIFI sí tiene HDMI)")
+        comprobar(dpc.salidas_video({"display_outputs": [{"connector": "usb_c", "video_signal": "displayport", "graphics_route": "discrete"}],
+                                     "back_panel_ports": ["2 x Thunderbolt 4 USB Type-C port(s)"]}) == [],
+                  "vídeo: el USB-C que saca la imagen de la tarjeta no vale para la integrada")
+        comprobar(dpc.salidas_video({"display_outputs": [{"connector": "hdmi", "graphics_route": "integrated"},
+                                                         {"connector": "usb_c", "video_signal": "displayport", "graphics_route": "integrated"}]})
+                  == ["HDMI", "USB-C"], "vídeo: mandan las salidas confirmadas")
+        # Amazon.es: solo el código que BuildCores da por comprobado
+        anuncios = {"identifiers": {"retailer_listings": [
+            {"source": "amazon", "channel": "us", "source_product_id": "B000000US1", "verified": True},
+            {"source": "amazon", "channel": "es", "source_product_id": "B09VCHR1VH", "verified": True}]}}
+        comprobar(dpc.asin_es(anuncios) == "B09VCHR1VH", "amazon: el código de España")
+        anuncios["identifiers"]["retailer_listings"][1]["verified"] = False
+        comprobar(dpc.asin_es(anuncios) == "", "amazon: sin comprobar, nada")
+        comprobar(dpc.asin_es({}) == "", "amazon: sin anuncios, nada")
+
+        # listas de M.2 repetidas: con cuatro o más, son la mitad; con dos iguales, se quedan
+        with open(os.path.join(OPENDB, "open-db", "Motherboard", "p1.json"), encoding="utf-8") as f:
+            base = json.load(f)
+        a = {"size": "2280", "key": "M", "interface": "PCIe 4.0 x4"}
+        b = {"size": "22110", "key": "M", "interface": "PCIe 3.0 x4"}
+        repetida = dict(base, opendb_id="r1", metadata=dict(base["metadata"], name="Prueba Repetida"), m2_slots=[a, b, a, b])
+        doble = dict(base, opendb_id="r2", metadata=dict(base["metadata"], name="Prueba Doble"), m2_slots=[a, a])
+        av = dpc.Avisos()
+        hechas = {x["nombre"]: x for x in dpc.preparar_placas([repetida, doble], json.load(open(reglas, encoding="utf-8"))["plataformas"], av)}
+        rep = next((x for n, x in hechas.items() if n.endswith("Repetida")), {})
+        dob = next((x for n, x in hechas.items() if n.endswith("Doble")), {})
+        comprobar(len(rep.get("m2") or []) == 2 and len(dob.get("m2") or []) == 2, f"M.2 repetidos: 4 → 2, y 2 iguales se quedan ({rep.get('m2')}, {dob.get('m2')})")
+
+        # placas revisadas a mano: mandan sobre BuildCores, y avisa si una ya no está
+        corr = os.path.join(t, "correcciones.json")
+        with open(corr, "w", encoding="utf-8") as f:
+            json.dump({"placas": [
+                {"nombre": "MSI MAG B550 TOMAHAWK", "fuente": "https://www.msi.com/x", "m2": [["2280", 4, 4, "ps"]],
+                 "video": [], "flashback": True, "notas_m2": ["Nota de prueba."], "notas_grafica": ["Ranura de prueba."]},
+                {"nombre": "Placa que ya no existe", "fuente": "https://example.com", "flashback": True}],
+                "graficas": [{"nombre": "Sapphire PULSE Radeon RX 6500 XT 4GB", "fuente": "https://www.sapphiretech.com/x",
+                              "largo": 194, "conectores": [1, 0, 0]}],
+                "fuentes": [{"nombre": "Montech APX 750W Non-Modular", "fuente": "https://www.montech.com/x", "pcie": [4, 0], "formato": "ATX"}],
+                "cajas": [{"nombre": "Lian Li LANCOOL 216 ATX Mid Tower Black", "fuente": "https://lian-li.com/x", "disipador_max": 180, "psu_max": 220}],
+                "disipadores": [{"nombre": "Otro Disipador 1151v2", "fuente": "https://example.com/d", "alto": 150}]}, f)
+        salida2 = os.path.join(t, "datos2")
+        with contextlib.redirect_stdout(io.StringIO()):
+            dpc.main(["--opendb", OPENDB, "--salida", salida2, "--reglas", reglas, "--correcciones", corr])
+        placas2 = {p["nombre"]: p for p in leer_tabla(os.path.join(salida2, "placas.json")).values()}
+        b5 = placas2.get("MSI MAG B550 TOMAHAWK", {})
+        comprobar(b5.get("m2") == [["2280", 4, 4, "ps"]] and b5.get("video") == [] and b5.get("notas_m2") == ["Nota de prueba."]
+                  and b5.get("fuente") == "https://www.msi.com/x" and b5.get("m2_nota") == "", "correcciones: mandan sobre la ficha")
+        with open(os.path.join(salida2, "meta.json"), encoding="utf-8") as f:
+            avisos2 = json.load(f)["avisos"]
+        comprobar(avisos2.get("placa: corregida a mano") == 1
+                  and any("ya no está" in k for k in avisos2), f"correcciones: cuenta las hechas y avisa de las que no casan ({avisos2})")
+        comprobar(b5.get("notas_grafica") == ["Ranura de prueba."], "correcciones: notas de la ranura de la gráfica")
+        g2 = {x["nombre"]: x for x in leer_tabla(os.path.join(salida2, "graficas.json")).values()}.get("Sapphire PULSE Radeon RX 6500 XT 4GB", {})
+        f2 = {x["nombre"]: x for x in leer_tabla(os.path.join(salida2, "fuentes.json")).values()}.get("Montech APX 750W Non-Modular", {})
+        k2 = {x["nombre"]: x for x in leer_tabla(os.path.join(salida2, "cajas.json")).values()}.get("Lian Li LANCOOL 216 ATX Mid Tower Black", {})
+        d2 = {x["nombre"]: x for x in leer_tabla(os.path.join(salida2, "disipadores.json")).values()}.get("Otro Disipador 1151v2", {})
+        comprobar(g2.get("largo") == 194 and g2.get("conectores") == [1, 0, 0] and g2.get("fuente") == "https://www.sapphiretech.com/x"
+                  and f2.get("pcie") == [4, 0] and f2.get("formato") == "ATX" and k2.get("disipador_max") == 180 and k2.get("psu_max") == 220
+                  and d2.get("alto") == 150 and d2.get("fuente") == "https://example.com/d",
+                  "correcciones: también gráficas, fuentes, cajas y disipadores")
+        comprobar(all(avisos2.get(k) == 1 for k in ("gráfica: corregida a mano", "fuente: corregida a mano", "caja: corregida a mano",
+                                                     "disipador: corregido a mano")),
+                  "correcciones: cuenta las de cada tipo")
+        comprobar(b5.get("corregidos") == ["m2", "video", "flashback", "notas_m2", "notas_grafica"] and g2.get("corregidos") == ["largo", "conectores"]
+                  and d2.get("corregidos") == ["alto"], "correcciones: guarda qué datos se corrigieron")
+        otra = next((p for n, p in placas2.items() if n != "MSI MAG B550 TOMAHAWK"), {})
+        comprobar("corregidos" in otra and otra["corregidos"] is None, "correcciones: las demás piezas, sin datos corregidos")
+
+        # una corrección con un valor imposible (o sin fuente) para la conversión: no se cuela en los datos
+        def falla_con(correccion, que):
+            ruta = os.path.join(t, "correcciones-malas.json")
+            with open(ruta, "w", encoding="utf-8") as f:
+                json.dump(correccion, f)
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    dpc.main(["--opendb", OPENDB, "--salida", os.path.join(t, "datos-malos"), "--reglas", reglas, "--correcciones", ruta])
+            except SystemExit as e:
+                return que in str(e)
+            return False
+        comprobar(falla_con({"cajas": [{"nombre": "Lian Li LANCOOL 216 ATX Mid Tower Black", "fuente": "https://x", "placas": ["Micro-ATX"]}]}, "imposible"),
+                  "correcciones: un formato con errata para")
+        comprobar(falla_con({"disipadores": [{"nombre": "Otro Disipador 1151v2", "fuente": "https://x", "zocalos": ["AM3"]}]}, "imposible"),
+                  "correcciones: un zócalo que no existe para")
+        comprobar(falla_con({"graficas": [{"nombre": "x", "fuente": "https://x", "pcie": [4, 6]}]}, "imposible"),
+                  "correcciones: una interfaz imposible para")
+        comprobar(falla_con({"fuentes": [{"nombre": "x", "pcie": [2, 0]}]}, "fuente"), "correcciones: sin fuente, para")
+        comprobar(falla_con({"fuentes": [{"nombre": "x", "fuente": "https://x", "colores": 3}]}, "no se puede corregir"),
+                  "correcciones: un campo que no se corrige para")
+
+        # un disipador que, corregido, no vale para ningún zócalo de la herramienta, fuera
+        corr3 = os.path.join(t, "correcciones3.json")
+        with open(corr3, "w", encoding="utf-8") as f:
+            json.dump({"disipadores": [{"nombre": "Otro Disipador 1151v2", "fuente": "https://example.com/d", "zocalos": []}]}, f)
+        salida3 = os.path.join(t, "datos3")
+        with contextlib.redirect_stdout(io.StringIO()):
+            dpc.main(["--opendb", OPENDB, "--salida", salida3, "--reglas", reglas, "--correcciones", corr3])
+        dis3 = {x["nombre"] for x in leer_tabla(os.path.join(salida3, "disipadores.json")).values()}
+        comprobar("Otro Disipador 1151v2" not in dis3 and dis3, "correcciones: disipador sin zócalos, fuera")
+
+        # medidas con decimales: las de las piezas hacia arriba, los máximos de las cajas hacia abajo
+        comprobar(dpc.medida(220.5, 60, 450, "arriba") == 221 and dpc.medida("357.6", 60, 450, "arriba") == 358
+                  and dpc.medida(455.7, 100, 600, "abajo") == 455 and dpc.medida(180.5, 20, 250, "abajo") == 180
+                  and dpc.medida(180, 20, 250, "abajo") == 180 and dpc.medida(0, 20, 250, "abajo") is None
+                  and dpc.medida(9999, 20, 250, "arriba") is None, "medidas con decimales: redondeo prudente")
+        comprobar(dpc.redondo(114.5) == 115 and dpc.redondo("220") == 220 and dpc.redondo(None) is None, "vatios: redondeo")
+        av = dpc.Avisos()
+        base_g = {"chipset": "GeForce RTX 4060", "metadata": {"name": "Prueba", "manufacturer": "Prueba"}}
+        gs = {x["nombre"]: x for x in dpc.preparar_graficas([
+            dict(base_g, opendb_id="g1", metadata={"name": "Uno", "manufacturer": "Prueba"}, length=220.5,
+                 power_connectors={"pcie_12VHPWR": 1, "pcie_12V_2x6": 1}),
+            dict(base_g, opendb_id="g2", metadata={"name": "Dos", "manufacturer": "Prueba"}, power_connectors={"pcie_8_pin": 1, "pcie_12VHPWR": 1}),
+            dict(base_g, opendb_id="g3", metadata={"name": "Tres", "manufacturer": "Prueba"}, power_connectors={"pcie_6_pin": 2, "pcie_8_pin": 2}),
+            dict(base_g, opendb_id="g4", metadata={"name": "Cuatro", "manufacturer": "Prueba"}, power_connectors={"pcie_8_pin": 4}),
+        ], av)}
+        comprobar(gs["Prueba Uno"]["conectores"] == [0, 0, 1] and gs["Prueba Uno"]["largo"] == 221,
+                  "gráfica: el de 16 pines con sus dos nombres cuenta una vez, y el largo con decimales se queda")
+        comprobar(gs["Prueba Dos"]["conectores"] is None and gs["Prueba Tres"]["conectores"] is None and gs["Prueba Cuatro"]["conectores"] == [0, 4, 0]
+                  and av.cuenta.get("gráfica: conectores imposibles, sin dato") == 2, "gráfica: conectores imposibles, sin dato (las de 4 de 8 existen)")
+        av = dpc.Avisos()
+        fs = {x["nombre"]: x for x in dpc.preparar_fuentes([
+            {"opendb_id": f"f{i}", "wattage": w, "metadata": {"name": f"F{i}", "manufacturer": "Prueba"},
+             "connectors": {"pcie_6_plus_2_pin": a, "pcie_12vhpwr": b}}
+            for i, (w, a, b) in enumerate([(750, 0, 4), (750, 1, 0), (650, 1, 0), (1000, 1, 1), (1000, 4, 1), (1600, 6, 3), (1000, 6, 3)])], av)}
+        pc = [fs[f"Prueba F{i}"]["pcie"] for i in range(7)]
+        comprobar(pc == [None, None, [1, 0], None, [4, 1], [6, 3], None] and av.cuenta.get("fuente: conectores PCIe imposibles, sin dato") == 4,
+                  f"fuente: conectores imposibles, sin dato ({pc})")
+
+        av = dpc.Avisos()
+        raros = {x["nombre"]: x for x in dpc.preparar_ssd([
+            {"opendb_id": "a", "form_factor": "M.2-2280", "interface": "M.2 PCIe 4.0 x8", "capacity": 1000,
+             "metadata": {"name": "Raro 1TB SSD", "manufacturer": "Raro"}},
+            {"opendb_id": "b", "form_factor": "M.2-2280", "interface": "M.2 PCIe 4.0 x4", "capacity": 1000,
+             "metadata": {"name": "Samsung 990 Pro w/Heatsink 1TB", "manufacturer": "Samsung"}}], av)}
+        comprobar(raros.get("Raro 1TB SSD", {}).get("gen") == 0 and raros["Raro 1TB SSD"]["carriles"] == 0,
+                  "ssd: x8 es imposible en M.2, así que velocidad sin dato")
+        comprobar(raros.get("Samsung 990 Pro w/Heatsink 1TB", {}).get("disipador") == 1 and raros["Raro 1TB SSD"]["disipador"] == 0,
+                  "ssd: el disipador sale del nombre")
+
+        # misma entrada, mismos archivos
+        antes = {f: open(os.path.join(salida, f), "rb").read() for f in os.listdir(salida)}
+        with contextlib.redirect_stdout(io.StringIO()):
+            dpc.main(["--opendb", OPENDB, "--salida", salida, "--reglas", reglas, "--correcciones", ""])
+        comprobar(antes == {f: open(os.path.join(salida, f), "rb").read() for f in os.listdir(salida)}, "misma entrada, mismos datos")
+
+        # si de repente salen muchas menos piezas, no se toca nada
+        anterior = os.path.join(t, "anterior")
+        os.makedirs(anterior)
+        with open(os.path.join(anterior, "meta.json"), "w", encoding="utf-8") as f:
+            json.dump({"piezas": {"cpu": 100, "placas": 6, "ram": 3, "ssd": 4}}, f)
+        otra = os.path.join(t, "otra")
+        try:
+            with contextlib.redirect_stdout(io.StringIO()):
+                dpc.main(["--opendb", OPENDB, "--salida", otra, "--reglas", reglas, "--anterior", anterior])
+            paro = False
+        except SystemExit as e:
+            paro = "antes había 100" in str(e)
+        comprobar(paro and not os.path.exists(otra), "caída de piezas: para y no escribe nada")
+        try:
+            dpc.main(["--opendb", os.path.join(t, "nada"), "--salida", otra])
+            paro = False
+        except SystemExit as e:
+            paro = "No encuentro" in str(e)
+        comprobar(paro, "sin copia de BuildCores: error claro")
+
+    # las piezas del repositorio son las que saldrían de esta versión del conversor (formato al día)
+    with open(os.path.join(RAIZ, "datos-pc", "placas.json"), encoding="utf-8") as f:
+        campos = json.load(f)["campos"]
+    comprobar(campos == dpc.CAMPOS["placas"], "datos-pc/: mismo formato que el conversor")
+    with open(os.path.join(RAIZ, "datos-pc", "ssd.json"), encoding="utf-8") as f:
+        comprobar(json.load(f)["campos"] == dpc.CAMPOS["ssd"], "datos-pc/: SSD con el formato del conversor")
+
+
+def prueba_logica_pc():
+    print("Lógica del PC (Node)")
+    node = shutil.which("node")
+    if not node:
+        print("  (sin Node: no se prueba la lógica de la página)")
+        return
+    r = subprocess.run([node, os.path.join(RAIZ, "tests", "probar_pc.js")], capture_output=True, text=True, timeout=120)
+    resumen = (r.stdout.strip().splitlines() or [""])[-1]
+    fallas = [l for l in r.stdout.splitlines() if "FALLA" in l]
+    for l in fallas:
+        print(l)
+    comprobar(r.returncode == 0, f"lógica del PC: {resumen} {r.stderr.strip()[:300]}")
+
+
 if __name__ == "__main__":
     prueba_utilidades()
     prueba_web()
@@ -406,5 +782,8 @@ if __name__ == "__main__":
     prueba_enlaces_guardados()
     prueba_videos_caidos()
     prueba_error()
+    prueba_pc_web()
+    prueba_datos_pc()
+    prueba_logica_pc()
     print(f"\n{hechas - len(fallos)} de {hechas} comprobaciones bien.")
     sys.exit(1 if fallos else 0)

@@ -1,0 +1,32 @@
+{
+ "opendb_id": "22222222-0000-4000-8000-000000000006",
+ "socket": "LGA 1954",
+ "chipset": "Intel Z990",
+ "form_factor": "ATX",
+ "memory": {
+  "ram_type": "DDR5",
+  "slots": 4,
+  "max": 256
+ },
+ "m2_slots": [
+  {
+   "size": "2280",
+   "key": "M",
+   "interface": "PCIe 5.0 x4"
+  }
+ ],
+ "metadata": {
+  "name": "ASUS PRIME Z990-P",
+  "manufacturer": "ASUS",
+  "releaseYear": 2021
+ },
+ "bios_features": {
+  "flashback": true,
+  "clear_cmos": false
+ },
+ "back_panel_ports": [
+  "1 x HDMI port",
+  "1 x DisplayPort",
+  "2 x USB 3.2"
+ ]
+}

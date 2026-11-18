@@ -1,0 +1,24 @@
+{
+ "opendb_id": "g1",
+ "metadata": {
+  "name": "DUAL GeForce RTX 4060 8GB",
+  "manufacturer": "Asus"
+ },
+ "identifiers": {
+  "version": 1,
+  "identifiers": []
+ },
+ "chipset": "GeForce RTX 4060",
+ "chipset_manufacturer": "NVIDIA",
+ "memory": 8,
+ "length": 227,
+ "total_slot_width": 2.5,
+ "tdp": 115,
+ "interface": "PCIe x16",
+ "power_connectors": {
+  "pcie_6_pin": 0,
+  "pcie_8_pin": 1,
+  "pcie_12VHPWR": 0,
+  "pcie_12V_2x6": 0
+ }
+}

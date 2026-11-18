@@ -1,0 +1,12 @@
+{
+ "opendb_id": "44444444-0000-4000-8000-000000000002",
+ "form_factor": "M.2-2280",
+ "interface": "M.2 SATA",
+ "nvme": false,
+ "capacity": 1000,
+ "storage_type": "SSD",
+ "metadata": {
+  "name": "Crucial MX500 1TB M.2-2280 SATA",
+  "manufacturer": "Crucial"
+ }
+}

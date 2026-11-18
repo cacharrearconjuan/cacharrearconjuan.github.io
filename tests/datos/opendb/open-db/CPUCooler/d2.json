@@ -1,0 +1,20 @@
+{
+ "opendb_id": "d2",
+ "metadata": {
+  "name": "Liquid Freezer III 360 A-RGB 48.82 CFM Water 360mm Black",
+  "manufacturer": "ARCTIC"
+ },
+ "identifiers": {
+  "version": 1,
+  "identifiers": []
+ },
+ "height": 53,
+ "water_cooled": true,
+ "radiator_size": 360,
+ "cpu_sockets": [
+  "AM5",
+  "AM4",
+  "LGA 1851",
+  "LGA 1700"
+ ]
+}

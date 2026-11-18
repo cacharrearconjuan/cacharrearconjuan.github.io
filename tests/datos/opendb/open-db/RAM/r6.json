@@ -1,0 +1,19 @@
+{
+ "opendb_id": "33333333-0000-4000-8000-000000000006",
+ "ram_type": "DDR4",
+ "speed": 3600,
+ "cas_latency": 18,
+ "modules": {
+  "quantity": 4,
+  "capacity_gb": 16
+ },
+ "capacity": 64,
+ "form_factor": "288-pin DIMM",
+ "profile_support": null,
+ "ecc": "Non-ECC",
+ "registered": "Unbuffered",
+ "metadata": {
+  "name": "Patriot Viper DDR4-3600 CL18 64GB (4x16GB)",
+  "manufacturer": "Patriot"
+ }
+}

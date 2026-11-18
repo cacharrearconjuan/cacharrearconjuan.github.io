@@ -1,0 +1,42 @@
+{
+ "fuente": "BuildCores OpenDB",
+ "url": "https://github.com/buildcores/buildcores-open-db",
+ "licencia": "CC BY-NC-SA 4.0",
+ "licencia_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es",
+ "cambios": "Adaptado: menos campos, nombres limpios, sin Xeon, EPYC, placas de servidor, SO-DIMM ni ECC, sin los huecos M.2 de plantilla o imposibles, sin medidas imposibles ni conectores «a cero» o imposibles (que no prueban nada), con las medidas redondeadas hacia el lado prudente, y con algunas placas, gráficas, fuentes, cajas y disipadores corregidos a mano con su ficha.",
+ "commit": "c9002fe308396c780d8a378cc93c10d85b215b8b",
+ "fecha": "2026-11-17T18:33:08+00:00",
+ "piezas": {
+  "cpu": 281,
+  "placas": 2794,
+  "ram": 3952,
+  "ssd": 1597,
+  "graficas": 3848,
+  "fuentes": 3269,
+  "cajas": 3800,
+  "disipadores": 2363
+ },
+ "avisos": {
+  "caja: corregida a mano": 13,
+  "caja: sin formatos de placa, fuera": 1,
+  "cpu: Xeon y EPYC fuera": 66,
+  "disipador: corregido a mano": 7,
+  "disipador: según su ficha, sin zócalos que cubra la herramienta, fuera": 1,
+  "disipador: solo zócalos que no cubre la herramienta, fuera": 51,
+  "fuente: conectores PCIe imposibles, sin dato": 19,
+  "fuente: conectores PCIe sin dato": 849,
+  "fuente: corregida a mano": 16,
+  "fuente: sin potencia creíble, fuera": 5,
+  "gráfica: conectores imposibles, sin dato": 3,
+  "gráfica: conectores sin dato": 1005,
+  "gráfica: corregida a mano": 12,
+  "placa: chipset de servidor fuera": 34,
+  "placa: corregida a mano": 30,
+  "placa: el tipo de RAM del nombre manda sobre el de la ficha": 1,
+  "placa: huecos M.2 de plantilla descartados": 1516,
+  "placa: huecos M.2 imposibles para su chipset descartados": 34,
+  "placa: lista de M.2 repetida en la ficha, contada una vez": 42,
+  "ram: ECC o registrada fuera": 174,
+  "ssd: más de cuatro carriles (imposible en M.2), velocidad sin dato": 2
+ }
+}

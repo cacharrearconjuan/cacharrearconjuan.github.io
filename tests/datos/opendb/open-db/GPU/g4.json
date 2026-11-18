@@ -1,0 +1,14 @@
+{
+ "opendb_id": "g4",
+ "metadata": {
+  "name": "Tarjeta sin chip",
+  "manufacturer": "Nadie"
+ },
+ "identifiers": {
+  "version": 1,
+  "identifiers": []
+ },
+ "chipset": "",
+ "chipset_manufacturer": "None",
+ "length": 200
+}

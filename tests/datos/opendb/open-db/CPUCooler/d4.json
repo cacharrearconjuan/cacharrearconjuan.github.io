@@ -1,0 +1,16 @@
+{
+ "opendb_id": "d4",
+ "metadata": {
+  "name": "Disipador 1151v2",
+  "manufacturer": "Otro"
+ },
+ "identifiers": {
+  "version": 1,
+  "identifiers": []
+ },
+ "height": 0,
+ "water_cooled": false,
+ "cpu_sockets": [
+  "LGA 1151v2"
+ ]
+}

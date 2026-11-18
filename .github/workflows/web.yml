@@ -25,10 +25,52 @@ jobs:
       - name: Pruebas
         run: python3 tests/probar.py
 
+      # «¿Qué le va a mi PC?»: las piezas salen de BuildCores OpenDB, que se actualiza a diario.
+      # Se bajan una vez al día; el resto de pasadas usan las guardadas en la caché de Actions.
+      # Si BuildCores falla, se quedan las últimas buenas (y, si no hay ninguna, las de datos-pc/).
+      - name: Fecha de hoy
+        id: hoy
+        run: echo "dia=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+
+      - name: Recuperar las piezas del PC guardadas
+        id: cache-pc
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
+        with:
+          path: _datos-pc
+          key: datos-pc-${{ hashFiles('web/datos_pc.py', 'pc/reglas.json', 'pc/correcciones.json') }}-${{ steps.hoy.outputs.dia }}
+          # solo piezas hechas con este mismo conversor, estas reglas y estas correcciones (si cambian, se rehacen)
+          restore-keys: datos-pc-${{ hashFiles('web/datos_pc.py', 'pc/reglas.json', 'pc/correcciones.json') }}-
+
+      - name: Bajar las piezas del día de BuildCores OpenDB
+        id: piezas
+        if: steps.cache-pc.outputs.cache-hit != 'true'
+        run: |
+          anterior=""
+          [ -f _datos-pc/meta.json ] && anterior="--anterior _datos-pc"
+          if git clone --quiet --depth 1 --filter=blob:none --sparse https://github.com/buildcores/buildcores-open-db /tmp/opendb \
+             && git -C /tmp/opendb sparse-checkout set open-db/CPU open-db/Motherboard open-db/RAM open-db/Storage \
+                  open-db/GPU open-db/PSU open-db/PCCase open-db/CPUCooler \
+             && python3 web/datos_pc.py --opendb /tmp/opendb --salida _datos-pc-nuevos $anterior; then
+            rm -rf _datos-pc && mv _datos-pc-nuevos _datos-pc
+            echo "nuevas=si" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::No se han podido bajar las piezas del PC de hoy: se usan las últimas buenas."
+          fi
+          if [ ! -f _datos-pc/meta.json ]; then
+            rm -rf _datos-pc && cp -r datos-pc _datos-pc
+          fi
+
+      - name: Guardar las piezas de hoy
+        if: steps.piezas.outputs.nuevas == 'si'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
+        with:
+          path: _datos-pc
+          key: datos-pc-${{ hashFiles('web/datos_pc.py', 'pc/reglas.json', 'pc/correcciones.json') }}-${{ steps.hoy.outputs.dia }}
+
       - name: Generar la web
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: python3 web/generar.py --salida _site
+        run: python3 web/generar.py --salida _site --pc-datos _datos-pc
 
       - name: ¿Ha cambiado algo?
         id: comparar

@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Genera la web a partir de los repositorios públicos de GitHub.
 
+También monta la herramienta «¿Qué le va a mi PC?» en /pc/ (código en pc/, piezas en
+datos-pc/ o en la carpeta de --pc-datos; las prepara web/datos_pc.py).
+
 Uso:
     python3 web/generar.py --salida _site
     python3 web/generar.py --salida _site --datos tests/datos/basico --ahora 2026-10-29
@@ -47,6 +50,11 @@ MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
 
 # identificadores que usa la propia página del proyecto
 IDS_RESERVADOS = {"contenido", "descarga", "lista", "novedades"}
+
+# la herramienta «¿Qué le va a mi PC?» (/pc/): enlazada arriba a la izquierda en todas las páginas
+TITULO_PC = "¿Qué le va a mi PC?"
+LEMA_PC = ("Placa, procesador, memoria, SSD, gráfica, fuente, caja y disipador: qué encaja, a qué velocidad irá "
+           "la memoria, si la gráfica cabe y si la fuente puede con ella. Se actualiza solo cada día.")
 
 
 class ErrorWeb(Exception):
@@ -145,6 +153,28 @@ def fecha_texto(iso):
     if not d:
         return ""
     return f"{d.day} de {MESES[d.month - 1]} de {d.year}"
+
+
+def fecha_hora_texto(iso):
+    """«18 de noviembre de 2026, a las 9:02» (hora de Madrid)."""
+    d = fecha_local(iso)
+    if not d:
+        return ""
+    return f"{d.day} de {MESES[d.month - 1]} de {d.year}, a las {d.hour}:{d.minute:02d}"
+
+
+def fecha_segura(texto):
+    """Fechas que vienen de fuera (catálogos): «2026-11-16 04:33:15» (UTC) o «2026-10-19». Si no se entiende, nada."""
+    texto = str(texto or "").strip()
+    if not re.match(r"^\d{4}-\d{2}-\d{2}", texto):
+        return None
+    try:
+        d = dt.datetime.fromisoformat(texto.replace("Z", "+00:00").replace(" ", "T", 1))
+    except ValueError:
+        return None
+    if d.tzinfo is None:
+        d = d.replace(tzinfo=dt.timezone.utc)
+    return d.isoformat()
 
 
 def fecha_corta(iso):
@@ -465,9 +495,24 @@ def leer_catalogo(api, url):
     salida = []
     for p in lista:
         if isinstance(p, dict) and p.get("url"):
-            salida.append({k: p.get(k) for k in ("name", "author", "version", "category",
-                                                   "description", "url", "source", "last_update")})
-    return {"nombre": datos.get("name") if isinstance(datos, dict) else None, "payloads": salida}
+            x = {k: p.get(k) for k in ("name", "author", "version", "category", "description", "url", "source")}
+            x["last_update"] = fecha_segura(p.get("last_update"))
+            salida.append(x)
+    return {"nombre": datos.get("name") if isinstance(datos, dict) else None, "payloads": salida,
+            # cuándo cambió la lista por última vez (lo escribe el actualizador del catálogo, en UTC)
+            "actualizado": fecha_segura(datos.get("last_updated")) if isinstance(datos, dict) else None,
+            "analizado": None}
+
+
+def ultimo_analisis(api, usuario, nombre):
+    """Cuándo terminó bien la última pasada programada del repo del catálogo (la que busca versiones nuevas)."""
+    try:
+        r = api.api(f"/repos/{usuario}/{nombre}/actions/runs?event=schedule&status=success&per_page=1")
+    except ErrorWeb as e:  # es un extra: si falla, la web sale sin esa fecha
+        print(f"Aviso: no se ha podido leer el último análisis de {nombre}: {e}", file=sys.stderr)
+        return None
+    runs = (r or {}).get("workflow_runs") or []
+    return fecha_segura(runs[0].get("updated_at")) if runs else None
 
 
 def preparar_proyectos(api, sitio, carpeta_notas, ahora):
@@ -518,6 +563,8 @@ def preparar_proyectos(api, sitio, carpeta_notas, ahora):
             }
         url_catalogo = nota.get("catalogo") or (sitio.get("catalogos") or {}).get(nombre)
         catalogo = leer_catalogo(api, url_catalogo) if url_catalogo else None
+        if catalogo:
+            catalogo["analizado"] = ultimo_analisis(api, usuario, nombre)
         creado = repo.get("created_at")
         dias = (ahora - fecha_local(creado)).days if creado else 999
         proyectos.append({
@@ -753,7 +800,7 @@ def pagina_guia(sitio, g):
 
 # ---------------------------------------------------------------- páginas
 
-def pagina(sitio, titulo, descripcion, cuerpo, nivel, ruta, actual="", pre=None):
+def pagina(sitio, titulo, descripcion, cuerpo, nivel, ruta, actual="", pre=None, scripts=""):
     if pre is None:
         pre = "../" * nivel
     url = sitio["url"].rstrip("/") + "/" + ruta
@@ -766,6 +813,8 @@ def pagina(sitio, titulo, descripcion, cuerpo, nivel, ruta, actual="", pre=None)
     enlaces_nav = "".join(
         f'<a href="{href}"{marca_actual if clave == actual else ""}>{texto}</a>'
         for clave, texto, href in nav)
+    # la herramienta del PC, arriba a la izquierda y bien a la vista en todas las páginas
+    enlace_pc = f'<a class="enlace-pc" href="{pre}pc/"{marca_actual if actual == "pc" else ""}>{esc(TITULO_PC)}</a>'
     titulo_completo = titulo if titulo == sitio["titulo"] else f"{titulo} | {sitio['titulo']}"
     return f"""<!doctype html>
 <html lang="es">
@@ -796,7 +845,10 @@ def pagina(sitio, titulo, descripcion, cuerpo, nivel, ruta, actual="", pre=None)
 <a class="saltar" href="#contenido">Ir al contenido</a>
 <header class="cabecera">
   <div class="ancho cabecera-fila">
-    <a class="marca" href="{pre or './'}">{esc(sitio['titulo'])}</a>
+    <div class="cabecera-izquierda">
+      <a class="marca" href="{pre or './'}">{esc(sitio['titulo'])}</a>
+      {enlace_pc}
+    </div>
     <nav aria-label="Principal">{enlaces_nav}</nav>
   </div>
 </header>
@@ -810,7 +862,7 @@ def pagina(sitio, titulo, descripcion, cuerpo, nivel, ruta, actual="", pre=None)
     <p class="pie-canales">{enlaces_canales(sitio, clase="")}</p>
   </div>
 </footer>
-{SCRIPT_COPIAR if "<pre" in cuerpo else ""}
+{SCRIPT_COPIAR if "<pre" in cuerpo else ""}{scripts}
 </body>
 </html>
 """
@@ -930,6 +982,26 @@ def portada(sitio, proyectos, guias=(), videos=()):
     return pagina(sitio, sitio["titulo"], sitio.get("lema", ""), cuerpo, 0, "", actual="")
 
 
+def pagina_pc(sitio):
+    cuerpo = f"""<section class="ancho seccion pc">
+  <h1 class="pagina-titulo">{esc(TITULO_PC)}</h1>
+  <p class="pagina-lema">Elige lo que tienes o lo que quieres comprar y te digo qué le va, si encaja con lo demás, a qué velocidad irá la memoria, si el procesador trae gráfica, si la tarjeta gráfica cabe en la caja y si la fuente puede con ella. Vale en los dos sentidos: de la placa a la memoria y de la memoria a la placa, de la caja a la gráfica y de la gráfica a la caja.</p>
+  <p class="visual-oculto" role="status" id="pc-estado"></p>
+  <div id="pc-app" class="pc-app">
+    <p class="pc-cargando">Cargando piezas…</p>
+    <noscript><p class="pc-error">Esta herramienta necesita JavaScript.</p></noscript>
+  </div>
+  <section class="pc-bloque pc-creditos" aria-labelledby="t-creditos">
+    <h2 id="t-creditos">De dónde sale todo</h2>
+    <p>Las piezas son de <a href="https://github.com/buildcores/buildcores-open-db" rel="noopener">BuildCores OpenDB</a>, con licencia <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" rel="noopener">CC BY-NC-SA 4.0</a>, adaptadas aquí: menos campos, nombres limpios y sin los datos que no cuadran. Se actualizan solas cada día.<span id="pc-fecha"></span> Los datos adaptados se pueden usar con la misma licencia.</p>
+    <p>Las reglas (qué chipset admite qué procesador, velocidades oficiales de memoria, PCIe, qué fuente pide cada gráfica, anclajes de disipadores) están sacadas a mano de las fichas de los fabricantes y de pruebas publicadas, y cada dato enlaza su fuente. Las medidas de cajas, gráficas y disipadores salen de la ficha de cada pieza en BuildCores; las que estaban mal y se han comprobado, corregidas a mano con su fuente. Las cuentas de la fuente de alimentación que no tienen dato oficial salen como «Estimación», con su horquilla. Es orientativo: antes de comprar, mira la lista de procesadores y de memorias (QVL) de tu placa y las medidas en la web del fabricante.</p>
+    <div id="pc-fuentes"></div>
+  </section>
+</section>"""
+    scripts = '\n<script src="logica.js"></script>\n<script src="app.js"></script>'
+    return pagina(sitio, TITULO_PC, LEMA_PC, cuerpo, 1, "pc/", actual="pc", scripts=scripts)
+
+
 def boton_archivo(a):
     return (f'<a class="pad" href="{esc(a["url"])}" download>'
             f'<span class="pad-nombre">{esc(a["nombre"])}</span>'
@@ -968,6 +1040,18 @@ def caja_descarga(p):
     return '<aside class="caja chip-caja" id="descarga" aria-label="Descarga">\n<h2 class="caja-titulo">Descarga</h2>\n' + "\n".join(filas) + "\n</aside>"
 
 
+def fechas_catalogo(cat):
+    partes = []
+    if cat.get("actualizado"):
+        partes.append(f"actualizados el {fecha_texto(cat['actualizado'])}")
+    if cat.get("analizado"):
+        partes.append(f"analizados por última vez el {fecha_hora_texto(cat['analizado'])}")
+    if not partes:
+        return ""
+    texto = " · ".join(partes)
+    return texto[0].upper() + texto[1:] + "."
+
+
 def tabla_catalogo(p):
     cat = p["catalogo"]
     if cat is None:
@@ -990,14 +1074,18 @@ Lo añades una vez y tienes la lista de abajo para descargar e instalar desde la
 </ol>
 <pre><code>{esc(p["catalogo_url"])}</code></pre>""")
     partes.append('<section class="catalogo"><h2 id="lista">Lista de payloads</h2>')
+    if fechas_catalogo(cat):
+        partes.append(f'<p class="catalogo-fechas">{esc(fechas_catalogo(cat))}</p>')
     for grupo in sorted(grupos, key=str.lower):
         partes.append(f"<h3>{esc(grupo)}</h3><ul class=\"payloads\" role=\"list\">")
         for x in sorted(grupos[grupo], key=lambda x: (x.get("name") or "").lower()):
             ver = f' <span class="payload-version">{esc(x.get("version"))}</span>' if x.get("version") else ""
             autor = f'<span class="payload-autor">de {esc(x.get("author"))}</span>' if x.get("author") else ""
             origen = f' <a href="{esc(x["source"])}" rel="noopener">Proyecto original</a>' if x.get("source") else ""
+            fecha = (f'<p class="payload-fecha">Actualizado el <time datetime="{esc(fecha_corta(x["last_update"]))}">'
+                     f'{esc(fecha_texto(x["last_update"]))}</time></p>') if x.get("last_update") else ""
             partes.append(
-                f'<li class="payload"><p class="payload-nombre">{esc(x.get("name"))}{ver} {autor}</p>'
+                f'<li class="payload"><p class="payload-nombre">{esc(x.get("name"))}{ver} {autor}</p>{fecha}'
                 f'<p class="payload-desc">{esc(x.get("description") or "")}</p>'
                 f'<p class="payload-enlaces"><a class="pad pad-peque" href="{esc(x["url"])}"><span class="pad-nombre">Descargar .elf</span></a>{origen}</p></li>')
         partes.append("</ul>")
@@ -1042,6 +1130,8 @@ def pagina_descargas(sitio, proyectos):
             pads = "".join(boton_archivo(a) for a in rel["archivos"])
         elif p["catalogo"]:
             detalle = f'{len(p["catalogo"]["payloads"])} payloads para Payload Manager'
+            if fechas_catalogo(p["catalogo"]):
+                detalle += f'. {esc(fechas_catalogo(p["catalogo"]))}'
             pads = f'<a class="pad" href="{enlace}#lista"><span class="pad-nombre">Ver la lista</span></a>'
         elif p["extra_descargas"]:
             detalle = ""
@@ -1108,14 +1198,38 @@ def feed(sitio, proyectos, guias=()):
 
 def mapa_sitio(sitio, proyectos, guias=()):
     base = sitio["url"].rstrip("/")
-    urls = [f"{base}/", f"{base}/descargas/"] + [f"{base}/proyectos/{p['slug']}/" for p in proyectos] + [f"{base}/guias/{g['slug']}/" for g in guias]
+    urls = ([f"{base}/", f"{base}/pc/", f"{base}/descargas/"]
+            + [f"{base}/proyectos/{p['slug']}/" for p in proyectos] + [f"{base}/guias/{g['slug']}/" for g in guias])
     filas = "".join(f"<url><loc>{esc(u)}</loc></url>" for u in urls)
     return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{filas}</urlset>\n'
 
 
 # ---------------------------------------------------------------- todo junto
 
-def generar(api, sitio, salida, carpeta_notas, ahora, carpeta_guias=None, ruta_enlaces=None):
+ARCHIVOS_PC = ("logica.js", "app.js", "reglas.json")
+DATOS_PC = ("cpu.json", "placas.json", "ram.json", "ssd.json", "graficas.json", "fuentes.json", "cajas.json",
+            "disipadores.json", "meta.json")
+
+
+def comprobar_pc(carpeta_datos):
+    """La herramienta del PC necesita sus archivos y sus datos (los genera web/datos_pc.py)."""
+    for f in ARCHIVOS_PC:
+        if not os.path.isfile(os.path.join(RAIZ, "pc", f)):
+            raise ErrorWeb(f"Falta pc/{f}")
+    for f in DATOS_PC:
+        ruta = os.path.join(carpeta_datos, f)
+        if not os.path.isfile(ruta):
+            raise ErrorWeb(f"Faltan los datos del PC: no está {ruta} (se generan con web/datos_pc.py)")
+        try:
+            with open(ruta, encoding="utf-8") as fh:
+                json.load(fh)
+        except ValueError as e:
+            raise ErrorWeb(f"{ruta} no es un JSON válido: {e}")
+
+
+def generar(api, sitio, salida, carpeta_notas, ahora, carpeta_guias=None, ruta_enlaces=None, carpeta_pc_datos=None):
+    carpeta_pc_datos = carpeta_pc_datos or os.path.join(RAIZ, "datos-pc")
+    comprobar_pc(carpeta_pc_datos)
     guias = preparar_guias(carpeta_guias or os.path.join(RAIZ, "guias"), ahora)
     sitio = dict(sitio, _hay_guias=bool(guias))
     proyectos = preparar_proyectos(api, sitio, carpeta_notas, ahora)
@@ -1125,6 +1239,7 @@ def generar(api, sitio, salida, carpeta_notas, ahora, carpeta_guias=None, ruta_e
         shutil.rmtree(salida)
     archivos = {
         "index.html": portada(sitio, proyectos, guias, videos),
+        "pc/index.html": pagina_pc(sitio),
         "descargas/index.html": pagina_descargas(sitio, proyectos),
         "404.html": pagina_404(sitio),
         "feed.xml": feed(sitio, proyectos, guias),
@@ -1153,6 +1268,12 @@ def generar(api, sitio, salida, carpeta_notas, ahora, carpeta_guias=None, ruta_e
             destino = os.path.join(salida, os.path.relpath(origen, plantilla))
             os.makedirs(os.path.dirname(destino), exist_ok=True)
             shutil.copyfile(origen, destino)
+    # la herramienta del PC: su código, sus reglas y las piezas del día
+    os.makedirs(os.path.join(salida, "pc", "datos"), exist_ok=True)
+    for f in ARCHIVOS_PC:
+        shutil.copyfile(os.path.join(RAIZ, "pc", f), os.path.join(salida, "pc", f))
+    for f in DATOS_PC:
+        shutil.copyfile(os.path.join(carpeta_pc_datos, f), os.path.join(salida, "pc", "datos", f))
     # huella: cambia solo si cambia algo de la web
     h = hashlib.sha256()
     for carpeta, _, ficheros in sorted(os.walk(salida)):
@@ -1178,13 +1299,15 @@ def main(argv=None):
                     help="dónde se guarda qué vídeo es de qué proyecto")
     ap.add_argument("--datos", help="carpeta con respuestas guardadas (pruebas)")
     ap.add_argument("--ahora", help="fecha AAAA-MM-DD para las pruebas")
+    ap.add_argument("--pc-datos", default=os.path.join(RAIZ, "datos-pc"),
+                    help="carpeta con las piezas de «¿Qué le va a mi PC?» (las genera web/datos_pc.py)")
     a = ap.parse_args(argv)
     with open(a.sitio, encoding="utf-8") as f:
         sitio = json.load(f)
     api = ApiFalsa(a.datos) if a.datos else ApiGitHub(os.environ.get("GITHUB_TOKEN"))
     ahora = dt.datetime.now(ZONA) if not a.ahora else dt.datetime.fromisoformat(a.ahora).replace(tzinfo=ZONA)
     try:
-        proyectos, guias, huella = generar(api, sitio, a.salida, a.notas, ahora, a.guias, a.enlaces)
+        proyectos, guias, huella = generar(api, sitio, a.salida, a.notas, ahora, a.guias, a.enlaces, a.pc_datos)
     except ErrorWeb as e:
         print(f"Error: {e}", file=sys.stderr)
         return 1

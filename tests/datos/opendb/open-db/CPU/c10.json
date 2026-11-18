@@ -1,0 +1,28 @@
+{
+ "opendb_id": "11111111-0000-4000-8000-000000000010",
+ "socket": "LGA 1851",
+ "metadata": {
+  "name": "Intel Core Ultra 7 270K Plus",
+  "releaseYear": 2022
+ },
+ "cores": {
+  "total": 24,
+  "threads": 24
+ },
+ "clocks": {
+  "performance": {
+   "boost": 5.5
+  }
+ },
+ "specifications": {
+  "tdp": 125,
+  "integratedGraphics": {
+   "model": "Intel Graphics"
+  },
+  "memory": {
+   "types": [
+    "DDR5"
+   ]
+  }
+ }
+}

@@ -1,0 +1,12 @@
+{
+ "opendb_id": "44444444-0000-4000-8000-000000000003",
+ "form_factor": "2.5\"",
+ "interface": "SATA 6.0 Gb/s",
+ "nvme": false,
+ "capacity": 1000,
+ "storage_type": "SSD",
+ "metadata": {
+  "name": "Crucial MX500 1TB 2.5\" SATA",
+  "manufacturer": "Crucial"
+ }
+}

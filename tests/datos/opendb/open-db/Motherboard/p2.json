@@ -1,0 +1,37 @@
+{
+ "opendb_id": "22222222-0000-4000-8000-000000000002",
+ "socket": "LGA 1151",
+ "chipset": "Intel Z270",
+ "form_factor": "ATX",
+ "memory": {
+  "ram_type": "DDR4",
+  "slots": 4,
+  "max": 64
+ },
+ "m2_slots": [
+  {
+   "size": "2242-2260",
+   "key": "M",
+   "interface": "PCIe 4.0 x4"
+  },
+  {
+   "size": "2280",
+   "key": "M",
+   "interface": "PCIe 4.0 x4"
+  }
+ ],
+ "metadata": {
+  "name": "MSI Z270 MORTAR DDR4 Micro ATX",
+  "manufacturer": "MSI",
+  "releaseYear": 2021
+ },
+ "bios_features": {
+  "flashback": true,
+  "clear_cmos": false
+ },
+ "back_panel_ports": [
+  "1 x HDMI port",
+  "1 x DisplayPort",
+  "2 x USB 3.2"
+ ]
+}

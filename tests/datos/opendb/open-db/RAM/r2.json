@@ -1,0 +1,21 @@
+{
+ "opendb_id": "33333333-0000-4000-8000-000000000002",
+ "ram_type": "DDR4",
+ "speed": 3200,
+ "cas_latency": 16,
+ "modules": {
+  "quantity": 2,
+  "capacity_gb": 8
+ },
+ "capacity": 16,
+ "form_factor": "288-pin DIMM",
+ "profile_support": [
+  "XMP"
+ ],
+ "ecc": "Non-ECC",
+ "registered": "Unbuffered",
+ "metadata": {
+  "name": "Corsair Vengeance LPX DDR4-3200 CL16 16GB (2x8GB)",
+  "manufacturer": "Corsair"
+ }
+}
