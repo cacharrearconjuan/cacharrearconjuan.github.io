@@ -236,6 +236,10 @@ def prueba_web():
                   "payloads: la fecha de cada uno")
         fechas = "Actualizados el 29 de octubre de 2026 · analizados por última vez el 18 de noviembre de 2026, a las 9:02."
         comprobar(f'<p class="catalogo-fechas">{fechas}</p>' in pay, "payloads: cuándo se actualizó la lista y cuándo se analizó (hora de Madrid)")
+        comprobar(f'<p class="caja-fecha">{fechas}</p>' in pay, "payloads: las fechas también en la caja de descarga, arriba")
+        portada2 = leer(salida, "index.html")
+        chip_pay = portada2.split('proyectos/mis-payloads-ps5/', 1)[1].split("</li>", 1)[0]
+        comprobar("17 payloads" in chip_pay and "Actualizados el 29 de octubre de 2026" in chip_pay, "payloads: la fecha en su chip de la portada")
 
         desc = leer(salida, "descargas/index.html")
         comprobar(desc.count('class="descarga"') == 4, "descargas: 4 proyectos")
