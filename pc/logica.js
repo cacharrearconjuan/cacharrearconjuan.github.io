@@ -647,26 +647,29 @@
   }
 
   // Sin procesador elegido: los que admite la placa con los que la gráfica iría más lenta que sin ellos.
-  // [{quien: «los Ryzen 4000G…» o «el Athlon 3000G», enlace}], de lo más nuevo a lo más viejo.
+  // [{quien: «los Ryzen 4000G…» o «el Athlon 3000G», enlace, salvo: [{quien, enlace}]}], de lo más nuevo a lo más viejo.
+  // «salvo»: los modelos de esa familia que van distinto (los Athlon a x4 en una familia a x8).
   function cpusQueLimitan(R, gpu, placa) {
     const ch = reglasChipset(R, placa);
     const soporte = (ch && ch.soporte) || {};
     const base = enlaceGrafica(R, gpu, placa, null);
     if (!base) return [];
     const b0 = banda(base.gen, base.carriles);
+    const igual = (a, b) => a.gen === b.gen && a.carriles === b.carriles;
     const salida = [];
     for (const k of familiasEnOrden(R).slice().reverse()) {
       const F = familia(R, k);
       if (!soporte[k] || soporte[k] === 'no' || !F || !F.grafica) continue;
       const general = enlaceGrafica(R, gpu, placa, {familia: k, id: ''});
-      if (general && banda(general.gen, general.carriles) < b0) salida.push({quien: 'los ' + F.nombre, enlace: general});
-      // los modelos que van distinto del resto de su familia (los Athlon con x4, el 8500G…)
+      const limita = general && banda(general.gen, general.carriles) < b0;
+      const modelos = [];
       for (const id of Object.keys(F.grafica.por_modelo || {})) {
         const e = enlaceGrafica(R, gpu, placa, {familia: k, id: id});
-        if (e && banda(e.gen, e.carriles) < b0 && !(general && e.gen === general.gen && e.carriles === general.carriles)) {
-          salida.push({quien: 'el ' + nombreModelo(id), enlace: e});
-        }
+        if (e && !igual(e, general) && (limita || banda(e.gen, e.carriles) < b0)) modelos.push({quien: 'el ' + nombreModelo(id), enlace: e});
       }
+      if (limita) salida.push({quien: 'los ' + F.nombre, enlace: general, salvo: modelos});
+      // si la familia va bien y solo algún modelo va más lento, se nombra el modelo
+      else for (const m of modelos) salida.push({quien: m.quien, enlace: m.enlace, salvo: []});
     }
     return salida;
   }
@@ -710,16 +713,27 @@
         }
       }
       if (limitan.length) {
-        // los que dejan la gráfica igual van juntos: «con los A o el B, a PCIe 3.0 x8»
+        // los que dejan la gráfica igual van juntos («con los A o el B, a PCIe 3.0 x8»); una familia con
+        // modelos que van distinto, aparte («con los C, a PCIe 3.0 x8, salvo el D, que va a PCIe 3.0 x4»)
+        const partes = [];
         const porEnlace = [];
         for (const x of limitan) {
           const t = enlaceTexto(x.enlace.gen, x.enlace.carriles);
-          const g = porEnlace.find((y) => y.t === t) || (porEnlace[porEnlace.length] = {t: t, quienes: []});
-          g.quienes.push(x.quien);
+          if (x.salvo.length) {
+            const otros = [];
+            for (const m of x.salvo) {
+              const tm = enlaceTexto(m.enlace.gen, m.enlace.carriles);
+              const g = otros.find((y) => y.t === tm) || (otros[otros.length] = {t: tm, quienes: []});
+              g.quienes.push(m.quien);
+            }
+            partes.push(`con ${x.quien}, a ${t}, salvo ${otros.map((g) => `${listaY(g.quienes)}, que ${g.quienes.length > 1 ? 'van' : 'va'} a ${g.t}`).join(', y ')}`);
+          } else {
+            const g = porEnlace.find((y) => y.t === t) || (porEnlace[porEnlace.length] = {t: t, quienes: []});
+            g.quienes.push(x.quien);
+          }
         }
-        const partes = porEnlace.map((g) => `con ${listaO(g.quienes)}, a ${g.t}`);
-        r.notas.push(`Depende del procesador: ${partes.join('; ')}. Elige el procesador y te digo cómo va.`);
-        for (const x of limitan) r.fuentes = r.fuentes.concat(x.enlace.fuentes);
+        r.notas.push(`Depende del procesador: ${porEnlace.map((g) => `con ${listaO(g.quienes)}, a ${g.t}`).concat(partes).join('; ')}. Elige el procesador y te digo cómo va.`);
+        for (const x of limitan) r.fuentes = r.fuentes.concat(x.enlace.fuentes, ...x.salvo.map((m) => m.enlace.fuentes));
       }
     }
     const rb = notaRebar(R, gpu, cpu);
@@ -731,6 +745,10 @@
     if (placa && placa.notas_grafica && placa.notas_grafica.length) {
       r.notas = r.notas.concat(placa.notas_grafica);
       if (placa.fuente && corregido(placa, 'notas_grafica')) r.fuentes.push(placa.fuente);
+    }
+    // si al final no es un «sí» (por ejemplo, por Resizable BAR), el texto no empieza por «Sí»
+    if (r.estado !== 'si') {
+      r.texto = r.texto.replace(/^Sí, entra, pero/, 'Entra, pero').replace(/^Sí: (.)/, (m, c) => c.toUpperCase());
     }
     return r;
   }
@@ -987,16 +1005,18 @@
       r.fuentes = r.fuentes.concat((G.potencia || {}).fuentes || []);
     } else if (!psu.pcie) {
       eCon = 'depende';
-      tCon = `No sé seguro cuántos conectores PCIe trae la fuente: su ficha no lo dice o no cuadra. ${ref ? textoLleva('La de referencia de esta gráfica', need.n) + ' (las de marca pueden llevar otros)' : textoLleva('Esta gráfica', need.n)}: míralo antes de comprar.`;
+      tCon = `No sé seguro cuántos conectores PCIe trae la fuente: su ficha no lo dice o no cuadra. ${ref ? textoLleva('La de referencia de esta gráfica', need.n) + ', y las de marca pueden llevar otros' : textoLleva('Esta gráfica', need.n)}: míralo antes de comprar.`;
     } else {
       const res = encaja(need.n, psu.pcie, a);
       const trae = `la fuente trae ${textoFuente(psu.pcie)}`;
       const pideAdaptador = a && need.n[2] > psu.pcie[1] ? ` El adaptador de 16 pines pide ${a} de 8 pines.` : '';
       if (ref) {
         const intro = `No sé qué conectores lleva tu modelo. ${textoLleva('La de referencia', need.n)} y ${trae}`;
-        const malas = otras.filter((v) => {
+        // las de marca con las que no llegan, y aparte las que dependen de un adaptador del que no hay dato
+        const malas = otras.filter((v) => encaja(v, psu.pcie, a).falta);
+        const sinAdaptador = otras.filter((v) => {
           const x = encaja(v, psu.pcie, a);
-          return x.falta || x.sinDato;
+          return !x.falta && x.sinDato;
         });
         if (res.falta || res.sinDato) {
           eCon = 'depende';
@@ -1006,13 +1026,16 @@
             return !x.falta && !x.sinDato;
           });
           const peso = (v) => v[0] + v[1] + v[2] * (a || 1);
-          const conOtros = buenas.length ? ` Con los de algunas de marca (${textoConectores(buenas.reduce((x, y) => (peso(y) < peso(x) ? y : x)))}), sí.` : '';
+          const conOtros = buenas.length ? ` Con los de algunas de marca sí llegan: llevan ${textoConectores(buenas.reduce((x, y) => (peso(y) < peso(x) ? y : x)))}.` : '';
           tCon = `${intro}: con esos no llegarían.${pideAdaptador}${conOtros} Mira los de tu modelo.`;
         } else if (malas.length) {
           eCon = 'depende';
           const peso = (v) => v[0] + v[1] + v[2] * (a || 1);
           const peorV = malas.reduce((x, y) => (peso(y) > peso(x) ? y : x));
           tCon = `${intro}: con esos llegan, pero hay versiones de marca con ${textoConectores(peorV)} y con esas no. Mira los de tu modelo.`;
+        } else if (sinAdaptador.length) {
+          eCon = 'depende';
+          tCon = `${intro}: con esos llegan, pero hay versiones de marca con ${textoConectores(sinAdaptador[0])}, y la fuente no trae ninguno: con esas hace falta el adaptador que traiga la gráfica. Mira cuántos de 8 pines pide.`;
         } else {
           tCon = `${intro}: llegan${res.adaptador ? `, con el adaptador que trae la gráfica (pide ${res.adaptador} de 8 pines)` : ''}${otras.length ? ', y también con los que llevan las versiones de marca de la lista' : ''}.`;
         }
@@ -1081,7 +1104,7 @@
         eAncho = 'no';
         partes.push(`Y es demasiado gruesa: ocupa ${huecos} ranuras y la caja tiene ${caja.ranuras}.`);
         r.fuentes = r.fuentes.concat(((R.cajas || {}).ranuras || {}).fuentes || []);
-      } else if (huecos >= caja.ranuras - 1) {
+      } else if (huecos === caja.ranuras) {
         // en muchas placas la ranura de la gráfica es la segunda: entonces cabe una menos
         r.notas.push(`De grosor va justa: ocupa ${huecos} ranuras y la caja tiene ${caja.ranuras}. Si en tu placa la ranura de la gráfica no es la primera, mira que le queden ${huecos} libres por debajo.`);
         r.fuentes = r.fuentes.concat(((R.cajas || {}).ranuras || {}).fuentes || []);
@@ -1403,15 +1426,18 @@
 
   // Piezas para las que una prueba da «si» o «depende», en grupos: primero las de «si».
   // grupo(p) da el título del grupo; orden(a, b) ordena los grupos dentro de cada estado.
-  // extra(p), si se da, es el estado de la pieza con lo demás que ya se ha elegido: cuenta el peor.
+  // extra(p), si se da, es el estado de la pieza con lo demás que ya se ha elegido: lo que da «no» sale de la
+  // lista y lo que da «depende» pasa a «ojo». Un «sin comprobar» (falta un dato de otra pieza) no cambia nada.
   function agrupar(lista, prueba, grupo, orden, extra) {
     const grupos = {};
     for (const p of lista) {
       let e = prueba(p);
       if (e !== 'si' && e !== 'depende') continue;
-      if (extra) e = peor([e, extra(p) || 'si']);
-      if (e === 'bios') e = 'depende';
-      if (e !== 'si' && e !== 'depende') continue;
+      if (extra) {
+        const x = extra(p);
+        if (x === 'no') continue;
+        if (x === 'depende' || x === 'bios') e = 'depende';
+      }
       const titulo = grupo(p) || 'Otras';
       const k = e + '|' + titulo;
       (grupos[k] || (grupos[k] = {estado: e, titulo: titulo, piezas: []})).piezas.push(p);

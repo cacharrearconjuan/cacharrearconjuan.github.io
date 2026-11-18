@@ -147,10 +147,17 @@
     incluida: 'la fuente que trae', zocalos: 'los zócalos', alto: 'la altura', liquida: 'el tipo', radiador: 'el radiador',
   };
 
+  // lo que se puede corregir de una placa, para su bloque
+  const CORREGIDO_PLACA = {
+    m2: 'los huecos M.2', notas_m2: 'los huecos M.2', video: 'las salidas de vídeo', flashback: 'el botón de BIOS',
+    max_gb: 'la memoria máxima', x16: 'la ranura de la gráfica', notas_grafica: 'la ranura de la gráfica', formato: 'el formato',
+  };
+
   // fila de las piezas con datos corregidos a mano: cuáles y dónde se comprobaron
   function filaComprobada(tipo, p) {
     if (!p.fuente || !p.corregidos || !p.corregidos.length) return '';
-    const datos = p.corregidos.map((c) => (tipo === 'psu' && c === 'pcie' ? 'los conectores PCIe' : DATO_CORREGIDO[c] || c));
+    const datos = p.corregidos.map((c) => (tipo === 'psu' && c === 'pcie' ? 'los conectores PCIe'
+      : tipo === 'caja' && c === 'ranuras' ? 'las ranuras de expansión' : DATO_CORREGIDO[c] || c));
     return fila('ok', 'Corregida a mano', `Datos corregidos a mano y comprobados en el enlace de abajo: ${listaY(datos)}. Lo demás sale de la base de datos de BuildCores.`, [p.fuente]);
   }
 
@@ -161,7 +168,7 @@
       if (f && !vistas.some((v) => v.url === f.url)) vistas.push(f);
     }
     if (!vistas.length) return '';
-    return `<p class="pc-fuentes">${vistas.length > 1 ? 'Fuentes' : 'Fuente'}: ${vistas.map((f) =>
+    return `<p class="pc-fuentes">De dónde sale: ${vistas.map((f) =>
       `<a href="${esc(f.url)}" rel="noopener" target="_blank">${esc(f.titulo)}</a>`).join(' · ')}</p>`;
   }
 
@@ -413,13 +420,13 @@
     if (mem.length) filas.push(`<li class="pc-nota-fila">${icono('info')}<div><h3>Memoria</h3><p>${esc(mem.join(', '))}.</p></div></li>`);
     let m2 = '';
     if (p.m2) {
-      m2 = `<p>${p.m2.length === 1 ? 'Un hueco' : p.m2.length + ' huecos'} para SSD, según la ficha${p.fuente ? ' del fabricante' : ''}:</p>${htmlHuecos(p)}`
+      m2 = `<p>${p.m2.length === 1 ? 'Un hueco' : p.m2.length + ' huecos'} para SSD, según la ficha${PC.corregido(p, 'm2') ? ' del fabricante' : ''}:</p>${htmlHuecos(p)}`
         + (p.notas_m2 && p.notas_m2.length ? `<ul class="pc-subnotas">${p.notas_m2.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : '');
     }
     else m2 = `<p>${esc(PC.textoSinHuecos(p))}</p>`;
     filas.push(`<li class="pc-nota-fila">${icono(p.m2 ? 'info' : 'nose')}<div><h3>SSD M.2</h3>${m2}</div></li>`);
     if (p.video && p.video.length) filas.push(`<li class="pc-nota-fila">${icono('info')}<div><h3>Salidas de vídeo</h3><p>${esc(p.video.join(', '))}. Solo dan imagen con un procesador con gráfica integrada.</p></div></li>`);
-    else if (Array.isArray(p.video)) filas.push(`<li class="pc-nota-fila">${icono('aviso')}<div><h3>Salidas de vídeo</h3><p>No tiene para la gráfica integrada: con esta placa hace falta tarjeta gráfica.</p>${htmlFuentes([p.fuente])}</div></li>`);
+    else if (Array.isArray(p.video)) filas.push(`<li class="pc-nota-fila">${icono('aviso')}<div><h3>Salidas de vídeo</h3><p>No tiene para la gráfica integrada: con esta placa hace falta tarjeta gráfica.</p>${htmlFuentes(PC.corregido(p, 'video') ? [p.fuente] : [])}</div></li>`);
     if (p.flashback === true) filas.push(`<li class="pc-nota-fila">${icono('ok')}<div><h3>Actualizar la BIOS sin procesador</h3><p>Se puede, con un pendrive y el botón de la placa (BIOS Flashback, Flash BIOS o Q-Flash Plus, según la marca).</p></div></li>`);
     // la ranura de la gráfica según el chipset
     const ranura = PC.pcieRanura(R, p);
@@ -431,7 +438,13 @@
         : `PCIe ${ranura.min}.0 o ${ranura.max}.0 x16: con el chipset ${p.chipset}, lo elige cada fabricante. Míralo en la ficha de la placa.`, ranura.fuentes));
     }
     if (p.formato) filas.push(fila('info', 'Formato', `${p.formato}: necesita una caja que admita placas ${PC.formatoPlaca(p.formato)}.`));
-    const extra = (p.fuente ? `<p class="pc-revisada">Huecos M.2, salidas de vídeo y botón de BIOS comprobados a mano con la <a href="${esc(p.fuente)}" rel="noopener" target="_blank">ficha del fabricante</a>.</p>` : '')
+    const corregidos = [];
+    for (const c of p.corregidos || []) {
+      const que = CORREGIDO_PLACA[c];
+      if (que && corregidos.indexOf(que) < 0) corregidos.push(que);
+    }
+    const ficha = p.fuente && corregidos.length ? fuente(p.fuente) : null;
+    const extra = (ficha ? `<p class="pc-revisada">Corregido a mano: ${esc(listaY(corregidos))}, ${/^ficha/.test(ficha.titulo) ? 'según la ' : ''}<a href="${esc(ficha.url)}" rel="noopener" target="_blank">${esc(ficha.titulo)}</a>.</p>` : '')
       + (p.revisada ? `<p class="pc-revisada">Ficha revisada a mano por BuildCores el ${esc(fechaTexto(p.revisada))}.</p>` : '');
     return bloque('placa', esc(p.nombre), `<ul class="pc-notas" role="list">${filas.join('')}</ul>${extra}`);
   }
@@ -562,10 +575,15 @@
       filas.push(fila('nose', `Chip ${g.chip}`, 'No tengo comprobada la ficha de este chip: lo que ves sale de la ficha de la tarjeta, sin contrastar.'));
     }
     if (!placa) {
-      const e = PC.enlaceGrafica(R, g, null, null);
+      const e = PC.enlaceGrafica(R, g, null, cpu);
       let t = 'Va en cualquier placa con ranura PCIe x16: PCIe funciona entre versiones.';
       const fuentes = (((R.graficas || {}).compatible || {}).fuentes || []).slice();
-      if (e && e.max[0] > 3) {
+      if (cpu && e) {
+        const max = `PCIe ${e.max[0]}.0 x${e.max[1]}`;
+        t += e.porCpu ? ` Con este procesador irá como mucho a PCIe ${e.gen}.0 x${e.carriles} (la gráfica es ${max}).`
+          : ` Con este procesador puede ir a toda su velocidad (${max}) si la ranura de la placa también la da.`;
+        fuentes.push(...e.fuentes);
+      } else if (e && e.max[0] > 3) {
         const e3 = {gen: 3, carriles: e.max[1], max: e.max};
         const nr = PC.notaRendimiento(R, e3, g);
         t += ` En un equipo PCIe 3.0 iría a PCIe 3.0 x${e.max[1]}${nr ? ': ' + nr.texto.charAt(0).toLowerCase() + nr.texto.slice(1) : '.'}`;
@@ -604,7 +622,7 @@
         const grupos = PC.cajasParaGrafica(R, datos.caja, g, extra);
         const n = grupos.reduce((s, x) => s + x.piezas.length, 0);
         html += bloque('cajas-gpu', 'Cajas donde cabe', htmlLista('caja', grupos, 'NZXT, Lancool, blanca…'),
-          esc(`${cifra(n)} cajas de la lista admiten una gráfica de ${g.largo} mm${g.ranuras ? ' y su grosor' : ''}${extra ? ' y encajan con lo demás que has elegido' : ''}. Solo salen las que traen esa medida en su ficha.`));
+          esc(`${cifra(n)} cajas de la lista admiten una gráfica de ${g.largo} mm${g.ranuras ? ' y su grosor' : ''}${extra ? ' y no chocan con lo demás que has elegido' : ''}. Solo salen las que traen esa medida en su ficha.`));
       }
     }
     if (!psu) {
@@ -614,9 +632,19 @@
         const extra = conLoDemas('psu', 'gpu');
         const grupos = PC.fuentesParaGrafica(R, datos.psu, g, cpu, extra);
         const si = grupos.filter((x) => x.estado === 'si').reduce((s, x) => s + x.piezas.length, 0);
-        const texto = !grupos.length
-          ? 'No sé qué fuente pide esta gráfica ni qué conectores lleva, así que no puedo filtrar las fuentes: mira su ficha.'
-          : `${cifra(si)} fuentes de la lista ${ch && ch.psu ? 'cumplen lo que pide ' + marca : 'le valen'}${cpu ? ' con este procesador' : ''}${extra ? ' y encajan con lo demás que has elegido' : ''}. Las de «ojo» van justas o les falta algún dato: elige una y te digo por qué.`;
+        const con = PC.conectoresGrafica(R, g);
+        const gasta = PC.consumoGrafica(R, g);
+        let texto;
+        if (!grupos.length) {
+          texto = !con && ch && ch.psu
+            ? `${marca} pide una fuente de ${ch.psu} W o más, pero no sé qué conectores de corriente lleva esta gráfica, así que no puedo filtrar las fuentes: míralos en su ficha.`
+            : !con || !gasta ? 'No sé cuánto gasta esta gráfica o qué conectores lleva, así que no puedo filtrar las fuentes: mira su ficha.'
+              : 'Ninguna fuente de la lista le vale con lo que has elegido.';
+        } else if (!si && !(ch && ch.psu)) {
+          texto = `No tengo la fuente que pide el fabricante para esta gráfica, así que ninguna sale con ✓: las de «ojo» tienen potencia para lo que gasta${cpu ? ' con este procesador' : ''}${extra ? ' y no chocan con lo demás que has elegido' : ''}. Elige una y te digo.`;
+        } else {
+          texto = `${cifra(si)} fuentes de la lista ${ch && ch.psu ? 'cumplen lo que pide ' + marca : 'le valen'}${cpu ? ' con este procesador' : ''}${extra ? ' y no chocan con lo demás que has elegido' : ''}. Las de «ojo» van justas o les falta algún dato: elige una y te digo por qué.`;
+        }
         html += bloque('fuentes-gpu', 'Fuentes que le valen', htmlLista('psu', grupos, 'Corsair, 850, Gold…'), esc(texto));
       }
     }
@@ -644,7 +672,7 @@
         const extra = conLoDemas('gpu', 'psu');
         const grupos = PC.graficasParaFuente(R, datos.gpu, p, elegido.cpu, extra);
         html += bloque('gpus-psu', 'Gráficas que puede mover', htmlLista('gpu', grupos, 'RTX 4070, Sapphire, 16GB…'),
-          esc(`Según la fuente que pide cada fabricante y los conectores${elegido.cpu ? ', con este procesador' : ''}${extra ? ', y que encajan con lo demás que has elegido' : ''}. Las de «ojo» van justas o les falta algún dato: elige una y te digo por qué.`));
+          esc(`Según la fuente que pide cada fabricante y los conectores${elegido.cpu ? ', con este procesador' : ''}${extra ? ', y que no chocan con lo demás que has elegido' : ''}. Las de «ojo» van justas o les falta algún dato: elige una y te digo por qué.`));
       }
     }
     return html;
@@ -675,7 +703,7 @@
         const grupos = PC.graficasParaCaja(R, datos.gpu, c, extra);
         const n = grupos.reduce((s, x) => s + x.piezas.length, 0);
         html += bloque('gpus-caja', 'Gráficas que caben', htmlLista('gpu', grupos, 'RTX 4070, Sapphire, 16GB…'),
-          esc(`${cifra(n)} gráficas de la lista miden ${c.gpu_max} mm o menos${c.ranuras ? ' y caben de grosor' : ''}${extra ? ', y encajan con lo demás que has elegido' : ''}. Solo salen las que traen su largo en la ficha.`));
+          esc(`${cifra(n)} gráficas de la lista miden ${c.gpu_max} mm o menos${c.ranuras ? ' y caben de grosor' : ''}${extra ? ', y no chocan con lo demás que has elegido' : ''}. Solo salen las que traen su largo en la ficha.`));
       }
     }
     if (!elegido.disipador && c.disipador_max) {
@@ -686,7 +714,7 @@
         const grupos = PC.disipadoresParaCaja(R, datos.disipador, c, extra);
         const n = grupos.reduce((s, x) => s + x.piezas.length, 0);
         html += bloque('disipadores-caja', 'Disipadores de aire que caben', htmlLista('disipador', grupos, 'Noctua, Peerless, blanco…'),
-          esc(`${cifra(n)} disipadores de la lista miden ${c.disipador_max} mm o menos de alto${extra ? ' y encajan con lo demás que has elegido' : ''}. Los de líquida no salen: depende del radiador.`));
+          esc(`${cifra(n)} disipadores de la lista miden ${c.disipador_max} mm o menos de alto${extra ? ' y no chocan con lo demás que has elegido' : ''}. Los de líquida no salen: depende del radiador.`));
       }
     }
     return html;
@@ -713,7 +741,7 @@
         const grupos = PC.cajasParaDisipador(R, datos.caja, d, extra);
         const n = grupos.reduce((s, x) => s + x.piezas.length, 0);
         html += bloque('cajas-disipador', 'Cajas donde cabe', htmlLista('caja', grupos, 'NZXT, Lancool, blanca…'),
-          esc(`${cifra(n)} cajas de la lista admiten un disipador de ${d.alto} mm de alto${extra ? ' y encajan con lo demás que has elegido' : ''}. Solo salen las que traen esa medida en su ficha.`));
+          esc(`${cifra(n)} cajas de la lista admiten un disipador de ${d.alto} mm de alto${extra ? ' y no chocan con lo demás que has elegido' : ''}. Solo salen las que traen esa medida en su ficha.`));
       }
     }
     return html;
@@ -742,13 +770,15 @@
         filtro('ASUS, B650, ITX…') + htmlGruposPlacas(grupos, 'Entra', 'Entra, pero mira la capacidad'),
         esc(`${cifra(total)} placas ${ram.tipo} con ranuras suficientes.`));
     }
-    // piezas nuevas que dependen de la placa o del procesador
+    // piezas nuevas que dependen de la placa o del procesador (si su tabla aún no ha llegado, se pintan al llegar)
+    if (placa && !elegido.caja && placa.formato && !listo.caja && !fallo.caja) esperaLista = true;
+    if ((cpu || placa) && !elegido.disipador && !listo.disipador && !fallo.disipador) esperaLista = true;
     if (placa && !elegido.caja && placa.formato && listo.caja) {
       const extra = conLoDemas('caja', 'placa');
       const grupos = PC.cajasParaPlaca(R, datos.caja, placa, extra);
       const n = grupos.reduce((s, x) => s + x.piezas.length, 0);
       html += bloque('cajas-placa', 'Cajas para esta placa', htmlLista('caja', grupos, 'NZXT, Lancool, blanca…'),
-        esc(`${cifra(n)} cajas de la lista admiten placas ${PC.formatoPlaca(placa.formato)}${extra ? ' y encajan con lo demás que has elegido' : ''}. Para la gráfica, el disipador y la fuente, elígelos y te digo si caben.`));
+        esc(`${cifra(n)} cajas de la lista admiten placas ${PC.formatoPlaca(placa.formato)}${extra ? ' y no chocan con lo demás que has elegido' : ''}. Para la gráfica, el disipador y la fuente, elígelos y te digo si caben.`));
     }
     const zocalo = cpu ? cpu.zocalo : placa ? placa.zocalo : null;
     if (zocalo && !elegido.disipador && listo.disipador) {
@@ -756,7 +786,7 @@
       const grupos = PC.disipadoresParaZocalo(R, datos.disipador, zocalo, extra);
       const n = grupos.reduce((s, x) => s + x.piezas.length, 0);
       html += bloque('disipadores-zocalo', `Disipadores para ${esc(zocalo)}`, htmlLista('disipador', grupos, 'Noctua, Peerless, 360…'),
-        esc(`${cifra(n)} disipadores de la lista traen anclaje para ${zocalo} o uno que vale${extra ? ', y encajan con lo demás que has elegido' : ''}. La ficha no dice cuánto calor disipa cada uno: para un procesador que gaste mucho, mira la recomendación del fabricante.`));
+        esc(`${cifra(n)} disipadores de la lista traen anclaje para ${zocalo} o uno que vale${extra ? ', y no chocan con lo demás que has elegido' : ''}. La ficha no dice cuánto calor disipa cada uno: para un procesador que gaste mucho, mira la recomendación del fabricante.`));
     }
     return html;
   }
@@ -906,7 +936,9 @@
       partes.push(`Del enlace que has abierto no encuentro ${perdidas.length > 1 ? 'estas piezas' : 'esta pieza'}: ${perdidas.join(', ')}. Puede que la hayan quitado o renombrado en la lista; búscala otra vez.`);
     }
     if (caidas.length) {
-      partes.push(`No se ha podido cargar la lista de ${listaY(caidas)}: ${caidas.length > 1 ? 'las piezas del enlace siguen' : 'la pieza del enlace sigue'} en la dirección, así que recarga la página para verla.`);
+      partes.push(caidas.length > 1
+        ? `No se han podido cargar las listas ${listaY(caidas.map((x) => 'de ' + x))}: las piezas del enlace siguen en la dirección, así que recarga la página para verlas.`
+        : `No se ha podido cargar la lista de ${caidas[0]}: la pieza del enlace sigue en la dirección, así que recarga la página para verla.`);
     }
     caja.hidden = !partes.length;
     caja.textContent = partes.join(' ');
@@ -966,7 +998,8 @@
 
   app.addEventListener('focusout', (e) => {
     const t = e.target;
-    if (t.matches && t.matches('input[role="combobox"]')) setTimeout(() => cerrar(t), 150);
+    // (si se ha repintado entretanto, el buscador viejo ya no está: no se cierra la lista del nuevo)
+    if (t.matches && t.matches('input[role="combobox"]')) setTimeout(() => { if (t.isConnected && document.activeElement !== t) cerrar(t); }, 150);
   });
 
   app.addEventListener('focusin', (e) => {

@@ -645,6 +645,10 @@ function pruebaPiezasNuevas() {
   r = PC.graficaConFuente(RG, g6500, psu('400', 400, [1, 0]), r5600x);
   comprobar(r.estado === 'depende' && /con esos llegan, pero hay versiones de marca con 2 conectores de 8 pines y con esas no/.test(r.texto),
     'referencia: si alguna de marca pide más, depende');
+  RG._conectoresChip['GeForce RTX 5060 Ti'] = [[0, 1, 0], [0, 0, 1]];
+  r = PC.graficaConFuente(RG, gpu('5060 Ti sin ficha', 'GeForce RTX 5060 Ti'), psu('650', 650, [2, 0]), r5600x);
+  comprobar(r.estado === 'depende' && /hace falta el adaptador que traiga la gráfica/.test(r.texto) && !/con esas no/.test(r.texto),
+    'referencia: una de marca de 16 pines sin regla de adaptador no se da por mala');
   r = PC.graficaConFuente(RG, gpu('4090 sin ficha', 'GeForce RTX 4090'), psu('1000', 1000, [2, 0]), r7800x3d);
   comprobar(r.estado === 'depende' && /con esos no llegarían/.test(r.texto) && /Mira los de tu modelo/.test(r.texto),
     'referencia que no llega: depende, no «no» (falta el dato de la tarjeta)');
@@ -757,6 +761,13 @@ function pruebaPiezasNuevas() {
     'placa sin procesador: no dice «a toda su velocidad» sin más');
   r = PC.graficaEnPlaca(RG, g4060, b650, null);
   comprobar(r.notas.some((n) => /con el Ryzen 5 8500G, a PCIe 4\.0 x4/.test(n)), 'sin procesador: nombra el modelo suelto que va distinto (8500G)');
+  RG.familias.picasso.grafica = {gen: 3, carriles: 8, por_modelo: {'athlon-3000g': [3, 4]}};
+  RG.plataformas.AM4.chipsets.B550.soporte.picasso = 'depende';
+  r = PC.graficaEnPlaca(RG, g4060, b550, null);
+  comprobar(r.notas.some((n) => /con los Ryzen 3000G \(Picasso\) y Athlon 3000G, a PCIe 3\.0 x8, salvo el Athlon 3000G, que va a PCIe 3\.0 x4/.test(n))
+    && !r.notas.some((n) => /; con el Athlon 3000G, a/.test(n)), 'sin procesador: un modelo que va distinto, como excepción de su familia');
+  r = PC.graficaEnPlaca(RG, arc, b550, null);
+  comprobar(r.estado === 'depende' && !/^Sí/.test(r.texto) && /^Entra en la ranura x16/.test(r.texto), 'Arc sin procesador: depende, sin un «Sí» delante');
   r = PC.graficaEnPlaca(RG, g4060, b550, r5600x);
   comprobar(!r.notas.some((n) => /Depende del procesador/.test(n)), 'con procesador, sin la nota de los que limitan');
   let filasCpu = PC.comprobar(RG, {cpu: r8500g, gpu: g4060});
@@ -801,14 +812,19 @@ function pruebaPiezasNuevas() {
   // caja: grosor que llena la caja; textos con su unidad
   r = PC.graficaEnCaja(RG, gpu('Gruesa', 'GeForce RTX 4090', {conectores: [0, 0, 1], largo: 300, ranuras: 3.5}), caja('Cuatro', {gpu_max: 350, ranuras: 4}));
   comprobar(r.estado === 'si' && r.notas.some((n) => /De grosor va justa: ocupa 4 ranuras y la caja tiene 4/.test(n)), 'gráfica que llena las ranuras de la caja: aviso');
-  r = PC.graficaEnCaja(RG, gpu('Gruesa', 'GeForce RTX 4090', {conectores: [0, 0, 1], largo: 300, ranuras: 3.5}), caja('Siete', {gpu_max: 350, ranuras: 7}));
-  comprobar(!r.notas.length, 'con ranuras de sobra, sin aviso');
+  r = PC.graficaEnCaja(RG, gpu('Gruesa', 'GeForce RTX 4090', {conectores: [0, 0, 1], largo: 300, ranuras: 3.5}), caja('Cinco', {gpu_max: 350, ranuras: 5}));
+  comprobar(!r.notas.length, 'con una ranura de sobra, sin aviso (cabe aunque su ranura sea la segunda)');
   comprobar(/caben hasta 200 mm\./.test(PC.fuenteEnCaja(RG, psu('Corta', 750, [2, 0], {largo: 150}), caja('Caja')).texto), 'fuente en caja: «hasta 200 mm»');
   r = PC.disipadorEnCaja(RG, disipador('Justo', ['AM4'], {alto: 162}), caja('Caja'));
   comprobar(r.notas.indexOf('Va justo: le sobran 3 mm.') >= 0, 'disipador justo: sin suponer nada de la tapa');
   // listas: lo demás elegido cuenta, y orden por número
   const conExtra = PC.disipadoresParaZocalo(RG, [moderno, viejo], 'AM5', (d) => (d === moderno ? 'no' : 'si'));
   comprobar(conExtra.length === 1 && conExtra[0].piezas[0] === viejo && conExtra[0].estado === 'depende', 'listas: lo que no encaja con lo demás, fuera');
+  const sinDatoOtra = PC.disipadoresParaZocalo(RG, [moderno, viejo], 'AM5', () => 'nose');
+  comprobar(sinDatoOtra.length === 2 && sinDatoOtra[0].estado === 'si' && sinDatoOtra[0].piezas[0] === moderno,
+    'listas: si falta un dato de otra pieza, no se quita nada ni cambia el estado');
+  const conOjo = PC.disipadoresParaZocalo(RG, [moderno], 'AM5', () => 'depende');
+  comprobar(conOjo.length === 1 && conOjo[0].estado === 'depende', 'listas: un «depende» con lo demás pasa a «ojo»');
   const altos = PC.disipadoresParaCaja(RG, [disipador('Bajo', ['AM4'], {alto: 95}), disipador('Alto', ['AM4'], {alto: 158})], caja('Caja'));
   comprobar(altos.map((x) => x.titulo).join('|') === 'De 90 a 99 mm de alto|De 150 a 159 mm de alto', 'grupos por altura: por número, no como texto');
 
