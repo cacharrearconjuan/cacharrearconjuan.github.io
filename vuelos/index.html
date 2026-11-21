@@ -90,7 +90,7 @@
       </label>
       <label>Escala máxima (horas)
         <input type="number" id="horas_max" min="3" max="96" step="1" value="12" inputmode="numeric">
-        <small>Tiempo máximo entre el vuelo de Iberia y el interno. Pon 30, 48 o 72 para pasar una noche o varios días en la ciudad.</small>
+        <small>Tiempo máximo entre el vuelo de Iberia y el interno. Pon 30, 48 o 72 para pasar una noche o varios días en la ciudad (y entonces también vale otro aeropuerto de la ciudad).</small>
       </label>
     </div>
 
@@ -102,10 +102,10 @@
         </label>
         <label class="check grande">
           <input type="checkbox" id="cambiar_aeropuerto" checked>
-          <span>En escalas largas, permitir otro aeropuerto de la ciudad<br><small>P. ej. llegar a Miami (MIA) y salir de Fort Lauderdale (FLL), o JFK → LaGuardia/Newark. Solo si pasas allí al menos las horas de abajo.</small></span>
+          <span>Si haces noche, permitir otro aeropuerto de la ciudad<br><small>P. ej. llegar a Miami (MIA) y al día siguiente salir de Fort Lauderdale (FLL), o JFK → LaGuardia/Newark. Siempre con al menos 5 h para cruzar la ciudad.</small></span>
         </label>
-        <label>Escala mínima para cambiar de aeropuerto (horas)
-          <input type="number" id="horas_cambio" min="3" step="1" value="12">
+        <label>Sin hacer noche, cambiar de aeropuerto solo si la escala es de (horas)
+          <input type="number" id="horas_cambio" min="5" step="1" value="12">
         </label>
         <fieldset id="houston-caja">
           <legend>Aeropuerto de Houston</legend>
