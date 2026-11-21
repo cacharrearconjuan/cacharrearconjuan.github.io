@@ -1237,13 +1237,25 @@ ARCHIVOS_VUELOS = ("index.html", "app.js", "estilos.css")
 
 
 def copiar_vuelos(salida):
-    """vuelos/: el buscador de vuelos Iberia–Houston. Es una página aparte, sin el menú de la web."""
+    """vuelos/: el buscador de vuelos Iberia–Houston. Es una página aparte, sin el menú de la web.
+
+    En index.html, app.js y estilos.css llevan «?v=<huella>» para que el móvil no siga usando
+    una versión vieja guardada en caché cuando cambian."""
     for f in ARCHIVOS_VUELOS:
-        origen = os.path.join(RAIZ, "vuelos", f)
-        if not os.path.isfile(origen):
+        if not os.path.isfile(os.path.join(RAIZ, "vuelos", f)):
             raise ErrorWeb(f"Falta vuelos/{f}")
-        os.makedirs(os.path.join(salida, "vuelos"), exist_ok=True)
-        shutil.copyfile(origen, os.path.join(salida, "vuelos", f))
+    os.makedirs(os.path.join(salida, "vuelos"), exist_ok=True)
+    for f in ARCHIVOS_VUELOS:
+        if f != "index.html":
+            shutil.copyfile(os.path.join(RAIZ, "vuelos", f), os.path.join(salida, "vuelos", f))
+    with open(os.path.join(RAIZ, "vuelos", "index.html"), encoding="utf-8") as fh:
+        html = fh.read()
+    for f in ("app.js", "estilos.css"):
+        with open(os.path.join(RAIZ, "vuelos", f), "rb") as fh:
+            huella = hashlib.sha256(fh.read()).hexdigest()[:10]
+        html = html.replace(f'"{f}"', f'"{f}?v={huella}"')
+    with open(os.path.join(salida, "vuelos", "index.html"), "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(html)
 
 
 def generar(api, sitio, salida, carpeta_notas, ahora, carpeta_guias=None, ruta_enlaces=None, carpeta_pc_datos=None):

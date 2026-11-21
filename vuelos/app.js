@@ -443,10 +443,13 @@ function tramoHtml(v, titulo, conMercados) {
     mercados = `<div class="mercados-lista">${precios.map(([m, p]) => `${esc(m)} ${fmtPrecio(p)}`).join(" · ")}</div>`;
   }
   const chip = conMercados && v.mercado ? `<span class="mercado-chip">mercado ${esc(v.mercado)}</span>` : "";
+  const maleta = v.maleta_estimada
+    ? `<div class="maleta-estimada">Incluye maleta <strong>estimada</strong> +${fmtPrecio(v.maleta_estimada)}: Google no sabe lo que cobra ${esc(v.aerolineas.join(", "))} por la maleta. Compruébalo al comprar.</div>`
+    : "";
   return `<div class="tramo"><div class="sub">${titulo}</div>
     <b>${esc(v.origen)} ${fmtHora(v.salida)} → ${esc(v.destino)} ${fmtHora(v.llegada)}</b>${otroDia(v.salida, v.llegada)}
     <div class="sub">${fmtFecha(v.salida)} · ${esc(v.aerolineas.join(", "))}${num}</div>
-    <div class="sub">Precio: ${fmtPrecio(v.precio)}${chip}</div>${mercados}</div>`;
+    <div class="sub">Precio: ${fmtPrecio(v.precio)}${chip}</div>${mercados}${maleta}</div>`;
 }
 
 function opcion(o, i, sentido, oculta) {

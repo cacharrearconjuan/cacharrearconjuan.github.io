@@ -276,6 +276,8 @@ def prueba_web():
         comprobar(not rv.errores and not rv.pila, f"vuelos: etiquetas equilibradas ({rv.errores[:3]} {rv.pila[:3]})")
         comprobar(len(rv.ids) == len(set(rv.ids)), "vuelos: ids únicos")
         comprobar(all(os.path.exists(os.path.join(salida, "vuelos", f)) for f in ("app.js", "estilos.css")), "vuelos: sus archivos")
+        comprobar(re.search(r'src="app\.js\?v=[0-9a-f]{10}"', vuelos) and re.search(r'href="estilos\.css\?v=[0-9a-f]{10}"', vuelos),
+                  "vuelos: app.js y estilos.css con huella (sin caché vieja)")
         comprobar('content="noindex, nofollow"' in vuelos and "Disallow: /vuelos/" in leer(salida, "robots.txt"),
                   "vuelos: fuera de los buscadores")
         comprobar("/vuelos/" not in leer(salida, "sitemap.xml"), "vuelos: fuera del mapa del sitio")
