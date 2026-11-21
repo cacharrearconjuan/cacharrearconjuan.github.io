@@ -591,7 +591,9 @@ function cocheHtml(res) {
   return `<h2 style="margin-top:0">🚗 Alternativa: coche de alquiler Dallas (DFW) ⇄ Houston</h2>
     <p class="coche-precio">≈ <strong>${fmtPrecio(c.eur)}</strong> <small>estimación · 1 día con todo el seguro y todos los gastos · precio por coche, no por persona</small></p>
     <p class="sub">${desglose}</p>
-    ${filas.length ? filas.join("") : `<p class="sub">Ese día no hay vuelo directo de Iberia en Dallas (DFW)${(res.peticion.pasarelas || []).includes("DFW") ? "" : ": marca «Dallas (DFW)» en «Más opciones»"}.</p>`}
+    ${filas.length ? filas.join("") : !(res.ida || res.vuelta)?.iberias
+      ? `<p class="sub">Esta búsqueda es anterior a la opción del coche: vuelve a buscar para ver los horarios con el Iberia de Dallas.</p>`
+      : `<p class="sub">Ese día no hay vuelo directo de Iberia en Dallas (DFW)${(res.peticion.pasarelas || []).includes("DFW") ? "" : ": marca «Dallas (DFW)» en «Más opciones»"}.</p>`}
     <details class="avanzado"><summary>Ajustar la estimación</summary><div class="rejilla">${campos}</div>
       <p class="ayuda">Son precios típicos, no reales: no hay ningún buscador gratis de alquiler de coches. Mira el precio de verdad en los enlaces (en DiscoverCars puedes elegir «cobertura total»). Para la estimación se cuenta 1 día con recogida en el aeropuerto y devolución en otra ciudad.</p>
       <button type="button" class="mas" id="coche-reiniciar">Volver a los valores típicos</button></details>
