@@ -79,17 +79,17 @@
       <label>Adultos
         <input type="number" id="adultos" min="1" max="9" value="1">
       </label>
+      <label>Escala máxima (horas)
+        <input type="number" id="horas_max" min="3" max="48" step="1" value="12" inputmode="numeric">
+        <small>Tiempo máximo entre el vuelo de Iberia y el interno. Pon 30 si aceptas dormir allí y volar al día siguiente.</small>
+      </label>
     </div>
 
     <details class="avanzado">
-      <summary>Más opciones (ciudades, horas, mercados…)</summary>
+      <summary>Más opciones (ciudades, escala mínima, mercados…)</summary>
       <div class="rejilla">
-        <label>Horas mínimas de conexión
+        <label>Escala mínima (horas)
           <input type="number" id="horas_min" min="0" step="0.5" value="3">
-        </label>
-        <label>Espera máxima (horas)
-          <input type="number" id="horas_max" min="1" step="1" value="12">
-          <small>Pon 30 si aceptas dormir en la ciudad y volar al día siguiente.</small>
         </label>
         <fieldset id="houston-caja">
           <legend>Aeropuerto de Houston</legend>
@@ -123,6 +123,11 @@
   </section>
 
   <section id="resultados" hidden>
+    <div id="filtro" class="tarjeta filtro" hidden>
+      <label for="filtro-escala">Escala máxima: <strong id="filtro-valor">12 h</strong></label>
+      <input type="range" id="filtro-escala" min="3" max="12" step="0.5" value="12">
+      <small id="filtro-nota">Mueve la barra para ver solo escalas más cortas, sin volver a buscar.</small>
+    </div>
     <div id="resumen" class="resumen"></div>
     <div id="bloque-ida"></div>
     <div id="bloque-vuelta"></div>

@@ -106,6 +106,7 @@ function iniciar() {
   $("cambiar-token").addEventListener("click", () => { guardado.poner("vuelos-token", null); mostrarConfigurar(); });
   $("ver-ultima").addEventListener("click", () => seguir(guardado.leer("vuelos-ultima"), null, true));
   $("formulario").addEventListener("submit", buscar);
+  $("filtro-escala").addEventListener("input", () => ULTIMO?.resultado && dibujar());
   document.querySelectorAll('input[name="destino"]').forEach((r) => r.addEventListener("change", cambiarDestino));
   $("otro-destino").addEventListener("input", () => {
     $("titulo-destino").textContent = $("otro-destino").value.trim().toUpperCase() || "otro destino";
@@ -280,7 +281,10 @@ async function seguir(id, inicio, soloLeer) {
 }
 
 // ---------------- resultados ----------------
+let ULTIMO = null; // el último resultado, para poder filtrarlo sin volver a buscar
+
 function pintar(estado) {
+  ULTIMO = estado;
   $("progreso").hidden = true;
   $("resultados").hidden = false;
   const errores = estado.errores || [];
@@ -289,22 +293,64 @@ function pintar(estado) {
   $("errores").innerHTML = errores.map((x) => `<li>${esc(x)}</li>`).join("");
 
   const res = estado.resultado;
+  $("filtro").hidden = !res;
   if (!res) {
     $("resumen").innerHTML = cifra("Error", "—", esc(estado.fase || "La búsqueda no terminó"), false);
     $("bloque-ida").innerHTML = $("bloque-vuelta").innerHTML = "";
     return;
   }
+  // la barra va de la escala mínima a la máxima con la que se buscó
+  const min = Number(res.peticion.horas_min) || 3;
+  const max = Math.max(min, Number(res.peticion.horas_max) || 12);
+  const barra = $("filtro-escala");
+  barra.min = min;
+  barra.max = max;
+  barra.value = max;
+  dibujar();
+  $("resultados").scrollIntoView({ behavior: "smooth" });
+}
+
+// Deja solo las opciones con escala <= horas y recalcula el resumen y la tabla por ciudad.
+function filtrar(res, horas) {
+  const limite = horas * 60;
+  const parte = (d) => {
+    if (!d) return d;
+    const opciones = d.opciones.filter((o) => o.espera_min <= limite);
+    const vistas = new Set();
+    const porCiudad = opciones.filter((o) => !vistas.has(o.pasarela) && vistas.add(o.pasarela))
+      .map(({ pasarela, ciudad, total, precio_domestico, espera_min }) => ({ pasarela, ciudad, total, precio_domestico, espera_min }));
+    return { ...d, opciones, por_ciudad: porCiudad };
+  };
+  const ida = parte(res.ida);
+  const vuelta = parte(res.vuelta);
+  const mi = ida.opciones[0];
+  const mv = vuelta?.opciones[0];
+  const mejor_total = mi && (mv || !vuelta) ? mi.total + (mv ? mv.total : 0) : null;
+  return { ...res, ida, vuelta, mejor_total };
+}
+
+function dibujar() {
+  const barra = $("filtro-escala");
+  const horas = Number(barra.value);
+  const recortado = horas < Number(barra.max);
+  $("filtro-valor").textContent = `${String(horas).replace(".", ",")} h`;
+  $("filtro-nota").textContent = recortado
+    ? `Mostrando solo escalas de hasta ${String(horas).replace(".", ",")} h (buscaste hasta ${barra.max} h).`
+    : "Mueve la barra para ver solo escalas más cortas, sin volver a buscar.";
+
+  const res = filtrar(ULTIMO.resultado, horas);
   const p = res.peticion;
   moneda = p.moneda || "EUR";
   const ida = res.ida.opciones[0];
   const vta = res.vuelta?.opciones[0];
   const nota = p.sumar_iberia ? "vuelo interno + Iberia" : "solo vuelo interno";
   const extra = `${p.adultos > 1 ? ` · ${p.adultos} adultos` : ""}${p.maleta ? " · con maleta" : " · sin maleta"}`;
+  const consejo = recortado ? "Sube la escala máxima con la barra" : "Prueba más ciudades o más horas de escala";
   let html = cifra("Ida más barata", ida ? fmtPrecio(ida.total) : "Sin opciones",
-    ida ? `vía ${esc(ida.ciudad)} · ${fmtFecha(ida.domestico.salida)}` : "Prueba más ciudades o más horas de espera", !!ida);
+    ida ? `vía ${esc(ida.ciudad)} · escala ${fmtEspera(ida.espera_min)}` : consejo, !!ida);
   if (res.vuelta) {
     html += cifra("Vuelta más barata", vta ? fmtPrecio(vta.total) : "Sin opciones",
-      vta ? `vía ${esc(vta.ciudad)} · ${fmtFecha(vta.domestico.salida)}` : "Prueba más ciudades o más horas de espera", !!vta);
+      vta ? `vía ${esc(vta.ciudad)} · escala ${fmtEspera(vta.espera_min)}` : consejo, !!vta);
   }
   if (res.mejor_total != null && res.vuelta) html += cifra("Total ida + vuelta", fmtPrecio(res.mejor_total), nota + extra, true);
   $("resumen").innerHTML = html;
@@ -316,7 +362,6 @@ function pintar(estado) {
     document.querySelectorAll(`.opcion[data-sentido="${b.dataset.sentido}"][hidden]`).forEach((o) => (o.hidden = false));
     b.remove();
   }));
-  $("resultados").scrollIntoView({ behavior: "smooth" });
 }
 
 function cifra(etq, valor, detalle, destacada) {
@@ -326,7 +371,7 @@ function cifra(etq, valor, detalle, destacada) {
 function bloque(titulo, datos, sentido) {
   let h = `<section class="tarjeta"><h2 style="margin-top:0">${titulo}</h2>`;
   if (datos.por_ciudad.length) {
-    h += `<table class="tabla-ciudades"><thead><tr><th>Conexión en</th><th class="num">Precio</th><th class="num">Espera</th></tr></thead><tbody>`;
+    h += `<table class="tabla-ciudades"><thead><tr><th>Conexión en</th><th class="num">Precio</th><th class="num">Escala</th></tr></thead><tbody>`;
     h += datos.por_ciudad.map((c, i) => `<tr><td>${i === 0 ? "🏆 " : ""}${esc(c.ciudad)} (${esc(c.pasarela)})</td><td class="num"><strong>${fmtPrecio(c.total)}</strong></td><td class="num">${fmtEspera(c.espera_min)}</td></tr>`).join("");
     h += `</tbody></table>`;
   }
@@ -334,7 +379,7 @@ function bloque(titulo, datos, sentido) {
     h += `<p class="sin-iberia">Sin vuelo directo de Iberia ese día: ${datos.ciudades_sin_iberia.map(esc).join(", ")}.</p>`;
   }
   if (!datos.opciones.length) {
-    return h + `<p>No hay combinaciones que cumplan las reglas. Prueba a marcar más ciudades o a aumentar la espera máxima.</p></section>`;
+    return h + `<p>No hay combinaciones que cumplan las reglas. Prueba a marcar más ciudades o a subir la escala máxima.</p></section>`;
   }
   const VISIBLES = 6;
   h += datos.opciones.map((o, i) => opcion(o, i, sentido, i >= VISIBLES)).join("");
@@ -359,7 +404,7 @@ function tramoHtml(v, titulo, conMercados) {
 function opcion(o, i, sentido, oculta) {
   const ib = tramoHtml(o.iberia, "Iberia (ya lo tienes)", false);
   const dom = tramoHtml(o.domestico, "Vuelo interno directo", true);
-  const espera = `<div class="espera">conexión<strong>${fmtEspera(o.espera_min)}</strong>mismo aeropuerto · ${esc(o.pasarela)}</div>`;
+  const espera = `<div class="espera">escala<strong>${fmtEspera(o.espera_min)}</strong>mismo aeropuerto · ${esc(o.pasarela)}</div>`;
   const ruta = sentido === "ida" ? ib + espera + dom : dom + espera + ib;
   const enlaces = Object.entries(o.enlaces).map(([n, u], k) => `<a href="${esc(u)}" target="_blank" rel="noopener" class="${k === 0 ? "principal" : ""}">${esc(n)}</a>`).join("");
   const enlacesIb = Object.entries(o.enlaces_iberia || {}).map(([n, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(n)}</a>`).join("");

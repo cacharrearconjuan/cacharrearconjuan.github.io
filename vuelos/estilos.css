@@ -147,3 +147,8 @@ button:disabled { opacity: .6; cursor: wait; }
 .destino #otro-caja { margin-top: 10px; }
 
 [hidden] { display: none !important; }
+
+.filtro { display: flex; flex-direction: column; gap: 6px; padding: 14px 18px; }
+.filtro label { flex-direction: row; gap: 6px; align-items: baseline; }
+.filtro input[type="range"] { width: 100%; padding: 0; accent-color: var(--acento); }
+.filtro small { color: var(--suave); }
