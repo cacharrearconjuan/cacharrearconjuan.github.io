@@ -10,7 +10,12 @@ const PASARELAS = {
   JFK: ["Nueva York", true], BOS: ["Boston", true], ORD: ["Chicago", true], MIA: ["Miami", true],
   SFO: ["San Francisco", true], IAD: ["Washington", true], DFW: ["Dallas", true],
   ATL: ["Atlanta", false], PHL: ["Filadelfia", false], CLT: ["Charlotte", false], SEA: ["Seattle", false],
+  LAX: ["Los Ángeles", false],
 };
+
+// Aerolíneas de vuelos internos en EE. UU. Las que el usuario desmarca no se buscan ni se muestran.
+const AEROLINEAS_EEUU = ["United", "American", "Delta", "Southwest", "JetBlue", "Alaska", "Frontier", "Spirit",
+  "Allegiant", "Breeze", "Avelo", "Sun Country"];
 const HOUSTON = { IAH: "Intercontinental", HOU: "Hobby" };
 const MERCADOS = { ES: "España", US: "EE. UU.", GB: "Reino Unido", MX: "México", CO: "Colombia", AR: "Argentina", IN: "India" };
 
@@ -164,6 +169,7 @@ function iniciar() {
   $("ver-ultima").addEventListener("click", () => seguir(guardado.leer("vuelos-ultima"), null, true));
   $("formulario").addEventListener("submit", buscar);
   $("filtro-escala").addEventListener("input", () => ULTIMO?.resultado && dibujar());
+  pintarAerolineasFormulario();
   document.querySelectorAll('input[name="destino"]').forEach((r) => r.addEventListener("change", cambiarDestino));
   document.querySelectorAll('input[name="tramos"]').forEach((r) => r.addEventListener("change", cambiarTramos));
   $("otro-destino").addEventListener("input", () => {
@@ -204,8 +210,28 @@ function cambiarTramos() {
 }
 const GRUPOS = { destinos: "houston", pasarelas: "pasarela", mercados: "mercado" };
 
+// ---------------- aerolíneas excluidas (se recuerdan en el móvil) ----------------
+let excluidas = new Set();
+try { excluidas = new Set(JSON.parse(guardado.leer("vuelos-excluir")) || []); } catch (_) { excluidas = new Set(); }
+const vuelaCon = (nombre, ex) => nombre.toLowerCase().includes(ex.toLowerCase()) || ex.toLowerCase().includes(nombre.toLowerCase());
+const estaExcluida = (nombre) => [...excluidas].some((ex) => vuelaCon(nombre, ex));
+
+function cambiarExcluida(nombre, quitar) {
+  if (quitar) excluidas.add(nombre);
+  else [...excluidas].filter((ex) => vuelaCon(nombre, ex)).forEach((ex) => excluidas.delete(ex));
+  guardado.poner("vuelos-excluir", JSON.stringify([...excluidas]));
+  document.querySelectorAll('input[name="aerolinea"]').forEach((e) => (e.checked = !estaExcluida(e.value)));
+}
+
+function pintarAerolineasFormulario() {
+  $("aerolineas").innerHTML = AEROLINEAS_EEUU.map((a) =>
+    `<label><input type="checkbox" name="aerolinea" value="${esc(a)}" ${estaExcluida(a) ? "" : "checked"}> ${esc(a)}</label>`).join("");
+  document.querySelectorAll('input[name="aerolinea"]').forEach((e) =>
+    e.addEventListener("change", () => cambiarExcluida(e.value, !e.checked)));
+}
+
 function leerFormulario() {
-  const d = { origen: "MAD", moneda: "EUR" };
+  const d = { origen: "MAD", moneda: "EUR", excluir_aerolineas: [...excluidas] };
   for (const c of CAMPOS) d[c] = $(c).type === "checkbox" ? $(c).checked : $(c).value;
   for (const [clave, nombre] of Object.entries(GRUPOS)) {
     d[clave] = [...document.querySelectorAll(`input[name="${nombre}"]:checked`)].map((e) => e.value);
@@ -397,7 +423,7 @@ function filtrar(res, horas) {
   const limite = horas * 60;
   const parte = (d) => {
     if (!d) return d;
-    const opciones = d.opciones.filter((o) => o.espera_min <= limite);
+    const opciones = d.opciones.filter((o) => o.espera_min <= limite && !o.domestico.aerolineas.some(estaExcluida));
     const vistas = new Set();
     const porCiudad = opciones.filter((o) => !vistas.has(o.pasarela) && vistas.add(o.pasarela))
       .map(({ pasarela, ciudad, total, precio_domestico, espera_min }) => ({ pasarela, ciudad, total, precio_domestico, espera_min }));
@@ -408,6 +434,34 @@ function filtrar(res, horas) {
   const mejores = [ida, vuelta].filter(Boolean).map((d) => d.opciones[0]);
   const mejor_total = mejores.length && mejores.every(Boolean) ? mejores.reduce((a, o) => a + o.total, 0) : null;
   return { ...res, ida, vuelta, mejor_total };
+}
+
+// Casillas de aerolíneas en los resultados: las que salen en los vuelos internos + las excluidas.
+function pintarFiltroAerolineas() {
+  const res = ULTIMO.resultado;
+  const precios = new Map();
+  for (const d of [res.ida, res.vuelta]) {
+    for (const o of d?.opciones || []) {
+      for (const a of o.domestico.aerolineas) {
+        if (!precios.has(a) || o.total < precios.get(a)) precios.set(a, o.total);
+      }
+    }
+  }
+  const nombres = [...precios.keys()].sort((a, b) => precios.get(a) - precios.get(b));
+  for (const ex of excluidas) if (!nombres.some((n) => vuelaCon(n, ex))) nombres.push(ex);
+  const enBusqueda = res.peticion.excluir_aerolineas || [];
+  $("filtro-aerolineas").innerHTML = nombres.map((a) => {
+    const desde = precios.has(a) ? ` <small>desde ${fmtPrecio(precios.get(a))}</small>` : "";
+    return `<label><input type="checkbox" name="filtro-aerolinea" value="${esc(a)}" ${estaExcluida(a) ? "" : "checked"}> ${esc(a)}${desde}</label>`;
+  }).join("") || "<small>Sin vuelos internos en los resultados.</small>";
+  document.querySelectorAll('input[name="filtro-aerolinea"]').forEach((e) => e.addEventListener("change", () => {
+    cambiarExcluida(e.value, !e.checked);
+    const sinBuscar = e.checked && enBusqueda.some((ex) => vuelaCon(e.value, ex));
+    $("filtro-aero-nota").textContent = sinBuscar
+      ? `${e.value} no se buscó en esta búsqueda: vuelve a buscar para ver sus vuelos.`
+      : "Desmarca una aerolínea para quitar sus vuelos. Se recuerda para las próximas búsquedas.";
+    dibujar();
+  }));
 }
 
 function dibujar() {
@@ -426,7 +480,9 @@ function dibujar() {
   const vta = res.vuelta?.opciones[0];
   const nota = p.sumar_iberia ? "vuelo interno + Iberia" : "solo vuelo interno";
   const extra = `${p.adultos > 1 ? ` · ${p.adultos} adultos` : ""}${p.maleta ? " · con maleta" : " · sin maleta"}`;
-  const consejo = recortado ? "Sube la escala máxima con la barra" : "Prueba más ciudades o más horas de escala";
+  const consejo = excluidas.size ? "Sube la escala máxima o vuelve a marcar aerolíneas" :
+    recortado ? "Sube la escala máxima con la barra" : "Prueba más ciudades o más horas de escala";
+  pintarFiltroAerolineas(res);
   let html = "";
   if (res.ida) {
     html += cifra("Ida más barata", ida ? fmtPrecio(ida.total) : "Sin opciones",

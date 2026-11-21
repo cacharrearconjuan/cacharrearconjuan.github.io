@@ -114,6 +114,9 @@
       </div>
       <h2>Ciudades de entrada de Iberia</h2>
       <div id="pasarelas" class="chips"></div>
+      <h2>Aerolíneas del vuelo interno</h2>
+      <p class="ayuda">Desmarca las que no quieras (p. ej. Frontier): sus vuelos no se buscan ni se muestran. También puedes quitarlas en los resultados.</p>
+      <div id="aerolineas" class="chips"></div>
       <h2>Mercados (países desde los que se busca)</h2>
       <p class="ayuda">Cada vuelo interno se busca desde todos los marcados y se queda el precio más barato.</p>
       <div id="mercados" class="chips"></div>
@@ -143,6 +146,11 @@
       <label for="filtro-escala">Escala máxima: <strong id="filtro-valor">12 h</strong></label>
       <input type="range" id="filtro-escala" min="3" max="12" step="0.5" value="12">
       <small id="filtro-nota">Mueve la barra para ver solo escalas más cortas, sin volver a buscar.</small>
+      <div class="filtro-aero">
+        <strong>Aerolíneas del vuelo interno</strong>
+        <div id="filtro-aerolineas" class="chips chips-pequenos"></div>
+        <small id="filtro-aero-nota">Desmarca una aerolínea para quitar sus vuelos. Se recuerda para las próximas búsquedas.</small>
+      </div>
     </div>
     <div id="resumen" class="resumen"></div>
     <div id="bloque-ida"></div>

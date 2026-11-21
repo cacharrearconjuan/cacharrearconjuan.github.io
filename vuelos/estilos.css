@@ -160,3 +160,6 @@ button:disabled { opacity: .6; cursor: wait; }
 .equipaje a { color: inherit; margin-left: 4px; }
 .equipaje-aviso { margin-top: 6px; font-size: .8rem; color: #b3261e; background: #fdecea; border-radius: 6px; padding: 5px 8px; }
 @media (prefers-color-scheme: dark) { .equipaje-aviso { color: #ffb4ab; background: #3b1714; } }
+.filtro-aero { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+.chips-pequenos label { padding: 4px 10px; font-size: .85rem; }
+.chips-pequenos small { color: var(--suave); font-weight: 400; }
