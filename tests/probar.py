@@ -270,7 +270,19 @@ def prueba_web():
         comprobar('>Guías</a>' in portada.split("</header>", 1)[0], "menú: Guías")
         comprobar("2 apartados" in portada, "portada: número de apartados")
 
+        # buscador de vuelos: página aparte (sin el menú de la web), no indexada
+        vuelos = leer(salida, "vuelos/index.html")
+        rv = revisar_html(vuelos)
+        comprobar(not rv.errores and not rv.pila, f"vuelos: etiquetas equilibradas ({rv.errores[:3]} {rv.pila[:3]})")
+        comprobar(len(rv.ids) == len(set(rv.ids)), "vuelos: ids únicos")
+        comprobar(all(os.path.exists(os.path.join(salida, "vuelos", f)) for f in ("app.js", "estilos.css")), "vuelos: sus archivos")
+        comprobar('content="noindex, nofollow"' in vuelos and "Disallow: /vuelos/" in leer(salida, "robots.txt"),
+                  "vuelos: fuera de los buscadores")
+        comprobar("vuelos/" not in portada and "/vuelos/" not in leer(salida, "sitemap.xml"), "vuelos: sin enlace desde la web")
+
         for ruta in paginas_html(salida):
+            if ruta.startswith("vuelos" + os.sep):
+                continue
             texto = leer(salida, ruta)
             comprobar(texto.count('class="enlace-pc"') == 1 and "¿Qué le va a mi PC?" in texto.split("</header>", 1)[0],
                       f"{ruta}: enlace a la herramienta del PC arriba")

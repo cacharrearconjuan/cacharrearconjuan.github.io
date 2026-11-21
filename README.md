@@ -13,6 +13,12 @@ La web que reúne los proyectos públicos de GitHub: una página por proyecto, u
 
 La página de `mis-payloads-ps5` sigue donde estaba (`cacharrearconjuan.github.io/mis-payloads-ps5/payloads.json`): la web nueva usa otras rutas y no la pisa.
 
+## Buscador de vuelos (`/vuelos/`)
+
+La carpeta `vuelos/` es una página aparte: **<https://cacharrearconjuan.github.io/vuelos/>**. No sale en el menú ni en el mapa del sitio y los buscadores no la indexan. El generador la copia tal cual (`copiar_vuelos` en `web/generar.py`).
+
+La página no busca por sí misma: con una llave (token) de GitHub que se guarda en el móvil, lanza la búsqueda en el repositorio privado `Vuelos` (GitHub Actions) y lee allí el resultado. El código del buscador y los resultados se quedan en ese repositorio privado.
+
 ## Cómo se actualiza
 
 | Cuándo | Qué hace |

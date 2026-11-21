@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#c8102e">
+  <title>Vuelos Iberia–Houston</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<header class="cabecera">
+  <div class="envoltorio">
+    <h1>Vuelos Iberia ⇄ Houston</h1>
+    <p>El vuelo interno más barato de EE. UU. que encaja con tu Iberia: un solo cambio de avión, en el mismo aeropuerto y con 3 horas mínimas de conexión. Compara precios en todos los mercados.</p>
+  </div>
+</header>
+
+<main class="envoltorio">
+
+  <!-- Primera vez: conectar con GitHub -->
+  <section id="configurar" class="tarjeta configurar" hidden>
+    <h2 style="margin-top:0">Conectar con GitHub (solo la primera vez)</h2>
+    <p>La búsqueda se hace en los servidores de GitHub, en tu repositorio privado <strong>Vuelos</strong>. Para que esta página pueda lanzarla necesita una «llave» (token) que solo sirve para eso. Se guarda en este móvil y no se envía a ningún otro sitio.</p>
+    <ol>
+      <li>Abre <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a> (con tu cuenta iniciada).</li>
+      <li><strong>Token name:</strong> <code>Vuelos web</code>. <strong>Expiration:</strong> la más larga que te deje (por ejemplo, 1 año).</li>
+      <li><strong>Repository access:</strong> <em>Only select repositories</em> → elige <code>Vuelos</code>.</li>
+      <li><strong>Permissions</strong> → <em>Add permissions</em>: <strong>Actions</strong> → <em>Read and write</em>, y <strong>Contents</strong> → <em>Read-only</em>.</li>
+      <li>Pulsa <strong>Generate token</strong>, copia el código (empieza por <code>github_pat_</code>) y pégalo aquí:</li>
+    </ol>
+    <div class="fila-token">
+      <input id="token" type="password" autocomplete="off" placeholder="github_pat_...">
+      <button type="button" id="guardar-token">Guardar</button>
+    </div>
+    <p id="token-estado" class="ayuda" style="margin-top:8px"></p>
+  </section>
+
+  <form id="formulario" class="tarjeta" hidden>
+    <div class="barra-sup">
+      <span id="conectado">Conectado a GitHub</span>
+      <span>
+        <button type="button" id="ver-ultima" class="enlace-boton" hidden>Ver la última búsqueda</button>
+        · <button type="button" id="cambiar-token" class="enlace-boton">Cambiar llave</button>
+      </span>
+    </div>
+    <div class="rejilla">
+      <label>Fecha de ida
+        <input type="date" id="fecha_ida" required>
+      </label>
+      <label>Fecha de vuelta <small>(opcional)</small>
+        <input type="date" id="fecha_vuelta">
+      </label>
+      <label class="check grande">
+        <input type="checkbox" id="maleta">
+        <span>Llevo maleta facturada<br><small>El precio incluye la tarifa de la maleta del vuelo interno</small></span>
+      </label>
+      <label>Adultos
+        <input type="number" id="adultos" min="1" max="9" value="1">
+      </label>
+    </div>
+
+    <details class="avanzado">
+      <summary>Más opciones (ciudades, horas, mercados…)</summary>
+      <div class="rejilla">
+        <label>Horas mínimas de conexión
+          <input type="number" id="horas_min" min="0" step="0.5" value="3">
+        </label>
+        <label>Espera máxima (horas)
+          <input type="number" id="horas_max" min="1" step="1" value="12">
+          <small>Pon 30 si aceptas dormir en la ciudad y volar al día siguiente.</small>
+        </label>
+        <fieldset>
+          <legend>Aeropuerto de Houston</legend>
+          <div id="houston" class="fila-checks"></div>
+        </fieldset>
+      </div>
+      <h2>Ciudades de entrada de Iberia</h2>
+      <div id="pasarelas" class="chips"></div>
+      <h2>Mercados (países desde los que se busca)</h2>
+      <p class="ayuda">Cada vuelo interno se busca desde todos los marcados y se queda el precio más barato.</p>
+      <div id="mercados" class="chips"></div>
+      <div class="rejilla" style="margin-top:14px">
+        <label class="check grande">
+          <input type="checkbox" id="codigo_compartido">
+          <span>Incluir vuelos con código compartido<br><small>De American, British Airways… vendidos con código de Iberia. Por defecto solo los que opera Iberia.</small></span>
+        </label>
+        <label class="check grande">
+          <input type="checkbox" id="sumar_iberia">
+          <span>Sumar el precio de Iberia al total<br><small>Déjalo sin marcar si ya tienes los billetes de Iberia.</small></span>
+        </label>
+      </div>
+    </details>
+
+    <button type="submit" id="boton">Buscar el vuelo más barato</button>
+  </form>
+
+  <section id="progreso" class="tarjeta" hidden>
+    <div class="barra"><div id="barra-relleno"></div></div>
+    <p id="fase">Buscando…</p>
+    <p id="enlace-run" class="ayuda" hidden></p>
+  </section>
+
+  <section id="resultados" hidden>
+    <div id="resumen" class="resumen"></div>
+    <div id="bloque-ida"></div>
+    <div id="bloque-vuelta"></div>
+    <details id="errores-caja" class="tarjeta" hidden>
+      <summary id="errores-titulo">Avisos</summary>
+      <ul id="errores"></ul>
+    </details>
+  </section>
+
+  <details class="tarjeta trucos">
+    <summary><strong>Consejos para pagar menos</strong></summary>
+    <ul>
+      <li><strong>Compra en la web de la aerolínea en dólares</strong> y paga con una tarjeta sin comisión de cambio (Revolut, N26, Wise…).</li>
+      <li>El precio de cada vuelo indica en qué <strong>mercado</strong> (país) sale más barato. El enlace de Google Flights ya abre ese mercado.</li>
+      <li><strong>Southwest</strong> (aeropuerto HOU) a veces no sale completa en los buscadores: usa siempre su enlace.</li>
+      <li><strong>Regla de las 24 h</strong>: en EE. UU. puedes cancelar gratis en las 24 h siguientes a la compra (si faltan 7 días o más). Reserva y sigue mirando.</li>
+      <li><strong>Billetes separados</strong>: si Iberia llega tarde, la aerolínea americana no te recoloca. Por eso hay 3 h mínimas: pasas inmigración y aduana, recoges la maleta y la vuelves a facturar.</li>
+      <li>Confirma siempre horario y precio en el enlace antes de pagar: Google no siempre devuelve la misma lista.</li>
+    </ul>
+  </details>
+</main>
+
+<footer class="envoltorio pie">
+  Precios de Google Flights obtenidos con la librería libre <a href="https://github.com/AWeirdDev/fast-flights" target="_blank" rel="noopener">fast-flights</a>.
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

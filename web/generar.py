@@ -1232,6 +1232,19 @@ def comprobar_pc(carpeta_datos):
             raise ErrorWeb(f"{ruta} no es un JSON válido: {e}")
 
 
+ARCHIVOS_VUELOS = ("index.html", "app.js", "estilos.css")
+
+
+def copiar_vuelos(salida):
+    """vuelos/: el buscador de vuelos Iberia–Houston. Es una página aparte, sin el menú de la web."""
+    for f in ARCHIVOS_VUELOS:
+        origen = os.path.join(RAIZ, "vuelos", f)
+        if not os.path.isfile(origen):
+            raise ErrorWeb(f"Falta vuelos/{f}")
+        os.makedirs(os.path.join(salida, "vuelos"), exist_ok=True)
+        shutil.copyfile(origen, os.path.join(salida, "vuelos", f))
+
+
 def generar(api, sitio, salida, carpeta_notas, ahora, carpeta_guias=None, ruta_enlaces=None, carpeta_pc_datos=None):
     carpeta_pc_datos = carpeta_pc_datos or os.path.join(RAIZ, "datos-pc")
     comprobar_pc(carpeta_pc_datos)
@@ -1249,7 +1262,7 @@ def generar(api, sitio, salida, carpeta_notas, ahora, carpeta_guias=None, ruta_e
         "404.html": pagina_404(sitio),
         "feed.xml": feed(sitio, proyectos, guias),
         "sitemap.xml": mapa_sitio(sitio, proyectos, guias),
-        "robots.txt": f"User-agent: *\nAllow: /\nSitemap: {sitio['url'].rstrip('/')}/sitemap.xml\n",
+        "robots.txt": f"User-agent: *\nAllow: /\nDisallow: /vuelos/\nSitemap: {sitio['url'].rstrip('/')}/sitemap.xml\n",
         ".nojekyll": "",
     }
     for p in proyectos:
@@ -1279,6 +1292,8 @@ def generar(api, sitio, salida, carpeta_notas, ahora, carpeta_guias=None, ruta_e
         shutil.copyfile(os.path.join(RAIZ, "pc", f), os.path.join(salida, "pc", f))
     for f in DATOS_PC:
         shutil.copyfile(os.path.join(carpeta_pc_datos, f), os.path.join(salida, "pc", "datos", f))
+    # buscador de vuelos: página aparte, sin enlace desde la web (vuelos/ se copia tal cual)
+    copiar_vuelos(salida)
     # huella: cambia solo si cambia algo de la web
     h = hashlib.sha256()
     for carpeta, _, ficheros in sorted(os.walk(salida)):
