@@ -586,6 +586,26 @@ function enlacesCocheHtml(grupos) {
 const precioDoble = (ciudad) =>
   `≈ <strong>${fmtPrecio(costeCoche(coche, ciudad, true).eur)}</strong> desde España · ≈ ${fmtPrecio(costeCoche(coche, ciudad, false).eur)} en web de EE. UU.`;
 
+// Sin Iberia en Dallas ese día: enlaces igualmente, con las fechas de la búsqueda (horas orientativas).
+function enlacesSinIberia(res, h) {
+  const p = res.peticion;
+  let html = "";
+  if (p.fecha_ida) {
+    html += `<div class="coche-opcion"><strong>Ida · ${fmtFecha(p.fecha_ida)}</strong>: Dallas (DFW) → Houston (${h})
+      ${enlacesCocheHtml(enlacesCoche("DFW", h, p.fecha_ida + "T12:00", p.fecha_ida + "T18:00"))}</div>`;
+  }
+  if (p.fecha_vuelta) {
+    const maps = (q) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+    html += `<div class="coche-opcion"><strong>Vuelta · ${fmtFecha(p.fecha_vuelta)}</strong>: Houston → Dallas (DFW)
+      <div class="coche-sitio"><strong>Oficina cerca de ${esc(coche.direccion)}</strong>
+        <div class="enlaces"><a class="principal" href="${esc(maps("alquiler de coches cerca de " + coche.direccion))}" target="_blank" rel="noopener">Oficinas cerca (Maps)</a></div>
+        ${enlacesCocheHtml(enlacesCoche("", "", "", ""))}</div>
+      <div class="coche-sitio"><strong>Aeropuerto de Houston (${h})</strong>
+        ${enlacesCocheHtml(enlacesCoche(h, "DFW", p.fecha_vuelta + "T08:00", p.fecha_vuelta + "T14:00"))}</div></div>`;
+  }
+  return html;
+}
+
 function cocheHtml(res) {
   const houston = (res.peticion.destinos || []).every((d) => d === "IAH" || d === "HOU");
   if (!houston) return "";
@@ -648,8 +668,9 @@ function cocheHtml(res) {
   const cu = costeCoche(coche, false, false);
   const desglose = `Desde España: ${Math.round(coche.tarifa)} $ alquiler + ${Math.round(coche.solo_ida)} $ dejarlo en otra ciudad + ${Math.round(coche.seguros_espana)} $ seguro completo incluido`
     + `${coche.joven ? ` + ${Math.round(coche.joven)} $ conductor joven` : ""} + ${Math.round(c.impuestos)} $ impuestos y tasas + ${Math.round(coche.gasolina)} $ gasolina`
-    + `${coche.peajes ? ` + ${Math.round(coche.peajes)} $ peajes` : ""} = <strong>${Math.round(c.usd)} $</strong>.`
-    + ` En web de EE. UU. el seguro completo se paga en el mostrador (~${Math.round(coche.seguros)} $): <strong>${Math.round(cu.usd)} $</strong>.`;
+    + `${coche.peajes ? ` + ${Math.round(coche.peajes)} $ peajes` : ""} = <strong>${Math.round(c.usd)} $ ≈ ${fmtPrecio(c.eur)}</strong>.`
+    + ` En web de EE. UU. el seguro completo se paga en el mostrador (~${Math.round(coche.seguros)} $ en vez de ${Math.round(coche.seguros_espana)} $):`
+    + ` <strong>${Math.round(cu.usd)} $ ≈ ${fmtPrecio(cu.eur)}</strong>. Cambio: 1 $ = ${String(coche.cambio).replace(".", ",")} €.`;
   return `<h2 style="margin-top:0">🚗 Alternativa: coche de alquiler Dallas (DFW) ⇄ Houston</h2>
     <table class="tabla-ciudades coche-tabla"><thead><tr><th>1 día con todo</th><th class="num">Reservando desde España</th><th class="num">Web de EE. UU. + seguro en mostrador</th></tr></thead><tbody>
       <tr><td>Aeropuerto</td><td class="num"><strong>${fmtPrecio(c.eur)}</strong></td><td class="num">${fmtPrecio(cu.eur)}</td></tr>
@@ -659,7 +680,7 @@ function cocheHtml(res) {
     <p class="sub">${desglose}</p>
     ${filas.length ? filas.join("") : !(res.ida || res.vuelta)?.iberias
       ? `<p class="sub">Esta búsqueda es anterior a la opción del coche: vuelve a buscar para ver los horarios con el Iberia de Dallas.</p>`
-      : `<p class="sub">Ese día no hay vuelo directo de Iberia en Dallas (DFW)${(res.peticion.pasarelas || []).includes("DFW") ? "" : ": marca «Dallas (DFW)» en «Más opciones»"}.</p>`}
+      : `<p class="sub">Ese día no hay vuelo directo de Iberia en Dallas (DFW)${(res.peticion.pasarelas || []).includes("DFW") ? "" : ": marca «Dallas (DFW)» en «Más opciones»"}. Aun así puedes mirar los precios del alquiler:</p>${enlacesSinIberia(res, h)}`}
     <details class="avanzado"><summary>Ajustar la estimación</summary><div class="rejilla">${campoDireccion}${campos}</div>
       <p class="ayuda">Son precios típicos, no reales: no hay ningún buscador gratis de alquiler de coches. Mira el precio de verdad en los enlaces. En las webs de EE. UU. el precio que ves no suele llevar el seguro a todo riesgo ni la responsabilidad civil ampliada (allí se da por hecho que tienes tu seguro de coche); te lo ofrecen en el mostrador y es caro. Desde España hay paquetes «todo incluido» para no residentes: con todo el seguro suelen salir más baratos. Una VPN de EE. UU. apenas cambia el precio: lo que cuenta es la web y el país de residencia, y conviene poner el real (España) para que el seguro valga. En DiscoverCars o Rentalcars la «cobertura total» es un seguro suyo: si hay daños pagas tú en el mostrador y luego te lo devuelven; la empresa de alquiler te bloqueará una fianza en la tarjeta de crédito. Para la estimación se cuenta 1 día con recogida en el aeropuerto y devolución en otra ciudad. Un día de alquiler son 24 h desde que lo recoges; si te pasas, suele haber un margen corto (unos 30 min, según la empresa) y después cobran horas o un día más.</p>
       <button type="button" class="mas" id="coche-reiniciar">Volver a los valores típicos</button></details>
