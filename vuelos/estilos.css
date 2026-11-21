@@ -169,3 +169,5 @@ button:disabled { opacity: .6; cursor: wait; }
 .coche-opcion { border: 1px solid var(--borde); border-radius: 10px; padding: 12px; margin-top: 10px; font-size: .92rem; }
 .coche-opcion .enlaces { margin-top: 8px; }
 .coche .sub { color: var(--suave); font-size: .85rem; }
+.coche-sitio { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--borde); }
+.coche-precio strong + strong, .coche-precio strong { white-space: nowrap; }

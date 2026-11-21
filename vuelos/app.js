@@ -520,6 +520,11 @@ const COCHE_DEFECTO = {
   cambio: 0.86,      // € por 1 $
   aduana: 1.5,       // h desde que aterriza Iberia hasta tener el coche (inmigración, maleta, autobús al centro de alquiler)
   conducir: 4,       // h de DFW a Houston
+  // recogida en una oficina de la ciudad (vuelta): sin la tasa del aeropuerto
+  direccion: "Bering Dr, Houston, TX",
+  impuestos_ciudad: 12, // % fuera del aeropuerto (impuesto de alquiler de Texas, sin tasa de concesión del aeropuerto)
+  tasas_ciudad: 2,      // $ tasas fijas fuera del aeropuerto
+  trafico: 0.5,         // h de más para salir de Houston (Galleria → I-45)
 };
 const COCHE_CAMPOS = [
   ["tarifa", "Alquiler 1 día ($)"], ["solo_ida", "Recargo por dejarlo en otra ciudad ($)"],
@@ -527,13 +532,15 @@ const COCHE_CAMPOS = [
   ["tasas", "Tasas fijas ($)"], ["gasolina", "Gasolina ($)"], ["peajes", "Peajes ($)"],
   ["joven", "Conductor menor de 25 años ($)"], ["cambio", "Cambio (€ por 1 $)"],
   ["aduana", "Horas desde que aterrizas hasta tener el coche"], ["conducir", "Horas conduciendo DFW ⇄ Houston"],
+  ["impuestos_ciudad", "Impuestos en una oficina de la ciudad (%)"], ["tasas_ciudad", "Tasas fijas en la ciudad ($)"],
+  ["trafico", "Horas de más por el tráfico de Houston"],
 ];
 let coche = { ...COCHE_DEFECTO };
 try { coche = { ...COCHE_DEFECTO, ...(JSON.parse(guardado.leer("vuelos-coche")) || {}) }; } catch (_) { coche = { ...COCHE_DEFECTO }; }
 
-function costeCoche(c) {
+function costeCoche(c, ciudad = false) {
   const base = c.tarifa + c.solo_ida + c.seguros + c.joven;
-  const impuestos = (base * c.impuestos) / 100 + c.tasas;
+  const impuestos = (base * (ciudad ? c.impuestos_ciudad : c.impuestos)) / 100 + (ciudad ? c.tasas_ciudad : c.tasas);
   const usd = base + impuestos + c.gasolina + c.peajes;
   return { usd, eur: Math.round(usd * c.cambio), impuestos };
 }
@@ -550,7 +557,7 @@ function enlacesCoche(desde, hasta, recogida, entrega) {
   return {
     "Kayak": `https://www.kayak.es/cars/${tramo}?sort=price_a`,
     "Kayak EE. UU.": `https://www.kayak.com/cars/${tramo}?sort=price_a`,
-    "DiscoverCars": "https://www.discovercars.com/es/estados-unidos/dallas/dfw",
+    "DiscoverCars": "https://www.discovercars.com/",
     "Rentalcars": "https://www.rentalcars.com/es/",
   };
 }
@@ -574,27 +581,47 @@ function cocheHtml(res) {
     }
   }
   if (res.vuelta) {
+    const cc = costeCoche(coche, true);
+    const maps = (q) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
     for (const ib of (res.vuelta.iberias || []).filter((v) => v.origen === "DFW")) {
       const devolver = sumarHoras(ib.salida, -3);
       const salir = sumarHoras(devolver, -coche.conducir - 0.5);
-      filas.push(`<div class="coche-opcion"><strong>Vuelta · ${fmtFecha(ib.salida)}</strong>: coges el coche en Houston hacia las <strong>${fmtHora(salir)}</strong>${otroDia(ib.salida, salir)}
-        → lo devuelves en Dallas (DFW) a las ${fmtHora(devolver)}, 3 h antes del Iberia ${esc(ib.numeros.join(", "))} de las ${fmtHora(ib.salida)}.
-        <div class="sub">${comparar(res.vuelta)}</div>
-        <div class="enlaces">${Object.entries(enlacesCoche(h, "DFW", salir, devolver)).map(([n, u], k) => `<a href="${esc(u)}" target="_blank" rel="noopener" class="${k === 0 ? "principal" : ""}">${esc(n)}</a>`).join("")}</div></div>`);
+      const salirCiudad = sumarHoras(devolver, -coche.conducir - coche.trafico - 0.5);
+      const horaSalida = Number(salirCiudad.slice(11, 13));
+      const avisoHorario = horaSalida < 9 || horaSalida >= 18
+        ? `<div class="equipaje-aviso">⚠️ A las ${fmtHora(salirCiudad)} muchas oficinas de barrio están cerradas (suelen abrir de 8–9 a 18 h, menos los fines de semana y algunas cierran en domingo). Si no abre, recógelo la tarde anterior: serían 2 días de alquiler.</div>`
+        : `<div class="sub">Comprueba el horario de la oficina: las de barrio suelen abrir de 8–9 a 18 h y menos los fines de semana.</div>`;
+      filas.push(`<div class="coche-opcion"><strong>Vuelta · ${fmtFecha(ib.salida)}</strong> · Iberia ${esc(ib.numeros.join(", "))} sale de Dallas (DFW) a las ${fmtHora(ib.salida)}. Lo devuelves en DFW a las ${fmtHora(devolver)} (3 h antes).
+        <div class="coche-sitio"><strong>A) Oficina en la ciudad, cerca de ${esc(coche.direccion)}</strong> · ≈ <strong>${fmtPrecio(cc.eur)}</strong> (sin tasa del aeropuerto)<br>
+          Lo recoges hacia las <strong>${fmtHora(salirCiudad)}</strong>${otroDia(ib.salida, salirCiudad)}.
+          ${avisoHorario}
+          <div class="enlaces">
+            <a class="principal" href="${esc(maps("alquiler de coches cerca de " + coche.direccion))}" target="_blank" rel="noopener">Oficinas cerca (Maps)</a>
+            <a href="${esc(maps("Enterprise Rent-A-Car near " + coche.direccion))}" target="_blank" rel="noopener">Enterprise</a>
+            <a href="${esc(maps("Hertz near " + coche.direccion))}" target="_blank" rel="noopener">Hertz</a>
+            <a href="${esc(maps("Avis near " + coche.direccion))}" target="_blank" rel="noopener">Avis</a>
+            <a href="${esc(maps("Budget Car Rental near " + coche.direccion))}" target="_blank" rel="noopener">Budget</a>
+          </div></div>
+        <div class="coche-sitio"><strong>B) Aeropuerto de Houston (${h})</strong> · ≈ <strong>${fmtPrecio(c.eur)}</strong><br>
+          Lo recoges hacia las <strong>${fmtHora(salir)}</strong>${otroDia(ib.salida, salir)}.
+          <div class="enlaces">${Object.entries(enlacesCoche(h, "DFW", salir, devolver)).map(([n, u], k) => `<a href="${esc(u)}" target="_blank" rel="noopener" class="${k === 0 ? "principal" : ""}">${esc(n)}</a>`).join("")}</div></div>
+        <div class="sub">${comparar(res.vuelta)}</div></div>`);
     }
   }
   const campos = COCHE_CAMPOS.map(([k, t]) =>
     `<label>${t}<input type="number" step="any" min="0" data-coche="${k}" value="${coche[k]}"></label>`).join("");
+  const campoDireccion = `<label>Recoger cerca de (vuelta)<input type="text" data-coche-texto="direccion" value="${esc(coche.direccion)}"></label>`;
   const desglose = `${Math.round(coche.tarifa)} $ alquiler + ${Math.round(coche.solo_ida)} $ dejarlo en otra ciudad + ${Math.round(coche.seguros)} $ seguros a tope`
     + `${coche.joven ? ` + ${Math.round(coche.joven)} $ conductor joven` : ""} + ${Math.round(c.impuestos)} $ impuestos y tasas + ${Math.round(coche.gasolina)} $ gasolina`
     + `${coche.peajes ? ` + ${Math.round(coche.peajes)} $ peajes` : ""} = <strong>${Math.round(c.usd)} $</strong>`;
   return `<h2 style="margin-top:0">🚗 Alternativa: coche de alquiler Dallas (DFW) ⇄ Houston</h2>
-    <p class="coche-precio">≈ <strong>${fmtPrecio(c.eur)}</strong> <small>estimación · 1 día con todo el seguro y todos los gastos · precio por coche, no por persona</small></p>
+    <p class="coche-precio">≈ <strong>${fmtPrecio(c.eur)}</strong> en un aeropuerto${res.vuelta ? ` · ≈ <strong>${fmtPrecio(costeCoche(coche, true).eur)}</strong> en una oficina de la ciudad` : ""}
+      <small>estimación · 1 día con todo el seguro y todos los gastos · precio por coche, no por persona</small></p>
     <p class="sub">${desglose}</p>
     ${filas.length ? filas.join("") : !(res.ida || res.vuelta)?.iberias
       ? `<p class="sub">Esta búsqueda es anterior a la opción del coche: vuelve a buscar para ver los horarios con el Iberia de Dallas.</p>`
       : `<p class="sub">Ese día no hay vuelo directo de Iberia en Dallas (DFW)${(res.peticion.pasarelas || []).includes("DFW") ? "" : ": marca «Dallas (DFW)» en «Más opciones»"}.</p>`}
-    <details class="avanzado"><summary>Ajustar la estimación</summary><div class="rejilla">${campos}</div>
+    <details class="avanzado"><summary>Ajustar la estimación</summary><div class="rejilla">${campoDireccion}${campos}</div>
       <p class="ayuda">Son precios típicos, no reales: no hay ningún buscador gratis de alquiler de coches. Mira el precio de verdad en los enlaces (en DiscoverCars puedes elegir «cobertura total»). Para la estimación se cuenta 1 día con recogida en el aeropuerto y devolución en otra ciudad.</p>
       <button type="button" class="mas" id="coche-reiniciar">Volver a los valores típicos</button></details>
     <p class="ayuda">El coche es para todos: con 2 o más personas suele salir mejor. Sin pagar maletas, pero son unas ${coche.conducir} h de carretera (I-45). Necesitas el carné de conducir español y conviene el permiso internacional.</p>`;
@@ -611,6 +638,11 @@ function pintarCoche(res) {
   caja.querySelectorAll("input[data-coche]").forEach((e) => e.addEventListener("change", () => {
     const n = Number(e.value);
     if (Number.isFinite(n) && n >= 0) coche[e.dataset.coche] = n;
+    guardado.poner("vuelos-coche", JSON.stringify(coche));
+    pintarCoche(res);
+  }));
+  caja.querySelectorAll("input[data-coche-texto]").forEach((e) => e.addEventListener("change", () => {
+    coche[e.dataset.cocheTexto] = e.value.trim().slice(0, 80) || COCHE_DEFECTO[e.dataset.cocheTexto];
     guardado.poner("vuelos-coche", JSON.stringify(coche));
     pintarCoche(res);
   }));
