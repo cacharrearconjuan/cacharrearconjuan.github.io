@@ -22,7 +22,11 @@ let moneda = "EUR";
 const fmtPrecio = (n) => n == null ? "—" : new Intl.NumberFormat("es-ES", { style: "currency", currency: moneda, maximumFractionDigits: 0 }).format(n);
 const fmtHora = (iso) => iso.slice(11, 16);
 const fmtFecha = (iso) => new Date(iso.slice(0, 10) + "T12:00:00").toLocaleDateString("es-ES", { weekday: "short", day: "numeric", month: "short" });
-const fmtEspera = (min) => `${Math.floor(min / 60)} h ${String(min % 60).padStart(2, "0")} min`;
+const fmtEspera = (min) => {
+  const d = Math.floor(min / 1440), r = min % 1440;
+  const hm = `${Math.floor(r / 60)} h ${String(r % 60).padStart(2, "0")} min`;
+  return d ? `${d} d ${hm}` : hm;
+};
 const otroDia = (a, b) => a.slice(0, 10) !== b.slice(0, 10) ? ` <span class="sub">(${fmtFecha(b)})</span>` : "";
 
 // ---------------- almacenamiento en el móvil ----------------
@@ -125,10 +129,12 @@ function iniciar() {
   $("formulario").addEventListener("submit", buscar);
   $("filtro-escala").addEventListener("input", () => ULTIMO?.resultado && dibujar());
   document.querySelectorAll('input[name="destino"]').forEach((r) => r.addEventListener("change", cambiarDestino));
+  document.querySelectorAll('input[name="tramos"]').forEach((r) => r.addEventListener("change", cambiarTramos));
   $("otro-destino").addEventListener("input", () => {
     $("titulo-destino").textContent = $("otro-destino").value.trim().toUpperCase() || "otro destino";
   });
   cambiarDestino();
+  cambiarTramos();
 
   if (guardado.leer("vuelos-token")) mostrarFormulario(); else mostrarConfigurar();
 }
@@ -148,7 +154,18 @@ function leerOtroDestino() {
   return { codigos: [...new Set(codigos)].slice(0, 4), malos };
 }
 
-const CAMPOS = ["fecha_ida", "fecha_vuelta", "adultos", "maleta", "horas_min", "horas_max", "sumar_iberia", "codigo_compartido"];
+const CAMPOS = ["fecha_ida", "fecha_vuelta", "adultos", "maleta", "horas_min", "horas_max", "sumar_iberia", "codigo_compartido",
+  "cambiar_aeropuerto", "horas_cambio"];
+
+// Ida y vuelta, solo ida o solo vuelta: se ocultan las fechas que no tocan
+function tramos() {
+  return document.querySelector('input[name="tramos"]:checked').value;
+}
+function cambiarTramos() {
+  const t = tramos();
+  $("caja-ida").hidden = t === "vuelta";
+  $("caja-vuelta").hidden = t === "ida";
+}
 const GRUPOS = { destinos: "houston", pasarelas: "pasarela", mercados: "mercado" };
 
 function leerFormulario() {
@@ -182,8 +199,13 @@ function nuevoId() {
 async function buscar(ev) {
   ev.preventDefault();
   const datos = leerFormulario();
-  if (!datos.fecha_ida) return alert("Pon la fecha de ida.");
-  if (datos.fecha_vuelta && datos.fecha_vuelta < datos.fecha_ida) return alert("La vuelta no puede ser antes que la ida.");
+  const t = tramos();
+  if (t === "vuelta") datos.fecha_ida = "";
+  if (t === "ida") datos.fecha_vuelta = "";
+  if (t !== "vuelta" && !datos.fecha_ida) return alert("Pon la fecha de ida.");
+  if (t !== "ida" && !datos.fecha_vuelta) return alert("Pon la fecha de vuelta (el día del Iberia a Madrid).");
+  if (datos.fecha_ida && datos.fecha_vuelta && datos.fecha_vuelta < datos.fecha_ida) return alert("La vuelta no puede ser antes que la ida.");
+  datos.tramos = t;
   if (!datos.pasarelas.length) return alert("Marca al menos una ciudad de Iberia.");
   const otro = document.querySelector('input[name="destino"]:checked').value === "otro";
   if (otro) {
@@ -347,9 +369,8 @@ function filtrar(res, horas) {
   };
   const ida = parte(res.ida);
   const vuelta = parte(res.vuelta);
-  const mi = ida.opciones[0];
-  const mv = vuelta?.opciones[0];
-  const mejor_total = mi && (mv || !vuelta) ? mi.total + (mv ? mv.total : 0) : null;
+  const mejores = [ida, vuelta].filter(Boolean).map((d) => d.opciones[0]);
+  const mejor_total = mejores.length && mejores.every(Boolean) ? mejores.reduce((a, o) => a + o.total, 0) : null;
   return { ...res, ida, vuelta, mejor_total };
 }
 
@@ -365,22 +386,25 @@ function dibujar() {
   const res = filtrar(ULTIMO.resultado, horas);
   const p = res.peticion;
   moneda = p.moneda || "EUR";
-  const ida = res.ida.opciones[0];
+  const ida = res.ida?.opciones[0];
   const vta = res.vuelta?.opciones[0];
   const nota = p.sumar_iberia ? "vuelo interno + Iberia" : "solo vuelo interno";
   const extra = `${p.adultos > 1 ? ` · ${p.adultos} adultos` : ""}${p.maleta ? " · con maleta" : " · sin maleta"}`;
   const consejo = recortado ? "Sube la escala máxima con la barra" : "Prueba más ciudades o más horas de escala";
-  let html = cifra("Ida más barata", ida ? fmtPrecio(ida.total) : "Sin opciones",
-    ida ? `vía ${esc(ida.ciudad)} · escala ${fmtEspera(ida.espera_min)}` : consejo, !!ida);
+  let html = "";
+  if (res.ida) {
+    html += cifra("Ida más barata", ida ? fmtPrecio(ida.total) : "Sin opciones",
+      ida ? `vía ${esc(ida.ciudad)} · escala ${fmtEspera(ida.espera_min)}` : consejo, !!ida);
+  }
   if (res.vuelta) {
     html += cifra("Vuelta más barata", vta ? fmtPrecio(vta.total) : "Sin opciones",
       vta ? `vía ${esc(vta.ciudad)} · escala ${fmtEspera(vta.espera_min)}` : consejo, !!vta);
   }
-  if (res.mejor_total != null && res.vuelta) html += cifra("Total ida + vuelta", fmtPrecio(res.mejor_total), nota + extra, true);
+  if (res.mejor_total != null && res.ida && res.vuelta) html += cifra("Total ida + vuelta", fmtPrecio(res.mejor_total), nota + extra, true);
   $("resumen").innerHTML = html;
 
   const dest = esc(res.destino || "Houston");
-  $("bloque-ida").innerHTML = bloque(`Ida · ${fmtFecha(p.fecha_ida)}: Madrid → EE. UU. → ${dest}`, res.ida, "ida");
+  $("bloque-ida").innerHTML = res.ida ? bloque(`Ida · ${fmtFecha(p.fecha_ida)}: Madrid → EE. UU. → ${dest}`, res.ida, "ida") : "";
   $("bloque-vuelta").innerHTML = res.vuelta ? bloque(`Vuelta · ${fmtFecha(p.fecha_vuelta)}: ${dest} → EE. UU. → Madrid`, res.vuelta, "vuelta") : "";
   document.querySelectorAll(".mas").forEach((b) => b.addEventListener("click", () => {
     document.querySelectorAll(`.opcion[data-sentido="${b.dataset.sentido}"][hidden]`).forEach((o) => (o.hidden = false));
@@ -428,7 +452,13 @@ function tramoHtml(v, titulo, conMercados) {
 function opcion(o, i, sentido, oculta) {
   const ib = tramoHtml(o.iberia, "Iberia (ya lo tienes)", false);
   const dom = tramoHtml(o.domestico, "Vuelo interno directo", true);
-  const espera = `<div class="espera">escala<strong>${fmtEspera(o.espera_min)}</strong>mismo aeropuerto · ${esc(o.pasarela)}</div>`;
+  const noches = o.noches ? `<span class="noches">${o.noches} noche${o.noches > 1 ? "s" : ""} en ${esc(o.ciudad)}</span>` : "";
+  let lugar = `mismo aeropuerto · ${esc(o.pasarela)}`;
+  if (o.cambio_aeropuerto) {
+    const [llega, sale] = sentido === "ida" ? [o.pasarela, o.aeropuerto_conexion] : [o.aeropuerto_conexion, o.pasarela];
+    lugar = `<span class="alerta">cambio de aeropuerto: llegas a ${esc(llega)}, sales de ${esc(sale)}</span>`;
+  }
+  const espera = `<div class="espera">escala<strong>${fmtEspera(o.espera_min)}</strong>${lugar}${noches}</div>`;
   const ruta = sentido === "ida" ? ib + espera + dom : dom + espera + ib;
   const enlaces = Object.entries(o.enlaces).map(([n, u], k) => `<a href="${esc(u)}" target="_blank" rel="noopener" class="${k === 0 ? "principal" : ""}">${esc(n)}</a>`).join("");
   const enlacesIb = Object.entries(o.enlaces_iberia || {}).map(([n, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(n)}</a>`).join("");

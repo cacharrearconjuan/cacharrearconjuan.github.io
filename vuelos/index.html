@@ -65,12 +65,21 @@
         <option value="DFW">Dallas</option><option value="ORD">Chicago</option><option value="MIA">Miami</option>
       </datalist>
     </fieldset>
+    <fieldset class="destino">
+      <legend>¿Qué buscas?</legend>
+      <div class="fila-checks">
+        <label><input type="radio" name="tramos" value="ambos" checked> Ida y vuelta</label>
+        <label><input type="radio" name="tramos" value="ida"> Solo ida</label>
+        <label><input type="radio" name="tramos" value="vuelta"> Solo vuelta a Madrid</label>
+      </div>
+    </fieldset>
     <div class="rejilla">
-      <label>Fecha de ida
-        <input type="date" id="fecha_ida" required>
+      <label id="caja-ida">Fecha de ida (Madrid → EE. UU.)
+        <input type="date" id="fecha_ida">
       </label>
-      <label>Fecha de vuelta <small>(opcional)</small>
+      <label id="caja-vuelta">Fecha de vuelta (EE. UU. → Madrid)
         <input type="date" id="fecha_vuelta">
+        <small>Es el día del vuelo de Iberia a Madrid.</small>
       </label>
       <label class="check grande">
         <input type="checkbox" id="maleta">
@@ -80,8 +89,8 @@
         <input type="number" id="adultos" min="1" max="9" value="1">
       </label>
       <label>Escala máxima (horas)
-        <input type="number" id="horas_max" min="3" max="48" step="1" value="12" inputmode="numeric">
-        <small>Tiempo máximo entre el vuelo de Iberia y el interno. Pon 30 si aceptas dormir allí y volar al día siguiente.</small>
+        <input type="number" id="horas_max" min="3" max="96" step="1" value="12" inputmode="numeric">
+        <small>Tiempo máximo entre el vuelo de Iberia y el interno. Pon 30, 48 o 72 para pasar una noche o varios días en la ciudad.</small>
       </label>
     </div>
 
@@ -90,6 +99,13 @@
       <div class="rejilla">
         <label>Escala mínima (horas)
           <input type="number" id="horas_min" min="0" step="0.5" value="3">
+        </label>
+        <label class="check grande">
+          <input type="checkbox" id="cambiar_aeropuerto" checked>
+          <span>En escalas largas, permitir otro aeropuerto de la ciudad<br><small>P. ej. llegar a Miami (MIA) y salir de Fort Lauderdale (FLL), o JFK → LaGuardia/Newark. Solo si pasas allí al menos las horas de abajo.</small></span>
+        </label>
+        <label>Escala mínima para cambiar de aeropuerto (horas)
+          <input type="number" id="horas_cambio" min="3" step="1" value="12">
         </label>
         <fieldset id="houston-caja">
           <legend>Aeropuerto de Houston</legend>

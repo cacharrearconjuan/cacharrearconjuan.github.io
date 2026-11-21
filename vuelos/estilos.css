@@ -152,3 +152,5 @@ button:disabled { opacity: .6; cursor: wait; }
 .filtro label { flex-direction: row; gap: 6px; align-items: baseline; }
 .filtro input[type="range"] { width: 100%; padding: 0; accent-color: var(--acento); }
 .filtro small { color: var(--suave); }
+.espera .noches { display: block; color: var(--suave); font-size: .78rem; }
+.espera .alerta { display: block; }
