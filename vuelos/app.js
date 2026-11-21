@@ -613,9 +613,16 @@ function cocheHtml(res) {
       const salir = sumarHoras(devolver, -coche.conducir - 0.5);
       const salirCiudad = sumarHoras(devolver, -coche.conducir - coche.trafico - 0.5);
       const horaSalida = Number(salirCiudad.slice(11, 13));
-      const avisoHorario = horaSalida < 9 || horaSalida >= 18
-        ? `<div class="equipaje-aviso">⚠️ A las ${fmtHora(salirCiudad)} muchas oficinas de barrio están cerradas (suelen abrir de 8–9 a 18 h, menos los fines de semana y algunas cierran en domingo). Si no abre, recógelo la tarde anterior: serían 2 días de alquiler.</div>`
-        : `<div class="sub">Comprueba el horario de la oficina: las de barrio suelen abrir de 8–9 a 18 h y menos los fines de semana.</div>`;
+      let avisoHorario = `<div class="sub">Comprueba el horario de la oficina: las de barrio suelen abrir de 8–9 a 18 h y menos los fines de semana.</div>`;
+      if (horaSalida < 9 || horaSalida >= 18) {
+        // si a esa hora está cerrada, se recoge antes (la tarde anterior, o a las 17:00 del mismo día si ya es tarde)
+        const antes = horaSalida >= 18 ? salirCiudad.slice(0, 11) + "17:00" : sumarHoras(salirCiudad.slice(0, 11) + "17:00", -24);
+        const horas = Math.round((new Date(devolver + ":00Z") - new Date(antes + ":00Z")) / 36e5);
+        const dias = Math.ceil(horas / 24);
+        avisoHorario = `<div class="equipaje-aviso">⚠️ A las ${fmtHora(salirCiudad)} muchas oficinas de barrio están cerradas (suelen abrir de 8–9 a 18 h, menos los fines de semana y algunas cierran en domingo).
+          Si lo recoges antes, por ejemplo el ${fmtFecha(antes)} a las 17:00, lo tendrías ${horas} h hasta devolverlo en DFW:
+          ${dias <= 1 ? "<strong>sigue siendo 1 día</strong> (menos de 24 h)." : `<strong>serían ${dias} días</strong> de alquiler (más de 24 h).`}</div>`;
+      }
       filas.push(`<div class="coche-opcion"><strong>Vuelta · ${fmtFecha(ib.salida)}</strong> · Iberia ${esc(ib.numeros.join(", "))} sale de Dallas (DFW) a las ${fmtHora(ib.salida)}. Lo devuelves en DFW a las ${fmtHora(devolver)} (3 h antes).
         <div class="coche-sitio"><strong>A) Oficina en la ciudad, cerca de ${esc(coche.direccion)}</strong> (sin tasa del aeropuerto)<br>${precioDoble(true)}<br>
           Lo recoges hacia las <strong>${fmtHora(salirCiudad)}</strong>${otroDia(ib.salida, salirCiudad)}.
@@ -654,7 +661,7 @@ function cocheHtml(res) {
       ? `<p class="sub">Esta búsqueda es anterior a la opción del coche: vuelve a buscar para ver los horarios con el Iberia de Dallas.</p>`
       : `<p class="sub">Ese día no hay vuelo directo de Iberia en Dallas (DFW)${(res.peticion.pasarelas || []).includes("DFW") ? "" : ": marca «Dallas (DFW)» en «Más opciones»"}.</p>`}
     <details class="avanzado"><summary>Ajustar la estimación</summary><div class="rejilla">${campoDireccion}${campos}</div>
-      <p class="ayuda">Son precios típicos, no reales: no hay ningún buscador gratis de alquiler de coches. Mira el precio de verdad en los enlaces. En las webs de EE. UU. el precio que ves no suele llevar el seguro a todo riesgo ni la responsabilidad civil ampliada (allí se da por hecho que tienes tu seguro de coche); te lo ofrecen en el mostrador y es caro. Desde España hay paquetes «todo incluido» para no residentes: con todo el seguro suelen salir más baratos. Una VPN de EE. UU. apenas cambia el precio: lo que cuenta es la web y el país de residencia, y conviene poner el real (España) para que el seguro valga. En DiscoverCars o Rentalcars la «cobertura total» es un seguro suyo: si hay daños pagas tú en el mostrador y luego te lo devuelven; la empresa de alquiler te bloqueará una fianza en la tarjeta de crédito. Para la estimación se cuenta 1 día con recogida en el aeropuerto y devolución en otra ciudad.</p>
+      <p class="ayuda">Son precios típicos, no reales: no hay ningún buscador gratis de alquiler de coches. Mira el precio de verdad en los enlaces. En las webs de EE. UU. el precio que ves no suele llevar el seguro a todo riesgo ni la responsabilidad civil ampliada (allí se da por hecho que tienes tu seguro de coche); te lo ofrecen en el mostrador y es caro. Desde España hay paquetes «todo incluido» para no residentes: con todo el seguro suelen salir más baratos. Una VPN de EE. UU. apenas cambia el precio: lo que cuenta es la web y el país de residencia, y conviene poner el real (España) para que el seguro valga. En DiscoverCars o Rentalcars la «cobertura total» es un seguro suyo: si hay daños pagas tú en el mostrador y luego te lo devuelven; la empresa de alquiler te bloqueará una fianza en la tarjeta de crédito. Para la estimación se cuenta 1 día con recogida en el aeropuerto y devolución en otra ciudad. Un día de alquiler son 24 h desde que lo recoges; si te pasas, suele haber un margen corto (unos 30 min, según la empresa) y después cobran horas o un día más.</p>
       <button type="button" class="mas" id="coche-reiniciar">Volver a los valores típicos</button></details>
     <p class="ayuda">El coche es para todos: con 2 o más personas suele salir mejor. Sin pagar maletas, pero son unas ${coche.conducir} h de carretera (I-45). Necesitas el carné de conducir español y conviene el permiso internacional.</p>`;
 }
