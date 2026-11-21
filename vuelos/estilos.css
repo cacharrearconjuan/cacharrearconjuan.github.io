@@ -171,3 +171,6 @@ button:disabled { opacity: .6; cursor: wait; }
 .coche .sub { color: var(--suave); font-size: .85rem; }
 .coche-sitio { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--borde); }
 .coche-precio strong + strong, .coche-precio strong { white-space: nowrap; }
+.coche-grupo { margin-top: 8px; }
+.coche-grupo > span { display: block; font-size: .8rem; color: var(--suave); margin-bottom: 4px; }
+.coche-tabla { margin: 6px 0; }

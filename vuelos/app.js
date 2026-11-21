@@ -511,7 +511,8 @@ function dibujar() {
 const COCHE_DEFECTO = {
   tarifa: 55,        // $ por 1 día, coche pequeño/medio, recogida en el aeropuerto
   solo_ida: 50,      // $ recargo por devolverlo en otra ciudad (Houston)
-  seguros: 65,       // $ por día, «a tope»: daños y robo sin franquicia (LDW/CDW) + responsabilidad civil ampliada (SLI) + accidentes/efectos personales + asistencia en carretera
+  seguros_espana: 35, // $ por día: lo que suma el seguro completo en un paquete «todo incluido» reservado desde España (no residentes)
+  seguros: 65,       // $ por día, «a tope», comprado en el mostrador (webs de EE. UU.): daños y robo sin franquicia (LDW/CDW) + responsabilidad civil ampliada (SLI) + accidentes/efectos personales + asistencia en carretera
   impuestos: 25,     // % impuestos de Texas + tasa de concesión del aeropuerto
   tasas: 8,          // $ tasas fijas por día (instalaciones del aeropuerto, matrícula)
   gasolina: 30,      // $ unos 400 km DFW → Houston (devolverlo con el depósito como lo recogiste)
@@ -528,7 +529,8 @@ const COCHE_DEFECTO = {
 };
 const COCHE_CAMPOS = [
   ["tarifa", "Alquiler 1 día ($)"], ["solo_ida", "Recargo por dejarlo en otra ciudad ($)"],
-  ["seguros", "Seguro a todo riesgo + responsabilidad civil ($/día)"], ["impuestos", "Impuestos y tasa del aeropuerto (%)"],
+  ["seguros_espana", "Seguro completo en paquete desde España ($/día)"],
+  ["seguros", "Seguro completo comprado en el mostrador, web de EE. UU. ($/día)"], ["impuestos", "Impuestos y tasa del aeropuerto (%)"],
   ["tasas", "Tasas fijas ($)"], ["gasolina", "Gasolina ($)"], ["peajes", "Peajes ($)"],
   ["joven", "Conductor menor de 25 años ($)"], ["cambio", "Cambio (€ por 1 $)"],
   ["aduana", "Horas desde que aterrizas hasta tener el coche"], ["conducir", "Horas conduciendo DFW ⇄ Houston"],
@@ -538,8 +540,8 @@ const COCHE_CAMPOS = [
 let coche = { ...COCHE_DEFECTO };
 try { coche = { ...COCHE_DEFECTO, ...(JSON.parse(guardado.leer("vuelos-coche")) || {}) }; } catch (_) { coche = { ...COCHE_DEFECTO }; }
 
-function costeCoche(c, ciudad = false) {
-  const base = c.tarifa + c.solo_ida + c.seguros + c.joven;
+function costeCoche(c, ciudad = false, espana = true) {
+  const base = c.tarifa + c.solo_ida + (espana ? c.seguros_espana : c.seguros) + c.joven;
   const impuestos = (base * (ciudad ? c.impuestos_ciudad : c.impuestos)) / 100 + (ciudad ? c.tasas_ciudad : c.tasas);
   const usd = base + impuestos + c.gasolina + c.peajes;
   return { usd, eur: Math.round(usd * c.cambio), impuestos };
@@ -552,15 +554,37 @@ const sumarHoras = (iso, h) => {
 };
 const horaKayak = (iso) => `${iso.slice(0, 10)}-${String(Math.max(0, Math.min(23, Number(iso.slice(11, 13))))).padStart(2, "0")}h`;
 
+// Enlaces en dos grupos: reservar desde España (paquetes con el seguro incluido) o en webs de EE. UU.
+// (precio sin seguro completo: se compra en el mostrador). Sin «tramo» (oficina de ciudad) no hay enlace a Kayak.
 function enlacesCoche(desde, hasta, recogida, entrega) {
-  const tramo = `${desde}/${hasta}/${horaKayak(recogida)}/${horaKayak(entrega)}`;
+  const tramo = desde ? `${desde}/${hasta}/${horaKayak(recogida)}/${horaKayak(entrega)}` : "";
   return {
-    "Kayak": `https://www.kayak.es/cars/${tramo}?sort=price_a`,
-    "Kayak EE. UU.": `https://www.kayak.com/cars/${tramo}?sort=price_a`,
-    "DiscoverCars": "https://www.discovercars.com/",
-    "Rentalcars": "https://www.rentalcars.com/es/",
+    "Desde España (seguro incluido)": {
+      ...(tramo ? { "Kayak.es": `https://www.kayak.es/cars/${tramo}?sort=price_a` } : {}),
+      "Rentalcars": "https://www.rentalcars.com/es/",
+      "DiscoverCars": "https://www.discovercars.com/",
+      "Auto Europe": "https://www.autoeurope.es/",
+      "Hertz.es": "https://www.hertz.es/",
+      "Avis.es": "https://www.avis.es/",
+    },
+    "Webs de EE. UU. (seguro aparte)": {
+      ...(tramo ? { "Kayak.com": `https://www.kayak.com/cars/${tramo}?sort=price_a` } : {}),
+      "Enterprise": "https://www.enterprise.com/",
+      "Hertz.com": "https://www.hertz.com/",
+      "Avis.com": "https://www.avis.com/",
+      "Priceline": "https://www.priceline.com/",
+    },
   };
 }
+
+function enlacesCocheHtml(grupos) {
+  return Object.entries(grupos).map(([titulo, enlaces], g) =>
+    `<div class="coche-grupo"><span>${esc(titulo)}:</span><div class="enlaces">${Object.entries(enlaces).map(([n, u], k) =>
+      `<a href="${esc(u)}" target="_blank" rel="noopener" class="${g === 0 && k === 0 ? "principal" : ""}">${esc(n)}</a>`).join("")}</div></div>`).join("");
+}
+
+const precioDoble = (ciudad) =>
+  `≈ <strong>${fmtPrecio(costeCoche(coche, ciudad, true).eur)}</strong> desde España · ≈ ${fmtPrecio(costeCoche(coche, ciudad, false).eur)} en web de EE. UU.`;
 
 function cocheHtml(res) {
   const houston = (res.peticion.destinos || []).every((d) => d === "IAH" || d === "HOU");
@@ -577,7 +601,8 @@ function cocheHtml(res) {
       filas.push(`<div class="coche-opcion"><strong>Ida · ${fmtFecha(ib.salida)}</strong>: Iberia ${esc(ib.numeros.join(", "))} aterriza en Dallas (DFW) a las ${fmtHora(ib.llegada)}
         → coges el coche hacia las ${fmtHora(recogida)} → llegas a Houston hacia las <strong>${fmtHora(llegada)}</strong>${otroDia(ib.llegada, llegada)} y lo dejas allí.
         <div class="sub">${comparar(res.ida)}</div>
-        <div class="enlaces">${Object.entries(enlacesCoche("DFW", h, recogida, entrega)).map(([n, u], k) => `<a href="${esc(u)}" target="_blank" rel="noopener" class="${k === 0 ? "principal" : ""}">${esc(n)}</a>`).join("")}</div></div>`);
+        <div class="sub">${precioDoble(false)}</div>
+        ${enlacesCocheHtml(enlacesCoche("DFW", h, recogida, entrega))}</div>`);
     }
   }
   if (res.vuelta) {
@@ -592,7 +617,7 @@ function cocheHtml(res) {
         ? `<div class="equipaje-aviso">⚠️ A las ${fmtHora(salirCiudad)} muchas oficinas de barrio están cerradas (suelen abrir de 8–9 a 18 h, menos los fines de semana y algunas cierran en domingo). Si no abre, recógelo la tarde anterior: serían 2 días de alquiler.</div>`
         : `<div class="sub">Comprueba el horario de la oficina: las de barrio suelen abrir de 8–9 a 18 h y menos los fines de semana.</div>`;
       filas.push(`<div class="coche-opcion"><strong>Vuelta · ${fmtFecha(ib.salida)}</strong> · Iberia ${esc(ib.numeros.join(", "))} sale de Dallas (DFW) a las ${fmtHora(ib.salida)}. Lo devuelves en DFW a las ${fmtHora(devolver)} (3 h antes).
-        <div class="coche-sitio"><strong>A) Oficina en la ciudad, cerca de ${esc(coche.direccion)}</strong> · ≈ <strong>${fmtPrecio(cc.eur)}</strong> (sin tasa del aeropuerto)<br>
+        <div class="coche-sitio"><strong>A) Oficina en la ciudad, cerca de ${esc(coche.direccion)}</strong> (sin tasa del aeropuerto)<br>${precioDoble(true)}<br>
           Lo recoges hacia las <strong>${fmtHora(salirCiudad)}</strong>${otroDia(ib.salida, salirCiudad)}.
           ${avisoHorario}
           <div class="enlaces">
@@ -601,28 +626,35 @@ function cocheHtml(res) {
             <a href="${esc(maps("Hertz near " + coche.direccion))}" target="_blank" rel="noopener">Hertz</a>
             <a href="${esc(maps("Avis near " + coche.direccion))}" target="_blank" rel="noopener">Avis</a>
             <a href="${esc(maps("Budget Car Rental near " + coche.direccion))}" target="_blank" rel="noopener">Budget</a>
-          </div></div>
-        <div class="coche-sitio"><strong>B) Aeropuerto de Houston (${h})</strong> · ≈ <strong>${fmtPrecio(c.eur)}</strong><br>
+          </div>
+          <div class="sub">Busca la oficina en el mapa y resérvala en la web de la empresa (eligiendo esa oficina):</div>
+          ${enlacesCocheHtml(enlacesCoche("", "", "", ""))}</div>
+        <div class="coche-sitio"><strong>B) Aeropuerto de Houston (${h})</strong><br>${precioDoble(false)}<br>
           Lo recoges hacia las <strong>${fmtHora(salir)}</strong>${otroDia(ib.salida, salir)}.
-          <div class="enlaces">${Object.entries(enlacesCoche(h, "DFW", salir, devolver)).map(([n, u], k) => `<a href="${esc(u)}" target="_blank" rel="noopener" class="${k === 0 ? "principal" : ""}">${esc(n)}</a>`).join("")}</div></div>
+          ${enlacesCocheHtml(enlacesCoche(h, "DFW", salir, devolver))}</div>
         <div class="sub">${comparar(res.vuelta)}</div></div>`);
     }
   }
   const campos = COCHE_CAMPOS.map(([k, t]) =>
     `<label>${t}<input type="number" step="any" min="0" data-coche="${k}" value="${coche[k]}"></label>`).join("");
   const campoDireccion = `<label>Recoger cerca de (vuelta)<input type="text" data-coche-texto="direccion" value="${esc(coche.direccion)}"></label>`;
-  const desglose = `${Math.round(coche.tarifa)} $ alquiler + ${Math.round(coche.solo_ida)} $ dejarlo en otra ciudad + ${Math.round(coche.seguros)} $ seguros a tope`
+  const cu = costeCoche(coche, false, false);
+  const desglose = `Desde España: ${Math.round(coche.tarifa)} $ alquiler + ${Math.round(coche.solo_ida)} $ dejarlo en otra ciudad + ${Math.round(coche.seguros_espana)} $ seguro completo incluido`
     + `${coche.joven ? ` + ${Math.round(coche.joven)} $ conductor joven` : ""} + ${Math.round(c.impuestos)} $ impuestos y tasas + ${Math.round(coche.gasolina)} $ gasolina`
-    + `${coche.peajes ? ` + ${Math.round(coche.peajes)} $ peajes` : ""} = <strong>${Math.round(c.usd)} $</strong>`;
+    + `${coche.peajes ? ` + ${Math.round(coche.peajes)} $ peajes` : ""} = <strong>${Math.round(c.usd)} $</strong>.`
+    + ` En web de EE. UU. el seguro completo se paga en el mostrador (~${Math.round(coche.seguros)} $): <strong>${Math.round(cu.usd)} $</strong>.`;
   return `<h2 style="margin-top:0">🚗 Alternativa: coche de alquiler Dallas (DFW) ⇄ Houston</h2>
-    <p class="coche-precio">≈ <strong>${fmtPrecio(c.eur)}</strong> en un aeropuerto${res.vuelta ? ` · ≈ <strong>${fmtPrecio(costeCoche(coche, true).eur)}</strong> en una oficina de la ciudad` : ""}
-      <small>estimación · 1 día con todo el seguro y todos los gastos · precio por coche, no por persona</small></p>
+    <table class="tabla-ciudades coche-tabla"><thead><tr><th>1 día con todo</th><th class="num">Reservando desde España</th><th class="num">Web de EE. UU. + seguro en mostrador</th></tr></thead><tbody>
+      <tr><td>Aeropuerto</td><td class="num"><strong>${fmtPrecio(c.eur)}</strong></td><td class="num">${fmtPrecio(cu.eur)}</td></tr>
+      ${res.vuelta ? `<tr><td>Oficina en la ciudad</td><td class="num"><strong>${fmtPrecio(costeCoche(coche, true, true).eur)}</strong></td><td class="num">${fmtPrecio(costeCoche(coche, true, false).eur)}</td></tr>` : ""}
+    </tbody></table>
+    <p class="coche-precio"><small>Estimación con precios típicos · todo el seguro y todos los gastos · precio por coche, no por persona</small></p>
     <p class="sub">${desglose}</p>
     ${filas.length ? filas.join("") : !(res.ida || res.vuelta)?.iberias
       ? `<p class="sub">Esta búsqueda es anterior a la opción del coche: vuelve a buscar para ver los horarios con el Iberia de Dallas.</p>`
       : `<p class="sub">Ese día no hay vuelo directo de Iberia en Dallas (DFW)${(res.peticion.pasarelas || []).includes("DFW") ? "" : ": marca «Dallas (DFW)» en «Más opciones»"}.</p>`}
     <details class="avanzado"><summary>Ajustar la estimación</summary><div class="rejilla">${campoDireccion}${campos}</div>
-      <p class="ayuda">Son precios típicos, no reales: no hay ningún buscador gratis de alquiler de coches. Mira el precio de verdad en los enlaces (en DiscoverCars puedes elegir «cobertura total»). Para la estimación se cuenta 1 día con recogida en el aeropuerto y devolución en otra ciudad.</p>
+      <p class="ayuda">Son precios típicos, no reales: no hay ningún buscador gratis de alquiler de coches. Mira el precio de verdad en los enlaces. En las webs de EE. UU. el precio que ves no suele llevar el seguro a todo riesgo ni la responsabilidad civil ampliada (allí se da por hecho que tienes tu seguro de coche); te lo ofrecen en el mostrador y es caro. Desde España hay paquetes «todo incluido» para no residentes: con todo el seguro suelen salir más baratos. Una VPN de EE. UU. apenas cambia el precio: lo que cuenta es la web y el país de residencia, y conviene poner el real (España) para que el seguro valga. En DiscoverCars o Rentalcars la «cobertura total» es un seguro suyo: si hay daños pagas tú en el mostrador y luego te lo devuelven; la empresa de alquiler te bloqueará una fianza en la tarjeta de crédito. Para la estimación se cuenta 1 día con recogida en el aeropuerto y devolución en otra ciudad.</p>
       <button type="button" class="mas" id="coche-reiniciar">Volver a los valores típicos</button></details>
     <p class="ayuda">El coche es para todos: con 2 o más personas suele salir mejor. Sin pagar maletas, pero son unas ${coche.conducir} h de carretera (I-45). Necesitas el carné de conducir español y conviene el permiso internacional.</p>`;
 }
