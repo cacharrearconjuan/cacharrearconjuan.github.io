@@ -163,3 +163,9 @@ button:disabled { opacity: .6; cursor: wait; }
 .filtro-aero { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
 .chips-pequenos label { padding: 4px 10px; font-size: .85rem; }
 .chips-pequenos small { color: var(--suave); font-weight: 400; }
+.coche-precio { font-size: 1.1rem; margin: 4px 0 6px; }
+.coche-precio strong { font-size: 1.6rem; color: var(--ok); }
+.coche-precio small { display: block; color: var(--suave); font-size: .8rem; }
+.coche-opcion { border: 1px solid var(--borde); border-radius: 10px; padding: 12px; margin-top: 10px; font-size: .92rem; }
+.coche-opcion .enlaces { margin-top: 8px; }
+.coche .sub { color: var(--suave); font-size: .85rem; }
