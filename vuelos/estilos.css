@@ -156,3 +156,7 @@ button:disabled { opacity: .6; cursor: wait; }
 .espera .alerta { display: block; }
 .maleta-estimada { margin-top: 6px; font-size: .78rem; color: #8a4b00; background: #fff4e0; border-radius: 6px; padding: 5px 8px; }
 @media (prefers-color-scheme: dark) { .maleta-estimada { color: #ffc27a; background: #3a2a10; } }
+.equipaje { margin-top: 6px; font-size: .78rem; color: var(--suave); }
+.equipaje a { color: inherit; margin-left: 4px; }
+.equipaje-aviso { margin-top: 6px; font-size: .8rem; color: #b3261e; background: #fdecea; border-radius: 6px; padding: 5px 8px; }
+@media (prefers-color-scheme: dark) { .equipaje-aviso { color: #ffb4ab; background: #3b1714; } }

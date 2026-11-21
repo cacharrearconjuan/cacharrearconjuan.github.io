@@ -14,6 +14,42 @@ const PASARELAS = {
 const HOUSTON = { IAH: "Intercontinental", HOU: "Hobby" };
 const MERCADOS = { ES: "España", US: "EE. UU.", GB: "Reino Unido", MX: "México", CO: "Colombia", AR: "Argentina", IN: "India" };
 
+// Equipaje de cada aerolínea (tarifa económica). kg/cm de la maleta facturada, maleta de mano y bolso.
+// Datos de las webs de las aerolíneas; cambian a veces: cada vuelo enlaza a las normas oficiales.
+const EQUIPAJE = {
+  Iberia: { kg: 23, cm: "158 cm (largo + ancho + alto)", mano: "56 × 40 × 25 cm", url: "https://www.iberia.com/es/equipaje/" },
+  United: { kg: 23, cm: "158 cm", mano: "56 × 35 × 23 cm", nota: "En Basic Economy no entra la maleta de mano, solo el bolso.", url: "https://www.united.com/es/us/fly/baggage.html" },
+  American: { kg: 23, cm: "158 cm", mano: "56 × 36 × 23 cm", url: "https://www.aa.com/i18n/travel-info/baggage/baggage.jsp" },
+  Delta: { kg: 23, cm: "158 cm", mano: "56 × 35 × 23 cm", url: "https://www.delta.com/es/es/baggage/overview" },
+  Southwest: { kg: 23, cm: "158 cm", mano: "61 × 41 × 25 cm", url: "https://www.southwest.com/help/baggage" },
+  JetBlue: { kg: 23, cm: "158 cm", mano: "56 × 35 × 23 cm", nota: "En Blue Basic no entra la maleta de mano, solo el bolso.", url: "https://www.jetblue.com/help/baggage" },
+  Alaska: { kg: 23, cm: "158 cm", mano: "56 × 35 × 23 cm", url: "https://www.alaskaair.com/content/travel-info/baggage/overview" },
+  Frontier: { kg: 18, cm: "158 cm", mano: "61 × 41 × 25 cm (se paga aparte)", nota: "Gratis solo el bolso: 36 × 46 × 20 cm.", url: "https://www.flyfrontier.com/travel/travel-info/bag-options/" },
+  Spirit: { kg: 23, cm: "158 cm", mano: "56 × 46 × 25 cm (se paga aparte)", nota: "Gratis solo el bolso: 46 × 36 × 20 cm.", url: "https://www.spirit.com/optional-services" },
+  Allegiant: { kg: 18, cm: "203 cm", mano: "56 × 36 × 23 cm (se paga aparte)", nota: "Gratis solo el bolso: 41 × 38 × 18 cm.", url: "https://www.allegiantair.com/popup/optional-services-fees" },
+};
+
+function equipaje(aerolineas) {
+  for (const a of aerolineas || []) {
+    const clave = Object.keys(EQUIPAJE).find((k) => a.toLowerCase().includes(k.toLowerCase()));
+    if (clave) return { nombre: clave, ...EQUIPAJE[clave] };
+  }
+  return null;
+}
+
+function equipajeHtml(v, esIberia) {
+  const e = equipaje(v.aerolineas);
+  if (!e) {
+    return `<div class="equipaje">🧳 Mira el tamaño y peso máximo de la maleta en la web de ${esc(v.aerolineas.join(", "))}.</div>`;
+  }
+  const iberia = EQUIPAJE.Iberia;
+  const aviso = !esIberia && e.kg < iberia.kg
+    ? `<div class="equipaje-aviso">⚠️ Máximo <strong>${e.kg} kg</strong> por maleta facturada; con Iberia puedes llevar ${iberia.kg} kg. Si tu maleta pesa más, aquí te cobrarán sobrepeso.</div>`
+    : "";
+  return `<div class="equipaje">🧳 Facturada: máx. <strong>${e.kg} kg</strong> y ${esc(e.cm)} · Mano: ${esc(e.mano)}${e.nota ? ". " + esc(e.nota) : ""}
+    <a href="${esc(e.url)}" target="_blank" rel="noopener">Normas de ${esc(e.nombre)}</a></div>${aviso}`;
+}
+
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const pausa = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -435,7 +471,7 @@ function bloque(titulo, datos, sentido) {
   return h + `</section>`;
 }
 
-function tramoHtml(v, titulo, conMercados) {
+function tramoHtml(v, titulo, conMercados, esIberia = false) {
   const num = v.numeros.length ? " · " + esc(v.numeros.join(", ")) : "";
   const precios = Object.entries(v.precios_mercado || {});
   let mercados = "";
@@ -449,11 +485,11 @@ function tramoHtml(v, titulo, conMercados) {
   return `<div class="tramo"><div class="sub">${titulo}</div>
     <b>${esc(v.origen)} ${fmtHora(v.salida)} → ${esc(v.destino)} ${fmtHora(v.llegada)}</b>${otroDia(v.salida, v.llegada)}
     <div class="sub">${fmtFecha(v.salida)} · ${esc(v.aerolineas.join(", "))}${num}</div>
-    <div class="sub">Precio: ${fmtPrecio(v.precio)}${chip}</div>${mercados}${maleta}</div>`;
+    <div class="sub">Precio: ${fmtPrecio(v.precio)}${chip}</div>${mercados}${maleta}${equipajeHtml(v, esIberia)}</div>`;
 }
 
 function opcion(o, i, sentido, oculta) {
-  const ib = tramoHtml(o.iberia, "Iberia (ya lo tienes)", false);
+  const ib = tramoHtml(o.iberia, "Iberia (ya lo tienes)", false, true);
   const dom = tramoHtml(o.domestico, "Vuelo interno directo", true);
   const noches = o.noches ? `<span class="noches">${o.noches} noche${o.noches > 1 ? "s" : ""} en ${esc(o.ciudad)}</span>` : "";
   let lugar = `mismo aeropuerto · ${esc(o.pasarela)}`;
