@@ -56,7 +56,18 @@ async function comprobarLlave() {
   if (!r.ok) throw new Error("GitHub respondió " + r.status);
   const repo = await r.json();
   guardado.poner("vuelos-rama", repo.default_branch);
+  // la llave también tiene que poder LEER el resultado (permiso Contents)
+  const c = await gh(`/contents/README.md?ref=${encodeURIComponent(repo.default_branch)}`);
+  if (c.status === 403 || c.status === 404) throw new ErrorPermiso();
   return repo.default_branch;
+}
+
+const AYUDA_CONTENTS = "A tu llave le falta el permiso para leer el resultado. En GitHub: Settings → Developer settings → " +
+  "Fine-grained tokens → «Vuelos web» → Edit → Repository permissions → Contents: Read-only → Update. " +
+  "La llave sigue siendo la misma: no hace falta volver a pegarla.";
+
+class ErrorPermiso extends Error {
+  constructor() { super(AYUDA_CONTENTS); }
 }
 
 // ---------------- pantalla ----------------
@@ -74,7 +85,7 @@ function mostrarFormulario() {
 }
 
 async function guardarToken() {
-  const t = $("token").value.trim();
+  const t = $("token").value.trim() || guardado.leer("vuelos-token");
   if (!t) return;
   guardado.poner("vuelos-token", t);
   $("token-estado").className = "ayuda";
@@ -84,6 +95,12 @@ async function guardarToken() {
     $("token").value = "";
     mostrarFormulario();
   } catch (e) {
+    if (e instanceof ErrorPermiso) {
+      // la llave vale para buscar; solo le falta poder leer: se guarda y se explica cómo arreglarlo
+      $("token").value = "";
+      mostrarConfigurar(e.message + " Después pulsa «Guardar» otra vez (con la casilla vacía).");
+      return;
+    }
     guardado.poner("vuelos-token", null);
     mostrarConfigurar(e.message);
   }
@@ -219,12 +236,19 @@ function fallo(e) {
     return;
   }
   $("progreso").hidden = false;
-  $("fase").textContent = "Error: " + e.message;
+  $("fase").textContent = (e instanceof ErrorPermiso ? "" : "Error: ") + e.message;
+  if (e instanceof ErrorPermiso) {
+    $("enlace-run").hidden = false;
+    $("enlace-run").innerHTML = '<a href="https://github.com/settings/personal-access-tokens" target="_blank" rel="noopener">Abrir mis llaves en GitHub</a> · ' +
+      "Cuando lo cambies, pulsa «Ver la última búsqueda»: el resultado ya está guardado.";
+    $("ver-ultima").hidden = !guardado.leer("vuelos-ultima");
+  }
 }
 
 async function leerResultado(id) {
   const r = await gh(`/contents/resultados/${id}.json?ref=resultados`, { headers: { Accept: "application/vnd.github.raw+json" } });
   if (r.status === 404) return null;
+  if (r.status === 403) throw new ErrorPermiso();
   if (!r.ok) throw new Error("GitHub respondió " + r.status + " al leer el resultado");
   return r.json();
 }
