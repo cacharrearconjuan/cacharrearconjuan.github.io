@@ -101,6 +101,8 @@ a:hover { text-decoration-thickness: 2px; }
 .pie-fila { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .pie p { margin: 0; }
 .pie-canales { display: flex; gap: 18px; flex-wrap: wrap; }
+.pie .pie-vuelos { margin-top: 20px; font-size: 0.78rem; }
+.pie-vuelos a { color: var(--tinta-suave); }
 
 /* portada */
 

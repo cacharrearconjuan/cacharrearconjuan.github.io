@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#c8102e">
-  <title>Vuelos Iberia–Houston</title>
+  <title>Vuelos con Iberia</title>
   <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
 <header class="cabecera">
   <div class="envoltorio">
-    <h1>Vuelos Iberia ⇄ Houston</h1>
+    <h1>Vuelos con Iberia ⇄ <span id="titulo-destino">Houston</span></h1>
     <p>El vuelo interno más barato de EE. UU. que encaja con tu Iberia: un solo cambio de avión, en el mismo aeropuerto y con 3 horas mínimas de conexión. Compara precios en todos los mercados.</p>
   </div>
 </header>
@@ -44,6 +44,27 @@
         · <button type="button" id="cambiar-token" class="enlace-boton">Cambiar llave</button>
       </span>
     </div>
+    <fieldset class="destino">
+      <legend>Destino</legend>
+      <div class="fila-checks">
+        <label><input type="radio" name="destino" value="houston" checked> Houston <small>(IAH y HOU)</small></label>
+        <label><input type="radio" name="destino" value="otro"> Otro destino</label>
+      </div>
+      <label id="otro-caja" hidden>Aeropuerto de destino en EE. UU.
+        <input id="otro-destino" list="aeropuertos" autocomplete="off" autocapitalize="characters" placeholder="Código, p. ej. LAS (varios: LAS, DEN)">
+        <small>Mismas reglas: Iberia directo, un solo cambio de avión en el mismo aeropuerto y conexión mínima. La próxima vez vuelve a Houston.</small>
+      </label>
+      <datalist id="aeropuertos">
+        <option value="LAS">Las Vegas</option><option value="DEN">Denver</option><option value="MCO">Orlando</option>
+        <option value="ATL">Atlanta</option><option value="AUS">Austin</option><option value="SAT">San Antonio</option>
+        <option value="MSY">Nueva Orleans</option><option value="PHX">Phoenix</option><option value="SEA">Seattle</option>
+        <option value="LAX">Los Ángeles</option><option value="SAN">San Diego</option><option value="SLC">Salt Lake City</option>
+        <option value="MSP">Mineápolis</option><option value="DTW">Detroit</option><option value="CLT">Charlotte</option>
+        <option value="TPA">Tampa</option><option value="FLL">Fort Lauderdale</option><option value="LGA">Nueva York LaGuardia</option>
+        <option value="HNL">Honolulu</option><option value="ANC">Anchorage</option><option value="BNA">Nashville</option>
+        <option value="DFW">Dallas</option><option value="ORD">Chicago</option><option value="MIA">Miami</option>
+      </datalist>
+    </fieldset>
     <div class="rejilla">
       <label>Fecha de ida
         <input type="date" id="fecha_ida" required>
@@ -70,7 +91,7 @@
           <input type="number" id="horas_max" min="1" step="1" value="12">
           <small>Pon 30 si aceptas dormir en la ciudad y volar al día siguiente.</small>
         </label>
-        <fieldset>
+        <fieldset id="houston-caja">
           <legend>Aeropuerto de Houston</legend>
           <div id="houston" class="fila-checks"></div>
         </fieldset>

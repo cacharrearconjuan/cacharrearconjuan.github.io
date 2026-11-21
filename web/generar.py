@@ -861,6 +861,7 @@ def pagina(sitio, titulo, descripcion, cuerpo, nivel, ruta, actual="", pre=None,
     Las novedades llegan también por <a href="{pre}feed.xml">el feed</a>.{aviso_visitas(sitio)}</p>
     <p class="pie-canales">{enlaces_canales(sitio, clase="")}</p>
   </div>
+  <div class="ancho"><p class="pie-vuelos"><a href="{pre}vuelos/">Vuelos</a></p></div>
 </footer>
 {SCRIPT_COPIAR if "<pre" in cuerpo else ""}{scripts}
 </body>

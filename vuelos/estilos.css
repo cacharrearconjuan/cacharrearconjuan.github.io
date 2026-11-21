@@ -142,3 +142,8 @@ button:disabled { opacity: .6; cursor: wait; }
 .enlace-boton { background: none; border: 0; padding: 0; margin: 0; width: auto; color: var(--suave); text-decoration: underline; font: inherit; font-weight: 500; cursor: pointer; }
 .mercados-lista { font-size: .78rem; color: var(--suave); margin-top: 3px; }
 .mercado-chip { display: inline-block; background: var(--ok); color: #fff; border-radius: 5px; padding: 0 6px; font-size: .75rem; font-weight: 700; margin-left: 4px; }
+
+.destino { margin-bottom: 16px; }
+.destino #otro-caja { margin-top: 10px; }
+
+[hidden] { display: none !important; }

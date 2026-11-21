@@ -278,12 +278,15 @@ def prueba_web():
         comprobar(all(os.path.exists(os.path.join(salida, "vuelos", f)) for f in ("app.js", "estilos.css")), "vuelos: sus archivos")
         comprobar('content="noindex, nofollow"' in vuelos and "Disallow: /vuelos/" in leer(salida, "robots.txt"),
                   "vuelos: fuera de los buscadores")
-        comprobar("vuelos/" not in portada and "/vuelos/" not in leer(salida, "sitemap.xml"), "vuelos: sin enlace desde la web")
+        comprobar("/vuelos/" not in leer(salida, "sitemap.xml"), "vuelos: fuera del mapa del sitio")
+        comprobar('<p class="pie-vuelos"><a href="vuelos/">Vuelos</a></p>' in portada.split("<footer", 1)[1],
+                  "vuelos: enlace pequeño abajo en la portada")
 
         for ruta in paginas_html(salida):
             if ruta.startswith("vuelos" + os.sep):
                 continue
             texto = leer(salida, ruta)
+            comprobar(texto.count('class="pie-vuelos"') == 1, f"{ruta}: enlace a Vuelos abajo")
             comprobar(texto.count('class="enlace-pc"') == 1 and "¿Qué le va a mi PC?" in texto.split("</header>", 1)[0],
                       f"{ruta}: enlace a la herramienta del PC arriba")
             r = revisar_html(texto)

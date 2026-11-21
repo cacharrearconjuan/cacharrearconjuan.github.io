@@ -1,5 +1,5 @@
 "use strict";
-// Vuelos Iberia ⇄ Houston. Esta página no busca por sí misma: lanza la búsqueda en GitHub Actions
+// Vuelos con Iberia (Houston por defecto). Esta página no busca por sí misma: lanza la búsqueda en GitHub Actions
 // (repositorio privado cacharrearconjuan/Vuelos) y lee allí el resultado, con la llave del usuario.
 
 const REPO = "cacharrearconjuan/Vuelos";
@@ -106,8 +106,28 @@ function iniciar() {
   $("cambiar-token").addEventListener("click", () => { guardado.poner("vuelos-token", null); mostrarConfigurar(); });
   $("ver-ultima").addEventListener("click", () => seguir(guardado.leer("vuelos-ultima"), null, true));
   $("formulario").addEventListener("submit", buscar);
+  document.querySelectorAll('input[name="destino"]').forEach((r) => r.addEventListener("change", cambiarDestino));
+  $("otro-destino").addEventListener("input", () => {
+    $("titulo-destino").textContent = $("otro-destino").value.trim().toUpperCase() || "otro destino";
+  });
+  cambiarDestino();
 
   if (guardado.leer("vuelos-token")) mostrarFormulario(); else mostrarConfigurar();
+}
+
+// Houston es el destino de siempre; «Otro destino» es para una búsqueda puntual (no se guarda).
+function cambiarDestino() {
+  const otro = document.querySelector('input[name="destino"]:checked').value === "otro";
+  $("otro-caja").hidden = !otro;
+  $("houston-caja").hidden = otro;
+  if (otro) $("otro-destino").focus();
+  $("titulo-destino").textContent = otro ? ($("otro-destino").value.trim().toUpperCase() || "otro destino") : "Houston";
+}
+
+function leerOtroDestino() {
+  const codigos = $("otro-destino").value.toUpperCase().split(/[\s,;/]+/).filter(Boolean);
+  const malos = codigos.filter((c) => !/^[A-Z]{3}$/.test(c));
+  return { codigos: [...new Set(codigos)].slice(0, 4), malos };
 }
 
 const CAMPOS = ["fecha_ida", "fecha_vuelta", "adultos", "maleta", "horas_min", "horas_max", "sumar_iberia", "codigo_compartido"];
@@ -147,9 +167,18 @@ async function buscar(ev) {
   if (!datos.fecha_ida) return alert("Pon la fecha de ida.");
   if (datos.fecha_vuelta && datos.fecha_vuelta < datos.fecha_ida) return alert("La vuelta no puede ser antes que la ida.");
   if (!datos.pasarelas.length) return alert("Marca al menos una ciudad de Iberia.");
-  if (!datos.destinos.length) return alert("Marca al menos un aeropuerto de Houston.");
+  const otro = document.querySelector('input[name="destino"]:checked').value === "otro";
+  if (otro) {
+    const { codigos, malos } = leerOtroDestino();
+    if (malos.length) return alert(`«${malos.join(", ")}» no es un código de aeropuerto. Usa 3 letras, p. ej. LAS.`);
+    if (!codigos.length) return alert("Escribe el código del aeropuerto de destino, p. ej. LAS.");
+    datos.destinos = codigos;
+  } else if (!datos.destinos.length) {
+    return alert("Marca al menos un aeropuerto de Houston.");
+  }
   if (!datos.mercados.length) return alert("Marca al menos un mercado.");
-  guardado.poner("vuelos-form", JSON.stringify(datos));
+  // se guardan las preferencias, pero no un destino puntual: la próxima vez vuelve a Houston
+  guardado.poner("vuelos-form", JSON.stringify(otro ? { ...datos, destinos: undefined } : datos));
 
   const id = nuevoId();
   $("boton").disabled = true;
@@ -280,8 +309,9 @@ function pintar(estado) {
   if (res.mejor_total != null && res.vuelta) html += cifra("Total ida + vuelta", fmtPrecio(res.mejor_total), nota + extra, true);
   $("resumen").innerHTML = html;
 
-  $("bloque-ida").innerHTML = bloque(`Ida · ${fmtFecha(p.fecha_ida)}: Madrid → EE. UU. → Houston`, res.ida, "ida");
-  $("bloque-vuelta").innerHTML = res.vuelta ? bloque(`Vuelta · ${fmtFecha(p.fecha_vuelta)}: Houston → EE. UU. → Madrid`, res.vuelta, "vuelta") : "";
+  const dest = esc(res.destino || "Houston");
+  $("bloque-ida").innerHTML = bloque(`Ida · ${fmtFecha(p.fecha_ida)}: Madrid → EE. UU. → ${dest}`, res.ida, "ida");
+  $("bloque-vuelta").innerHTML = res.vuelta ? bloque(`Vuelta · ${fmtFecha(p.fecha_vuelta)}: ${dest} → EE. UU. → Madrid`, res.vuelta, "vuelta") : "";
   document.querySelectorAll(".mas").forEach((b) => b.addEventListener("click", () => {
     document.querySelectorAll(`.opcion[data-sentido="${b.dataset.sentido}"][hidden]`).forEach((o) => (o.hidden = false));
     b.remove();
