@@ -530,11 +530,11 @@ const COCHE_DEFECTO = {
 const COCHE_CAMPOS = [
   ["tarifa", "Alquiler 1 día ($)"], ["solo_ida", "Recargo por dejarlo en otra ciudad ($)"],
   ["seguros_espana", "Seguro completo en paquete desde España ($/día)"],
-  ["seguros", "Seguro completo comprado en el mostrador, web de EE. UU. ($/día)"], ["impuestos", "Impuestos y tasa del aeropuerto (%)"],
+  ["seguros", "Seguro completo comprado en el mostrador, web de EE. UU. ($/día)"], ["impuestos", "Impuestos y tasa del aeropuerto, en la ida (%)"],
   ["tasas", "Tasas fijas ($)"], ["gasolina", "Gasolina ($)"], ["peajes", "Peajes ($)"],
   ["joven", "Conductor menor de 25 años ($)"], ["cambio", "Cambio (€ por 1 $)"],
   ["aduana", "Horas desde que aterrizas hasta tener el coche"], ["conducir", "Horas conduciendo DFW ⇄ Houston"],
-  ["impuestos_ciudad", "Impuestos en una oficina de la ciudad (%)"], ["tasas_ciudad", "Tasas fijas en la ciudad ($)"],
+  ["impuestos_ciudad", "Impuestos al recogerlo en la ciudad, en la vuelta (%)"], ["tasas_ciudad", "Tasas fijas en la ciudad ($)"],
   ["trafico", "Horas de más por el tráfico de Houston"],
 ];
 let coche = { ...COCHE_DEFECTO };
@@ -556,7 +556,7 @@ const horaKayak = (iso) => `${iso.slice(0, 10)}-${String(Math.max(0, Math.min(23
 
 // ---- Enlaces que abren cada buscador con la búsqueda ya rellenada ----
 // Formatos y códigos comprobados uno a uno en cada web (nov. 2026). Dallas = aeropuerto DFW;
-// Houston = zona Bering Dr / Galleria (o el aeropuerto IAH/HOU). Donde una web no admite enlaces
+// Houston = siempre en la ciudad, zona Bering Dr / Galleria (nunca el aeropuerto de Houston). Donde una web no admite enlaces
 // con la búsqueda (Auto Europe, Enterprise) o no tenemos el código del lugar, va a su portada.
 const LUGARES = {
   DFW: {
@@ -573,8 +573,6 @@ const LUGARES = {
     rc: { nombre: "Galleria", coords: "29.75436019897461,-95.47549438476562", tipo: "D" },
     dc: 4765, hertz: "HOUC28", avis: "GLL", avisEs: "Houston Galleria - Estados Unidos", avisTipo: "OTHER",
   },
-  IAH: { nombre: "aeropuerto de Houston (IAH)", kayakEs: "IAH", kayakCom: "IAH", priceline: "IAH", expediaEs: "IAH", expediaCom: "IAH", dc: 4765 },
-  HOU: { nombre: "aeropuerto de Houston (HOU)", kayakEs: "HOU", kayakCom: "HOU", priceline: "HOU", expediaEs: "HOU", expediaCom: "HOU", dc: 4765 },
 };
 
 // Oficinas de la zona Galleria comprobadas (las de Hertz y Avis más cercanas a Bering Dr)
@@ -688,7 +686,7 @@ const INCLUYE = {
   "Enterprise": "las coberturas se añaden después",
 };
 
-// desde/hasta: "DFW", "CIUDAD", "IAH" o "HOU"; recogida/entrega: "AAAA-MM-DDTHH:MM" (hora local)
+// desde/hasta: "DFW" o "CIUDAD"; recogida/entrega: "AAAA-MM-DDTHH:MM" (hora local)
 function enlacesCoche(desde, hasta, recogida, entrega) {
   const o = LUGARES[desde], d = LUGARES[hasta];
   const grupos = {};
@@ -743,16 +741,12 @@ function enlacesSinIberia(res, h) {
   if (p.fecha_ida) {
     html += `<div class="coche-opcion"><strong>Ida · ${fmtFecha(p.fecha_ida)}</strong>: Dallas (DFW) → Houston (horas orientativas: 12:00 → 17:00; cámbialas en la web)
       <div class="coche-sitio"><strong>Dejarlo cerca de Bering Dr (Galleria)</strong>${oficinasHtml()}
-        ${enlacesCocheHtml(enlacesCoche("DFW", "CIUDAD", p.fecha_ida + "T12:00", p.fecha_ida + "T17:00"))}</div>
-      <div class="coche-sitio"><strong>Dejarlo en el aeropuerto de Houston (${h})</strong>
-        ${enlacesCocheHtml(enlacesCoche("DFW", h, p.fecha_ida + "T12:00", p.fecha_ida + "T17:00"))}</div></div>`;
+        ${enlacesCocheHtml(enlacesCoche("DFW", "CIUDAD", p.fecha_ida + "T12:00", p.fecha_ida + "T17:00"))}</div></div>`;
   }
   if (p.fecha_vuelta) {
     html += `<div class="coche-opcion"><strong>Vuelta · ${fmtFecha(p.fecha_vuelta)}</strong>: Houston → Dallas (DFW) (horas orientativas: 10:00 → 17:00)
       <div class="coche-sitio"><strong>Recogerlo cerca de Bering Dr (Galleria)</strong>${oficinasHtml()}
-        ${enlacesCocheHtml(enlacesCoche("CIUDAD", "DFW", p.fecha_vuelta + "T10:00", p.fecha_vuelta + "T17:00"))}</div>
-      <div class="coche-sitio"><strong>Recogerlo en el aeropuerto de Houston (${h})</strong>
-        ${enlacesCocheHtml(enlacesCoche(h, "DFW", p.fecha_vuelta + "T10:00", p.fecha_vuelta + "T17:00"))}</div></div>`;
+        ${enlacesCocheHtml(enlacesCoche("CIUDAD", "DFW", p.fecha_vuelta + "T10:00", p.fecha_vuelta + "T17:00"))}</div></div>`;
   }
   return html;
 }
@@ -773,13 +767,11 @@ function cocheHtml(res) {
       filas.push(`<div class="coche-opcion"><strong>Ida · ${fmtFecha(ib.salida)}</strong>: Iberia ${esc(ib.numeros.join(", "))} aterriza en Dallas (DFW) a las ${fmtHora(ib.llegada)}
         → coges el coche hacia las ${fmtHora(recogida)} → llegas a Houston hacia las <strong>${fmtHora(llegada)}</strong>${otroDia(ib.llegada, llegada)}.
         <div class="sub">${comparar(res.ida)}</div>
-        <div class="coche-sitio"><strong>A) Dejarlo cerca de Bering Dr (Galleria)</strong> · ${precioDoble(true)}<br>
+        <div class="coche-sitio"><strong>Lo dejas cerca de Bering Dr (Galleria)</strong> · ${precioDoble(false)} (se recoge en el aeropuerto de Dallas: lleva su tasa)<br>
           ${dejar.movida ? `Las oficinas de la zona están cerradas a esa hora: lo dejas el ${fmtFecha(dejar.iso)} a las ${fmtHora(dejar.iso)} (${diasAlquiler(recogida, dejar.iso)}).`
             : `Lo dejas hacia las ${fmtHora(dejar.iso)} (${diasAlquiler(recogida, dejar.iso)}).`}
           ${oficinasHtml()}
-          ${enlacesCocheHtml(enlacesCoche("DFW", "CIUDAD", recogida, dejar.iso))}</div>
-        <div class="coche-sitio"><strong>B) Dejarlo en el aeropuerto de Houston (${h})</strong>, abierto toda la noche · ${precioDoble(false)}
-          ${enlacesCocheHtml(enlacesCoche("DFW", h, recogida, entrega))}</div></div>`);
+          ${enlacesCocheHtml(enlacesCoche("DFW", "CIUDAD", recogida, dejar.iso))}</div></div>`);
     }
   }
   if (res.vuelta) {
@@ -787,7 +779,6 @@ function cocheHtml(res) {
     const maps = (q) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
     for (const ib of (res.vuelta.iberias || []).filter((v) => v.origen === "DFW")) {
       const devolver = sumarHoras(ib.salida, -3);
-      const salir = sumarHoras(devolver, -coche.conducir - 0.5);
       const salirCiudad = sumarHoras(devolver, -coche.conducir - coche.trafico - 0.5);
       const horaSalida = Number(salirCiudad.slice(11, 13));
       let avisoHorario = `<div class="sub">Comprueba el horario de la oficina: las de barrio suelen abrir de 8–9 a 18 h y menos los fines de semana.</div>`;
@@ -801,20 +792,17 @@ function cocheHtml(res) {
           ${dias <= 1 ? "<strong>sigue siendo 1 día</strong> (menos de 24 h)." : `<strong>serían ${dias} días</strong> de alquiler (más de 24 h).`}</div>`;
       }
       filas.push(`<div class="coche-opcion"><strong>Vuelta · ${fmtFecha(ib.salida)}</strong> · Iberia ${esc(ib.numeros.join(", "))} sale de Dallas (DFW) a las ${fmtHora(ib.salida)}. Lo devuelves en DFW a las ${fmtHora(devolver)} (3 h antes).
-        <div class="coche-sitio"><strong>A) Recogerlo cerca de Bering Dr (Galleria)</strong> (sin tasa del aeropuerto)<br>${precioDoble(true)}<br>
+        <div class="coche-sitio"><strong>Lo recoges cerca de Bering Dr (Galleria)</strong> · ${precioDoble(true)} (sin tasa del aeropuerto)<br>
           Lo recoges hacia las <strong>${fmtHora(salirCiudad)}</strong>${otroDia(ib.salida, salirCiudad)}.
           ${avisoHorario}
           ${oficinasHtml()}
           ${enlacesCocheHtml(enlacesCoche("CIUDAD", "DFW", horaOficina(salirCiudad, false).iso, devolver))}</div>
-        <div class="coche-sitio"><strong>B) Aeropuerto de Houston (${h})</strong><br>${precioDoble(false)}<br>
-          Lo recoges hacia las <strong>${fmtHora(salir)}</strong>${otroDia(ib.salida, salir)}.
-          ${enlacesCocheHtml(enlacesCoche(h, "DFW", salir, devolver))}</div>
         <div class="sub">${comparar(res.vuelta)}</div></div>`);
     }
   }
   const campos = COCHE_CAMPOS.map(([k, t]) =>
     `<label>${t}<input type="number" step="any" min="0" data-coche="${k}" value="${coche[k]}"></label>`).join("");
-  const campoDireccion = `<label>Recoger cerca de (vuelta)<input type="text" data-coche-texto="direccion" value="${esc(coche.direccion)}"></label>`;
+  const campoDireccion = `<label>Zona de Houston (para el mapa)<input type="text" data-coche-texto="direccion" value="${esc(coche.direccion)}"></label>`;
   const cu = costeCoche(coche, false, false);
   const desglose = `Desde España: ${Math.round(coche.tarifa)} $ alquiler + ${Math.round(coche.solo_ida)} $ dejarlo en otra ciudad + ${Math.round(coche.seguros_espana)} $ seguro completo incluido`
     + `${coche.joven ? ` + ${Math.round(coche.joven)} $ conductor joven` : ""} + ${Math.round(c.impuestos)} $ impuestos y tasas + ${Math.round(coche.gasolina)} $ gasolina`
@@ -823,8 +811,8 @@ function cocheHtml(res) {
     + ` <strong>${Math.round(cu.usd)} $ ≈ ${fmtPrecio(cu.eur)}</strong>. Cambio: 1 $ = ${String(coche.cambio).replace(".", ",")} €.`;
   return `<h2 style="margin-top:0">🚗 Alternativa: coche de alquiler Dallas (DFW) ⇄ Houston</h2>
     <table class="tabla-ciudades coche-tabla"><thead><tr><th>1 día con todo</th><th class="num">Reservando desde España</th><th class="num">Web de EE. UU. + seguro en mostrador</th></tr></thead><tbody>
-      <tr><td>Aeropuerto</td><td class="num"><strong>${fmtPrecio(c.eur)}</strong></td><td class="num">${fmtPrecio(cu.eur)}</td></tr>
-      ${res.vuelta ? `<tr><td>Oficina en la ciudad</td><td class="num"><strong>${fmtPrecio(costeCoche(coche, true, true).eur)}</strong></td><td class="num">${fmtPrecio(costeCoche(coche, true, false).eur)}</td></tr>` : ""}
+      ${res.ida ? `<tr><td>Ida: aeropuerto de Dallas → Bering Dr</td><td class="num"><strong>${fmtPrecio(c.eur)}</strong></td><td class="num">${fmtPrecio(cu.eur)}</td></tr>` : ""}
+      ${res.vuelta ? `<tr><td>Vuelta: Bering Dr → aeropuerto de Dallas</td><td class="num"><strong>${fmtPrecio(costeCoche(coche, true, true).eur)}</strong></td><td class="num">${fmtPrecio(costeCoche(coche, true, false).eur)}</td></tr>` : ""}
     </tbody></table>
     <p class="coche-precio"><small>Estimación con precios típicos · todo el seguro y todos los gastos · precio por coche, no por persona</small></p>
     <p class="sub">${desglose}</p>
@@ -833,7 +821,7 @@ function cocheHtml(res) {
       : `<p class="sub">Ese día no hay vuelo directo de Iberia en Dallas (DFW)${(res.peticion.pasarelas || []).includes("DFW") ? "" : ": marca «Dallas (DFW)» en «Más opciones»"}. Aun así puedes mirar los precios del alquiler:</p>${enlacesSinIberia(res, h)}`}
     ${INCLUYE_HTML}
     <details class="avanzado"><summary>Ajustar la estimación</summary><div class="rejilla">${campoDireccion}${campos}</div>
-      <p class="ayuda">Son precios típicos, no reales: no hay ningún buscador gratis de alquiler de coches. Mira el precio de verdad en los enlaces. En las webs de EE. UU. el precio que ves no suele llevar el seguro a todo riesgo ni la responsabilidad civil ampliada (allí se da por hecho que tienes tu seguro de coche); te lo ofrecen en el mostrador y es caro. Desde España hay paquetes «todo incluido» para no residentes: con todo el seguro suelen salir más baratos. Una VPN de EE. UU. apenas cambia el precio: lo que cuenta es la web y el país de residencia, y conviene poner el real (España) para que el seguro valga. En DiscoverCars o Rentalcars la «cobertura total» es un seguro suyo: si hay daños pagas tú en el mostrador y luego te lo devuelven; la empresa de alquiler te bloqueará una fianza en la tarjeta de crédito. Para la estimación se cuenta 1 día con recogida en el aeropuerto y devolución en otra ciudad. Un día de alquiler son 24 h desde que lo recoges; si te pasas, suele haber un margen corto (unos 30 min, según la empresa) y después cobran horas o un día más.</p>
+      <p class="ayuda">Son precios típicos, no reales: no hay ningún buscador gratis de alquiler de coches. Mira el precio de verdad en los enlaces. En las webs de EE. UU. el precio que ves no suele llevar el seguro a todo riesgo ni la responsabilidad civil ampliada (allí se da por hecho que tienes tu seguro de coche); te lo ofrecen en el mostrador y es caro. Desde España hay paquetes «todo incluido» para no residentes: con todo el seguro suelen salir más baratos. Una VPN de EE. UU. apenas cambia el precio: lo que cuenta es la web y el país de residencia, y conviene poner el real (España) para que el seguro valga. En DiscoverCars o Rentalcars la «cobertura total» es un seguro suyo: si hay daños pagas tú en el mostrador y luego te lo devuelven; la empresa de alquiler te bloqueará una fianza en la tarjeta de crédito. Para la estimación se cuenta 1 día: en la ida se recoge en el aeropuerto de Dallas (con su tasa) y se deja en Houston cerca de Bering Dr; en la vuelta se recoge cerca de Bering Dr (sin tasa del aeropuerto) y se deja en el aeropuerto de Dallas. Un día de alquiler son 24 h desde que lo recoges; si te pasas, suele haber un margen corto (unos 30 min, según la empresa) y después cobran horas o un día más.</p>
       <button type="button" class="mas" id="coche-reiniciar">Volver a los valores típicos</button></details>
     <p class="ayuda">El coche es para todos: con 2 o más personas suele salir mejor. Sin pagar maletas, pero son unas ${coche.conducir} h de carretera (I-45). Necesitas el carné de conducir español y conviene el permiso internacional.</p>`;
 }
