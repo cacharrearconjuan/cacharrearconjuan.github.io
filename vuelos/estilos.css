@@ -174,3 +174,6 @@ button:disabled { opacity: .6; cursor: wait; }
 .coche-grupo { margin-top: 8px; }
 .coche-grupo > span { display: block; font-size: .8rem; color: var(--suave); margin-bottom: 4px; }
 .coche-tabla { margin: 6px 0; }
+.incluye { margin-top: 12px; }
+.incluye summary { cursor: pointer; font-weight: 600; }
+.incluye li { font-size: .85rem; margin-bottom: 4px; }

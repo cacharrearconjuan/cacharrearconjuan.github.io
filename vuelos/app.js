@@ -554,34 +554,184 @@ const sumarHoras = (iso, h) => {
 };
 const horaKayak = (iso) => `${iso.slice(0, 10)}-${String(Math.max(0, Math.min(23, Number(iso.slice(11, 13))))).padStart(2, "0")}h`;
 
-// Enlaces en dos grupos: reservar desde España (paquetes con el seguro incluido) o en webs de EE. UU.
-// (precio sin seguro completo: se compra en el mostrador). Sin «tramo» (oficina de ciudad) no hay enlace a Kayak.
+// ---- Enlaces que abren cada buscador con la búsqueda ya rellenada ----
+// Formatos y códigos comprobados uno a uno en cada web (nov. 2026). Dallas = aeropuerto DFW;
+// Houston = zona Bering Dr / Galleria (o el aeropuerto IAH/HOU). Donde una web no admite enlaces
+// con la búsqueda (Auto Europe, Enterprise) o no tenemos el código del lugar, va a su portada.
+const LUGARES = {
+  DFW: {
+    nombre: "aeropuerto de Dallas (DFW)", kayakEs: "DFW-a16406", kayakCom: "DFW-a16406", priceline: "DFW",
+    expediaEs: "Dallas, TX, Estados Unidos (DFW-A. Internacional de Dallas - Fort Worth)",
+    expediaCom: "Dallas, TX, United States of America (DFW-Dallas-Fort Worth Intl.)",
+    expediaId: "5719620", lat: "32.897552", lon: "-97.040434",
+    rc: { nombre: "Aeropuerto internacional de Dallas-Fort Worth", coords: "32.89670181274414,-97.04219818115234", tipo: "A", iata: "DFW" },
+    dc: 5072, hertz: "DFWT20", avis: "DFW", avisEs: "Aeropuerto Internacional Dallas/Fort Worth - Estados Unidos (DFW)", avisTipo: "AIRPORT",
+  },
+  CIUDAD: {
+    nombre: "Houston, zona Bering Dr / Galleria", kayakEs: "Houston,Texas,Estados-Unidos-c31193", kayakCom: "Houston,Texas,United-States-c31193",
+    priceline: "Bering Dr, Houston, TX 77057, US", expediaEs: "Bering Dr, Houston, Texas, EE. UU.", expediaCom: "Bering Dr, Houston, TX",
+    rc: { nombre: "Galleria", coords: "29.75436019897461,-95.47549438476562", tipo: "D" },
+    dc: 4765, hertz: "HOUC28", avis: "GLL", avisEs: "Houston Galleria - Estados Unidos", avisTipo: "OTHER",
+  },
+  IAH: { nombre: "aeropuerto de Houston (IAH)", kayakEs: "IAH", kayakCom: "IAH", priceline: "IAH", expediaEs: "IAH", expediaCom: "IAH", dc: 4765 },
+  HOU: { nombre: "aeropuerto de Houston (HOU)", kayakEs: "HOU", kayakCom: "HOU", priceline: "HOU", expediaEs: "HOU", expediaCom: "HOU", dc: 4765 },
+};
+
+// Oficinas de la zona Galleria comprobadas (las de Hertz y Avis más cercanas a Bering Dr)
+const OFICINAS_GALLERIA = [
+  { nombre: "Hertz · Westin Galleria", dir: "5060 West Alabama St, Houston, TX 77056", horario: "entre semana hasta las 17:30" },
+  { nombre: "Avis · Houston Galleria", dir: "4825 Richmond Ave, Houston, TX 77027", horario: "entre semana de 7:30 a 18:00" },
+];
+const ABRE = 9, CIERRA = 17; // horas «seguras» para recoger o dejar el coche en una oficina de barrio
+
+const MESES_AVIS = ["ene.", "feb.", "mar.", "abr.", "may.", "jun.", "jul.", "ago.", "sept.", "oct.", "nov.", "dic."];
+const partes = (iso) => ({ y: iso.slice(0, 4), m: iso.slice(5, 7), d: iso.slice(8, 10), H: Number(iso.slice(11, 13)), M: Number(iso.slice(14, 16)) });
+const dos = (n) => String(n).padStart(2, "0");
+const hora12 = (H) => ({ h: H % 12 === 0 ? 12 : H % 12, ap: H < 12 ? "AM" : "PM" });
+const enc = (t) => encodeURIComponent(t).replace(/%2C/g, ",");
+const uuid = () => (crypto.randomUUID ? crypto.randomUUID()
+  : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => ((Math.random() * 16) | (c === "x" ? 0 : 8)).toString(16)));
+
+const CONSTRUCTORES = {
+  "Kayak.es": (o, d, r, e) => `https://www.kayak.es/cars/${o.kayakEs}/${d.kayakEs}/${horaKayak(r)}/${horaKayak(e)}?sort=price_a`,
+  "Kayak.com": (o, d, r, e) => `https://www.kayak.com/cars/${o.kayakCom}/${d.kayakCom}/${horaKayak(r)}/${horaKayak(e)}?sort=price_a`,
+  "Priceline": (o, d, r, e) => {
+    const t = (iso) => `${iso.slice(0, 4)}${iso.slice(5, 7)}${iso.slice(8, 10)}-${iso.slice(11, 16)}`;
+    return `https://www.priceline.com/drive/search/r/listings/${enc(o.priceline)}/${enc(d.priceline)}/${t(r)}/${t(e)}/list`;
+  },
+  "Expedia.es": (o, d, r, e) => {
+    const a = partes(r), b = partes(e);
+    const q = new URLSearchParams({ locn: o.expediaEs, date1: r.slice(0, 10), d1: r.slice(0, 10), time1: `${a.H}:${a.M}`,
+      loc2: d.expediaEs, date2: e.slice(0, 10), d2: e.slice(0, 10), time2: `${b.H}:${b.M}` });
+    if (o.expediaId) { q.set("dpln", o.expediaId); q.set("olat", o.lat); q.set("olon", o.lon); }
+    if (d.expediaId) { q.set("drid1", d.expediaId); q.set("dlat", d.lat); q.set("dlon", d.lon); }
+    return `https://www.expedia.es/carsearch?${q}`;
+  },
+  "Expedia.com": (o, d, r, e) => {
+    const a = partes(r), b = partes(e), ha = hora12(a.H), hb = hora12(b.H);
+    const q = new URLSearchParams({ date1: `${a.m}/${a.d}/${a.y}`, date2: `${b.m}/${b.d}/${b.y}`,
+      time1: `${ha.h}${dos(a.M)}${ha.ap}`, time2: `${hb.h}${dos(b.M)}${hb.ap}`, locn: o.expediaCom, loc2: d.expediaCom });
+    if (o.expediaId) { q.set("dpln", o.expediaId); q.set("olat", o.lat); q.set("olon", o.lon); }
+    if (d.expediaId) { q.set("drid1", d.expediaId); q.set("dlat", d.lat); q.set("dlon", d.lon); }
+    return `https://www.expedia.com/carsearch?${q}`;
+  },
+  "Rentalcars": (o, d, r, e) => {
+    if (!o.rc || !d.rc) return null;
+    const a = partes(r), b = partes(e);
+    const q = new URLSearchParams({ intent: "direct", location: "", dropLocation: "",
+      locationName: o.rc.nombre, coordinates: o.rc.coords, ftsType: o.rc.tipo,
+      dropLocationName: d.rc.nombre, dropCoordinates: d.rc.coords, dropFtsType: d.rc.tipo, driversAge: "30",
+      puDay: String(Number(a.d)), puMonth: String(Number(a.m)), puYear: a.y, puHour: String(a.H), puMinute: String(a.M),
+      doDay: String(Number(b.d)), doMonth: String(Number(b.m)), doYear: b.y, doHour: String(b.H), doMinute: String(b.M) });
+    if (o.rc.iata) q.set("locationIata", o.rc.iata);
+    if (d.rc.iata) q.set("dropLocationIata", d.rc.iata);
+    return `https://www.rentalcars.com/search-results?${q}`;
+  },
+  "DiscoverCars": (o, d, r, e) => {
+    const sq = btoa(JSON.stringify({ PickupLocationId: o.dc, DropOffLocationId: d.dc, PickupDateTime: `${r}:00`,
+      DropOffDateTime: `${e}:00`, ResidenceCountry: "ES", DriverAge: 35, Hash: "" }));
+    return `https://www.discovercars.com/es/search/${uuid()}?sq=${encodeURIComponent(sq)}&searchVersion=2`;
+  },
+  "Hertz.es": (o, d, r, e) => o.hertz && d.hertz
+    ? `https://www.hertz.es/es/es/book/vehicles?${new URLSearchParams({ age: "25", ddate: `${e}:00`, did: d.hertz, pCountryCode: "US", pdate: `${r}:00`, pid: o.hertz })}` : null,
+  "Hertz.com": (o, d, r, e) => o.hertz && d.hertz
+    ? `https://www.hertz.com/us/en/book/vehicles?${new URLSearchParams({ age: "25", ddate: `${e}:00`, did: d.hertz, pCountryCode: "US", pdate: `${r}:00`, pid: o.hertz })}` : null,
+  "Avis.es": (o, d, r, e) => {
+    if (!o.avis || !d.avis) return null;
+    const a = partes(r), b = partes(e);
+    const disp = (p) => `${Number(p.d)} ${MESES_AVIS[Number(p.m) - 1]} ${p.y.slice(2)}`;
+    // mismos campos y en el mismo orden que la búsqueda comprobada en avis.es (los vacíos también)
+    const q = new URLSearchParams({ isNewHomePageTemplate: "true", tid: "", vehicleCategory: "default", exclusiveSearch: "", partnerBrand: "",
+      templateName: "AvisBookingFlow:pages/homePageAbg", locationBrand: "avis", dropLocationBrand: "", budgetPickupLocCode: "",
+      budgetDropoffLocCode: "", driverDob: "", isUasorSds: "", fccRecg: "", userAwdCode: "", "hire-country": "GB",
+      maxLocationRentalDays: "360", afBetaFlow: "",
+      "hire-search": o.avisEs, "hire-location": o.avis, "return-search": d.avisEs, "return-location": d.avis, "trigger-return-location": "on",
+      "date-from-display": disp(a), "date-from": `${a.d}/${a.m}/${a.y}`, "time-from-display": `${dos(a.H)}:${dos(a.M)}`, "time-from": `${dos(a.H)}${dos(a.M)}`,
+      "date-to-display": disp(b), "date-to": `${b.d}/${b.m}/${b.y}`, "time-to-display": `${dos(b.H)}:${dos(b.M)}`, "time-to": `${dos(b.H)}${dos(b.M)}`,
+      offerStartDate: "", offerEndDate: "", blackoutStartDate: "", blackoutEndDate: "", cor: "",
+      hideAwdNumber: "false", hideAwdCodeAndMessage: "false", "yds-applicable": "on", awdcode: "" });
+    return `https://secure.avis.es/resultados-b%C3%BAsqueda?${q}`;
+  },
+  "Avis.com": (o, d, r, e) => {
+    if (!o.avis || !d.avis) return null;
+    const a = partes(r), b = partes(e), ha = hora12(a.H), hb = hora12(b.H);
+    const q = new URLSearchParams({ pickup_suggestion_type_code: o.avisTipo, dropoff_suggestion_type_code: d.avisTipo, pickup_location_region: "NAM",
+      pickup_hour: dos(ha.h), pickup_minute: dos(a.M), pickup_am_pm: ha.ap, pickup_day: a.d, pickup_month: a.m, pickup_year: a.y,
+      return_hour: dos(hb.h), return_minute: dos(b.M), return_am_pm: hb.ap, return_day: b.d, return_month: b.m, return_year: b.y,
+      residency_value: "US", pickup_location_code: o.avis, return_location_code: d.avis, age: "25", country: "us", locale: "en-US", brand: "avis" });
+    return `https://www.avis.com/en/reservation/vehicle-availability?${q}`;
+  },
+};
+const PORTADAS = {
+  "Rentalcars": "https://www.rentalcars.com/es/", "Hertz.es": "https://www.hertz.es/", "Hertz.com": "https://www.hertz.com/",
+  "Avis.es": "https://www.avis.es/", "Avis.com": "https://www.avis.com/",
+  "Auto Europe": "https://www.autoeurope.es/", "Enterprise": "https://www.enterprise.com/",
+};
+const GRUPOS_COCHE = {
+  "Desde España": ["Kayak.es", "Avis.es", "Rentalcars", "DiscoverCars", "Expedia.es", "Hertz.es", "Auto Europe"],
+  "Webs de EE. UU.": ["Kayak.com", "Priceline", "Expedia.com", "Avis.com", "Hertz.com", "Enterprise"],
+};
+// Lo que incluye el precio que enseña cada web (comprobado en sus resultados, nov. 2026)
+const INCLUYE = {
+  "Avis.es": "incluye la cobertura de daños y robo (LDW), tasas del aeropuerto/ciudad y kilometraje ilimitado; es lo más completo",
+  "Rentalcars": "total con tasas; en ofertas como la de Hertz, daños y robo con franquicia 0 €; pide fianza",
+  "DiscoverCars": "muchas ofertas «sin franquicia»; su «Cobertura total» es un extra que no va en el precio",
+  "Expedia.es": "incluye tasas, impuestos y el cargo por dejarlo en otra ciudad; algunas ofertas con cobertura sin franquicia",
+  "Kayak.es": "comparador: lo que incluye depende de la web a la que te manda",
+  "Hertz.es": "precio estimado; las coberturas se eligen después y no van en el precio",
+  "Auto Europe": "incluye el cargo por dejarlo en otra ciudad e IVA; puede haber tasas en el mostrador",
+  "Priceline": "varía por oferta: unas incluyen daños (CDW) y responsabilidad civil, otras no",
+  "Expedia.com": "incluye tasas; la cobertura varía según la oferta",
+  "Avis.com": "las coberturas se eligen aparte",
+  "Hertz.com": "las coberturas se eligen aparte",
+  "Kayak.com": "comparador: lo que incluye depende de la web a la que te manda",
+  "Enterprise": "las coberturas se añaden después",
+};
+
+// desde/hasta: "DFW", "CIUDAD", "IAH" o "HOU"; recogida/entrega: "AAAA-MM-DDTHH:MM" (hora local)
 function enlacesCoche(desde, hasta, recogida, entrega) {
-  const tramo = desde ? `${desde}/${hasta}/${horaKayak(recogida)}/${horaKayak(entrega)}` : "";
-  return {
-    "Desde España (seguro incluido)": {
-      ...(tramo ? { "Kayak.es": `https://www.kayak.es/cars/${tramo}?sort=price_a` } : {}),
-      "Rentalcars": "https://www.rentalcars.com/es/",
-      "DiscoverCars": "https://www.discovercars.com/",
-      "Auto Europe": "https://www.autoeurope.es/",
-      "Hertz.es": "https://www.hertz.es/",
-      "Avis.es": "https://www.avis.es/",
-    },
-    "Webs de EE. UU. (seguro aparte)": {
-      ...(tramo ? { "Kayak.com": `https://www.kayak.com/cars/${tramo}?sort=price_a` } : {}),
-      "Enterprise": "https://www.enterprise.com/",
-      "Hertz.com": "https://www.hertz.com/",
-      "Avis.com": "https://www.avis.com/",
-      "Priceline": "https://www.priceline.com/",
-    },
-  };
+  const o = LUGARES[desde], d = LUGARES[hasta];
+  const grupos = {};
+  for (const [titulo, webs] of Object.entries(GRUPOS_COCHE)) {
+    grupos[titulo] = webs.map((w) => {
+      const url = CONSTRUCTORES[w] ? CONSTRUCTORES[w](o, d, recogida, entrega) : null;
+      return { nombre: w, url: url || PORTADAS[w], aMano: !url };
+    });
+  }
+  return grupos;
 }
 
 function enlacesCocheHtml(grupos) {
   return Object.entries(grupos).map(([titulo, enlaces], g) =>
-    `<div class="coche-grupo"><span>${esc(titulo)}:</span><div class="enlaces">${Object.entries(enlaces).map(([n, u], k) =>
-      `<a href="${esc(u)}" target="_blank" rel="noopener" class="${g === 0 && k === 0 ? "principal" : ""}">${esc(n)}</a>`).join("")}</div></div>`).join("");
+    `<div class="coche-grupo"><span>${esc(titulo)}:</span><div class="enlaces">${enlaces.map((x, k) =>
+      `<a href="${esc(x.url)}" target="_blank" rel="noopener" class="${g === 0 && k === 0 ? "principal" : ""}" title="${esc(INCLUYE[x.nombre] || "")}">${esc(x.nombre)}${x.aMano ? " (a mano)" : ""}</a>`).join("")}</div></div>`).join("")
+    + `<div class="sub">Los enlaces abren la búsqueda ya hecha. «(a mano)»: esa web no lo permite, hay que rellenarla.</div>`;
 }
+
+const INCLUYE_HTML = `<details class="incluye"><summary>¿Qué incluye el precio de cada web?</summary><ul>${
+  Object.entries(INCLUYE).map(([w, t]) => `<li><strong>${esc(w)}</strong>: ${esc(t)}.</li>`).join("")}</ul>
+  <p class="ayuda">Ninguna dice nada de la responsabilidad civil ampliada (SLI): si la quieres, añádela al reservar o en el mostrador.</p></details>`;
+
+const mapsQ = (q) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+const oficinasHtml = () => `<div class="sub">Oficinas cerca de Bering Dr: ${OFICINAS_GALLERIA.map((o) =>
+  `<a href="${esc(mapsQ(o.nombre.replace(" · ", " ") + ", " + o.dir))}" target="_blank" rel="noopener">${esc(o.nombre)}</a> (${esc(o.horario)})`).join(" · ")}.</div>`;
+
+// Una oficina de barrio: si la hora cae fuera de horario, se mueve a la apertura (dejar) o al cierre anterior (recoger).
+function horaOficina(iso, dejar) {
+  const H = Number(iso.slice(11, 13)) + Number(iso.slice(14, 16)) / 60;
+  if (H >= ABRE && H <= CIERRA) return { iso, movida: false };
+  if (dejar) {
+    const dia = H > CIERRA ? sumarHoras(iso.slice(0, 11) + "00:00", 24).slice(0, 11) : iso.slice(0, 11);
+    return { iso: `${dia}${dos(ABRE)}:00`, movida: true };
+  }
+  const dia = H < ABRE ? sumarHoras(iso.slice(0, 11) + "00:00", -24).slice(0, 11) : iso.slice(0, 11);
+  return { iso: `${dia}${dos(CIERRA)}:00`, movida: true };
+}
+const horasEntre = (a, b) => Math.round((new Date(b + ":00Z") - new Date(a + ":00Z")) / 36e5);
+const diasAlquiler = (a, b) => {
+  const h = horasEntre(a, b);
+  return h <= 24 ? `${h} h con el coche: <strong>1 día</strong> de alquiler` : `${h} h con el coche: <strong>${Math.ceil(h / 24)} días</strong> de alquiler`;
+};
 
 const precioDoble = (ciudad) =>
   `≈ <strong>${fmtPrecio(costeCoche(coche, ciudad, true).eur)}</strong> desde España · ≈ ${fmtPrecio(costeCoche(coche, ciudad, false).eur)} en web de EE. UU.`;
@@ -591,17 +741,18 @@ function enlacesSinIberia(res, h) {
   const p = res.peticion;
   let html = "";
   if (p.fecha_ida) {
-    html += `<div class="coche-opcion"><strong>Ida · ${fmtFecha(p.fecha_ida)}</strong>: Dallas (DFW) → Houston (${h})
-      ${enlacesCocheHtml(enlacesCoche("DFW", h, p.fecha_ida + "T12:00", p.fecha_ida + "T18:00"))}</div>`;
+    html += `<div class="coche-opcion"><strong>Ida · ${fmtFecha(p.fecha_ida)}</strong>: Dallas (DFW) → Houston (horas orientativas: 12:00 → 17:00; cámbialas en la web)
+      <div class="coche-sitio"><strong>Dejarlo cerca de Bering Dr (Galleria)</strong>${oficinasHtml()}
+        ${enlacesCocheHtml(enlacesCoche("DFW", "CIUDAD", p.fecha_ida + "T12:00", p.fecha_ida + "T17:00"))}</div>
+      <div class="coche-sitio"><strong>Dejarlo en el aeropuerto de Houston (${h})</strong>
+        ${enlacesCocheHtml(enlacesCoche("DFW", h, p.fecha_ida + "T12:00", p.fecha_ida + "T17:00"))}</div></div>`;
   }
   if (p.fecha_vuelta) {
-    const maps = (q) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
-    html += `<div class="coche-opcion"><strong>Vuelta · ${fmtFecha(p.fecha_vuelta)}</strong>: Houston → Dallas (DFW)
-      <div class="coche-sitio"><strong>Oficina cerca de ${esc(coche.direccion)}</strong>
-        <div class="enlaces"><a class="principal" href="${esc(maps("alquiler de coches cerca de " + coche.direccion))}" target="_blank" rel="noopener">Oficinas cerca (Maps)</a></div>
-        ${enlacesCocheHtml(enlacesCoche("", "", "", ""))}</div>
-      <div class="coche-sitio"><strong>Aeropuerto de Houston (${h})</strong>
-        ${enlacesCocheHtml(enlacesCoche(h, "DFW", p.fecha_vuelta + "T08:00", p.fecha_vuelta + "T14:00"))}</div></div>`;
+    html += `<div class="coche-opcion"><strong>Vuelta · ${fmtFecha(p.fecha_vuelta)}</strong>: Houston → Dallas (DFW) (horas orientativas: 10:00 → 17:00)
+      <div class="coche-sitio"><strong>Recogerlo cerca de Bering Dr (Galleria)</strong>${oficinasHtml()}
+        ${enlacesCocheHtml(enlacesCoche("CIUDAD", "DFW", p.fecha_vuelta + "T10:00", p.fecha_vuelta + "T17:00"))}</div>
+      <div class="coche-sitio"><strong>Recogerlo en el aeropuerto de Houston (${h})</strong>
+        ${enlacesCocheHtml(enlacesCoche(h, "DFW", p.fecha_vuelta + "T10:00", p.fecha_vuelta + "T17:00"))}</div></div>`;
   }
   return html;
 }
@@ -618,11 +769,17 @@ function cocheHtml(res) {
       const recogida = sumarHoras(ib.llegada, coche.aduana);
       const llegada = sumarHoras(recogida, coche.conducir);
       const entrega = sumarHoras(recogida, 6);
+      const dejar = horaOficina(sumarHoras(llegada, coche.trafico), true);
       filas.push(`<div class="coche-opcion"><strong>Ida · ${fmtFecha(ib.salida)}</strong>: Iberia ${esc(ib.numeros.join(", "))} aterriza en Dallas (DFW) a las ${fmtHora(ib.llegada)}
-        → coges el coche hacia las ${fmtHora(recogida)} → llegas a Houston hacia las <strong>${fmtHora(llegada)}</strong>${otroDia(ib.llegada, llegada)} y lo dejas allí.
+        → coges el coche hacia las ${fmtHora(recogida)} → llegas a Houston hacia las <strong>${fmtHora(llegada)}</strong>${otroDia(ib.llegada, llegada)}.
         <div class="sub">${comparar(res.ida)}</div>
-        <div class="sub">${precioDoble(false)}</div>
-        ${enlacesCocheHtml(enlacesCoche("DFW", h, recogida, entrega))}</div>`);
+        <div class="coche-sitio"><strong>A) Dejarlo cerca de Bering Dr (Galleria)</strong> · ${precioDoble(true)}<br>
+          ${dejar.movida ? `Las oficinas de la zona están cerradas a esa hora: lo dejas el ${fmtFecha(dejar.iso)} a las ${fmtHora(dejar.iso)} (${diasAlquiler(recogida, dejar.iso)}).`
+            : `Lo dejas hacia las ${fmtHora(dejar.iso)} (${diasAlquiler(recogida, dejar.iso)}).`}
+          ${oficinasHtml()}
+          ${enlacesCocheHtml(enlacesCoche("DFW", "CIUDAD", recogida, dejar.iso))}</div>
+        <div class="coche-sitio"><strong>B) Dejarlo en el aeropuerto de Houston (${h})</strong>, abierto toda la noche · ${precioDoble(false)}
+          ${enlacesCocheHtml(enlacesCoche("DFW", h, recogida, entrega))}</div></div>`);
     }
   }
   if (res.vuelta) {
@@ -644,18 +801,11 @@ function cocheHtml(res) {
           ${dias <= 1 ? "<strong>sigue siendo 1 día</strong> (menos de 24 h)." : `<strong>serían ${dias} días</strong> de alquiler (más de 24 h).`}</div>`;
       }
       filas.push(`<div class="coche-opcion"><strong>Vuelta · ${fmtFecha(ib.salida)}</strong> · Iberia ${esc(ib.numeros.join(", "))} sale de Dallas (DFW) a las ${fmtHora(ib.salida)}. Lo devuelves en DFW a las ${fmtHora(devolver)} (3 h antes).
-        <div class="coche-sitio"><strong>A) Oficina en la ciudad, cerca de ${esc(coche.direccion)}</strong> (sin tasa del aeropuerto)<br>${precioDoble(true)}<br>
+        <div class="coche-sitio"><strong>A) Recogerlo cerca de Bering Dr (Galleria)</strong> (sin tasa del aeropuerto)<br>${precioDoble(true)}<br>
           Lo recoges hacia las <strong>${fmtHora(salirCiudad)}</strong>${otroDia(ib.salida, salirCiudad)}.
           ${avisoHorario}
-          <div class="enlaces">
-            <a class="principal" href="${esc(maps("alquiler de coches cerca de " + coche.direccion))}" target="_blank" rel="noopener">Oficinas cerca (Maps)</a>
-            <a href="${esc(maps("Enterprise Rent-A-Car near " + coche.direccion))}" target="_blank" rel="noopener">Enterprise</a>
-            <a href="${esc(maps("Hertz near " + coche.direccion))}" target="_blank" rel="noopener">Hertz</a>
-            <a href="${esc(maps("Avis near " + coche.direccion))}" target="_blank" rel="noopener">Avis</a>
-            <a href="${esc(maps("Budget Car Rental near " + coche.direccion))}" target="_blank" rel="noopener">Budget</a>
-          </div>
-          <div class="sub">Busca la oficina en el mapa y resérvala en la web de la empresa (eligiendo esa oficina):</div>
-          ${enlacesCocheHtml(enlacesCoche("", "", "", ""))}</div>
+          ${oficinasHtml()}
+          ${enlacesCocheHtml(enlacesCoche("CIUDAD", "DFW", horaOficina(salirCiudad, false).iso, devolver))}</div>
         <div class="coche-sitio"><strong>B) Aeropuerto de Houston (${h})</strong><br>${precioDoble(false)}<br>
           Lo recoges hacia las <strong>${fmtHora(salir)}</strong>${otroDia(ib.salida, salir)}.
           ${enlacesCocheHtml(enlacesCoche(h, "DFW", salir, devolver))}</div>
@@ -681,6 +831,7 @@ function cocheHtml(res) {
     ${filas.length ? filas.join("") : !(res.ida || res.vuelta)?.iberias
       ? `<p class="sub">Esta búsqueda es anterior a la opción del coche: vuelve a buscar para ver los horarios con el Iberia de Dallas.</p>`
       : `<p class="sub">Ese día no hay vuelo directo de Iberia en Dallas (DFW)${(res.peticion.pasarelas || []).includes("DFW") ? "" : ": marca «Dallas (DFW)» en «Más opciones»"}. Aun así puedes mirar los precios del alquiler:</p>${enlacesSinIberia(res, h)}`}
+    ${INCLUYE_HTML}
     <details class="avanzado"><summary>Ajustar la estimación</summary><div class="rejilla">${campoDireccion}${campos}</div>
       <p class="ayuda">Son precios típicos, no reales: no hay ningún buscador gratis de alquiler de coches. Mira el precio de verdad en los enlaces. En las webs de EE. UU. el precio que ves no suele llevar el seguro a todo riesgo ni la responsabilidad civil ampliada (allí se da por hecho que tienes tu seguro de coche); te lo ofrecen en el mostrador y es caro. Desde España hay paquetes «todo incluido» para no residentes: con todo el seguro suelen salir más baratos. Una VPN de EE. UU. apenas cambia el precio: lo que cuenta es la web y el país de residencia, y conviene poner el real (España) para que el seguro valga. En DiscoverCars o Rentalcars la «cobertura total» es un seguro suyo: si hay daños pagas tú en el mostrador y luego te lo devuelven; la empresa de alquiler te bloqueará una fianza en la tarjeta de crédito. Para la estimación se cuenta 1 día con recogida en el aeropuerto y devolución en otra ciudad. Un día de alquiler son 24 h desde que lo recoges; si te pasas, suele haber un margen corto (unos 30 min, según la empresa) y después cobran horas o un día más.</p>
       <button type="button" class="mas" id="coche-reiniciar">Volver a los valores típicos</button></details>
